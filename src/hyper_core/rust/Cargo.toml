@@ -1,0 +1,33 @@
+[package]
+name = "super_pi_ecosystem"
+version = "0.1.0"
+edition = "2025"
+authors = ["KOSASIH"]
+description = "Super Pi Ecosystem: Hyper-Tech Autonomous Smart Contract for Full Pi Network Mainnet Opening and Decentralization"
+license = "MIT"
+keywords = ["pi-network", "soroban", "blockchain", "decentralization", "ai", "quantum"]
+categories = ["cryptography::cryptocurrencies", "smart-contracts"]
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+soroban-sdk = "0.10"
+
+[dev-dependencies]
+soroban-sdk = { version = "0.10", features = ["testutils"] }
+
+[profile.release]
+opt-level = 3
+debug = false
+rpath = false
+lto = true
+debug-assertions = false
+codegen-units = 1
+panic = 'abort'
+incremental = false
+overflow-checks = true
+
+[workspace]
+resolver = "2"
+members = ["."]
