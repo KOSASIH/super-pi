@@ -1,0 +1,23 @@
+# Rust build artifacts
+target/
+Cargo.lock
+
+# Soroban specific
+*.wasm
+soroban-*.log
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
