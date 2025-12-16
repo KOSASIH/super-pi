@@ -1,21 +1,31 @@
 [package]
-name = "super_pi_ecosystem"
+name = "super-pi-ecosystem"
 version = "0.1.0"
 edition = "2025"
 authors = ["KOSASIH"]
-description = "Super Pi Ecosystem: Hyper-Tech Autonomous Smart Contract for Full Pi Network Mainnet Opening and Decentralization"
-license = "MIT"
-keywords = ["pi-network", "soroban", "blockchain", "decentralization", "ai", "quantum"]
+description = "Hyper-Tech Autonomous Super App for Pi Network Mainnet Opening and Decentralization"
+license = "MIT OR Apache-2.0"
+keywords = ["pi-network", "blockchain", "soroban", "decentralization"]
 categories = ["cryptography::cryptocurrencies", "smart-contracts"]
 
 [lib]
 crate-type = ["cdylib"]
+doctest = false
 
 [dependencies]
-soroban-sdk = "0.10"
+soroban-sdk = "0.9"
+tokio = { version = "1.0", features = ["full"] }
+rayon = "1.5"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.10"
+regex = "1.5"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.0", features = ["v4"] }
+hex = "0.4"
 
 [dev-dependencies]
-soroban-sdk = { version = "0.10", features = ["testutils"] }
+soroban-sdk = { version = "0.9", features = ["testutils"] }
 
 [profile.release]
 opt-level = 3
@@ -24,10 +34,17 @@ rpath = false
 lto = true
 debug-assertions = false
 codegen-units = 1
-panic = 'abort'
+panic = "abort"
 incremental = false
 overflow-checks = true
 
-[workspace]
-resolver = "2"
-members = ["."]
+[profile.dev]
+opt-level = 0
+debug = true
+rpath = false
+lto = false
+debug-assertions = true
+codegen-units = 16
+panic = "unwind"
+incremental = true
+overflow-checks = true
