@@ -6,29 +6,47 @@ x-base: &base
   restart: unless-stopped
   networks:
     - superpi-network
+  logging:
+    driver: "json-file"
+    options:
+      max-size: "10m"
+      max-file: "3"
 
 x-env: &env
   NODE_ENV: production
   TZ: UTC
 
+x-deploy: &deploy
+  resources:
+    limits:
+      memory: 1G
+    reservations:
+      memory: 512M
+
 services:
-  # 🌟 Pi Wallet (Main Frontend + Purity System)
+  # 🌟 Pi Wallet (Main Frontend + Purity + Ecosystem Shield)
   wallet:
     build:
       context: ./apps/wallet
       dockerfile: Dockerfile
       args:
-        - NODE_VERSION=20
+        - NODE_VERSION=20.11
+        - PNPM_VERSION=8.15
     ports:
       - "3000:3000"
-      - "3001:3001"
+      - "3001:3001"  # Wallet API
     environment:
       <<: *env
       NEXT_PUBLIC_API_URL: http://api:3002
       NEXT_PUBLIC_PURITY_API: http://purity-node:3003
+      NEXT_PUBLIC_ECOSYSTEM_GUARD: http://ecosystem-guard:3005
+      NEXT_PUBLIC_EXPLORER_URL: http://explorer:3004
       DATABASE_URL: postgresql://postgres:${DB_PASSWORD}@db:5432/superpi
-      REDIS_URL: redis://redis:6379
+      REDIS_URL: redis://redis:6379/0
       WALLET_SECRET: ${WALLET_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+    volumes:
+      - wallet-cache:/app/.next/cache
     depends_on:
       db:
         condition: service_healthy
@@ -38,34 +56,35 @@ services:
         condition: service_healthy
       purity-node:
         condition: service_healthy
+      ecosystem-guard:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
       interval: 30s
       timeout: 10s
-      retries: 3
+      retries: 5
+      start_period: 40s
     <<: *base
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-        reservations:
-          memory: 512M
+    <<: *deploy
 
-  # 🔗 Pi API + Blockchain Node
+  # 🔗 Pi API + Smart Contracts
   api:
     build:
       context: ./apps/api
       dockerfile: Dockerfile
       args:
-        - NODE_VERSION=20
+        - NODE_VERSION=20.11
     ports:
       - "3002:3002"
     environment:
       <<: *env
       DATABASE_URL: postgresql://postgres:${DB_PASSWORD}@db:5432/superpi
-      REDIS_URL: redis://redis:6379
+      REDIS_URL: redis://redis:6379/1
       JWT_SECRET: ${JWT_SECRET}
       PI_BLOCKCHAIN_RPC: http://blockchain:8545
+      PURITY_SERVICE: http://purity-node:3003
+      ECOSYSTEM_GUARD: http://ecosystem-guard:3005
+      ETHERSCAN_API_KEY: ${ETHERSCAN_API_KEY}
     depends_on:
       db:
         condition: service_healthy
@@ -73,65 +92,10 @@ services:
         condition: service_healthy
       blockchain:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    <<: *base
-
-  # 🌟 Purity Tracker + Dual Value System
-  purity-node:
-    build:
-      context: ./packages/purity-tracker
-      dockerfile: Dockerfile
-    ports:
-      - "3003:3003"
-    environment:
-      <<: *env
-      REDIS_URL: redis://redis:6379
-      EXCHANGE_DB_URL: ${EXCHANGE_DB_URL}
-      ML_MODEL_PATH: /app/models/taint-model-v2.onnx
-    volumes:
-      - purity-data:/app/data
-      - ./models:/app/models:ro
-    depends_on:
-      redis:
+      purity-node:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    <<: *base
-
-  # ⛓️ Pi Blockchain Node (Geth + Custom Pi Chain)
-  blockchain:
-    image: ethereum/client-go:v1.13.14
-    command: >
-      --datadir /data 
-      --http 
-      --http.addr 0.0.0.0 
-      --http.port 8545 
-      --http.corsdomain "*" 
-      --http.api eth,net,web3,debug 
-      --ws 
-      --ws.addr 0.0.0.0 
-      --ws.port 8546 
-      --ws.origins "*" 
-      --ws.api eth,net,web3,debug 
-      --syncmode full 
-      --maxpeers 50
-    ports:
-      - "8545:8545"
-      - "8546:8546"
-      - "30303:30303"
-    volumes:
-      - blockchain-data:/data
-    environment:
-      <<: *env
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8545"]
+      test: ["CMD-SHELL", "curl -f http://localhost:3002/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -139,11 +103,119 @@ services:
     deploy:
       resources:
         limits:
-          memory: 4G
-        reservations:
           memory: 2G
+        reservations:
+          memory: 1G
 
-  # 🗄️ PostgreSQL 16 (Production Ready)
+  # 🛡️ ECOSYSTEM GUARD - PERMANENT TAINT PROTECTION
+  ecosystem-guard:
+    build:
+      context: ./packages/ecosystem-guard
+      dockerfile: Dockerfile
+      args:
+        - NODE_VERSION=20.11
+    ports:
+      - "3005:3005"
+    environment:
+      <<: *env
+      REDIS_URL: redis://redis:6379/2
+      TAINT_DB_INDEX: 2
+      EXCHANGE_ORACLE_URLS: ${EXCHANGE_ORACLE_URLS}
+      BLACKLIST_UPDATE_INTERVAL: 300  # 5 minutes
+      NODE_ID: ecosystem-guard-01
+    volumes:
+      - taint-data:/app/data
+      - ./blacklists:/app/blacklists:ro
+    depends_on:
+      redis:
+        condition: service_healthy
+      purity-node:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3005/health || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    <<: *base
+    deploy:
+      resources:
+        limits:
+          memory: 1.5G
+        reservations:
+          memory: 768M
+
+  # 🌟 Purity Tracker + Dual Value System (Enhanced)
+  purity-node:
+    build:
+      context: ./packages/purity-tracker
+      dockerfile: Dockerfile
+      args:
+        - NODE_VERSION=20.11
+    ports:
+      - "3003:3003"
+    environment:
+      <<: *env
+      REDIS_URL: redis://redis:6379/3
+      EXCHANGE_DB_URL: ${EXCHANGE_DB_URL}
+      ML_MODEL_PATH: /app/models/taint-model-v3.onnx
+      ECOSYSTEM_GUARD_URL: http://ecosystem-guard:3005
+      TAINT_CHECK_ENABLED: "true"
+    volumes:
+      - purity-data:/app/data
+      - ./models:/app/models:ro
+    depends_on:
+      redis:
+        condition: service_healthy
+      ecosystem-guard:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3003/health || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+    <<: *base
+    <<: *deploy
+
+  # ⛓️ Pi Blockchain Node (Custom Pi Chain)
+  blockchain:
+    image: ethereum/client-go:v1.13.14
+    command: >
+      --datadir /data 
+      --http --http.addr 0.0.0.0 --http.port 8545 --http.corsdomain "*" 
+      --http.api eth,net,web3,debug,admin 
+      --ws --ws.addr 0.0.0.0 --ws.port 8546 --ws.origins "*" 
+      --ws.api eth,net,web3,debug,admin 
+      --syncmode snap --maxpeers 100 --cache 4096
+      --authrpc.addr 0.0.0.0 --authrpc.port 8551 --authrpc.vhosts=*
+      --authrpc.jwtsecret /config/jwt.hex
+    ports:
+      - "8545:8545"
+      - "8546:8546"
+      - "30303:30303"
+      - "30304:30304/udp"
+      - "8551:8551"
+    volumes:
+      - blockchain-data:/data
+      - ./config/jwt.hex:/config/jwt.hex:ro
+    environment:
+      <<: *env
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f -X POST -H 'Content-Type: application/json' --data '{\"jsonrpc\":\"2.0\",\"method\":\"eth_blockNumber\",\"params\":[],\"id\":1}' http://localhost:8545 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+    <<: *base
+    deploy:
+      resources:
+        limits:
+          memory: 6G
+          cpus: '2.0'
+        reservations:
+          memory: 4G
+          cpus: '1.0'
+
+  # 🗄️ PostgreSQL 16 Cluster (HA Ready)
   db:
     image: postgres:16-alpine
     ports:
@@ -152,12 +224,50 @@ services:
       POSTGRES_DB: superpi
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-db:/docker-entrypoint-initdb.d:ro
-    command: postgres -c shared_preload_libraries=pg_stat_statements -c max_connections=200
+      - ./backups:/backups
+    command: >
+      postgres
+      -c shared_preload_libraries=pg_stat_statements,pg_stat_io
+      -c max_connections=300
+      -c wal_buffers=64MB
+      -c checkpoint_completion_target=0.9
+      -c log_min_duration_statement=1000
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d superpi"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    <<: *base
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '1.5'
+        reservations:
+          memory: 2G
+
+  # 🗃️ Redis Sentinel Cluster
+  redis:
+    image: redis:7.2-alpine
+    command: >
+      redis-server
+      --appendonly yes
+      --maxmemory 2gb
+      --maxmemory-policy allkeys-lru
+      --save 60 1
+      --save 300 100
+    ports:
+      - "6379:6379"
+      - "16379:16379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -165,77 +275,123 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2G
+          memory: 2.5G
         reservations:
-          memory: 1G
+          memory: 1.5G
 
-  # 🗃️ Redis Cluster (High Performance)
-  redis:
-    image: redis:7-alpine
-    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-    <<: *base
-
-  # 📊 Block Explorer
+  # 📊 Block Explorer + Taint Visualizer
   explorer:
-    build: ./apps/explorer
+    build:
+      context: ./apps/explorer
+      dockerfile: Dockerfile
+      args:
+        - NODE_VERSION=20.11
     ports:
       - "3004:3004"
     environment:
       <<: *env
       API_URL: http://api:3002
       BLOCKCHAIN_RPC: http://blockchain:8545
+      PURITY_API: http://purity-node:3003
+      GUARD_API: http://ecosystem-guard:3005
     depends_on:
       api:
         condition: service_healthy
       blockchain:
         condition: service_healthy
+      ecosystem-guard:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3004/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     <<: *base
+    <<: *deploy
 
-  # 🔍 Pi Coin Analytics + ML Taint Detection
+  # 📈 Analytics + ML Taint Detection
   analytics:
     build: ./packages/analytics
     environment:
       <<: *env
       DATABASE_URL: postgresql://postgres:${DB_PASSWORD}@db:5432/superpi_analytics
-      REDIS_URL: redis://redis:6379
+      REDIS_URL: redis://redis:6379/4
+      GUARD_SERVICE: http://ecosystem-guard:3005
     depends_on:
       db:
         condition: service_healthy
       redis:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     <<: *base
 
-  # 🛡️ Nginx Reverse Proxy + SSL
+  # 🛡️ Nginx + SSL + Load Balancer
   nginx:
-    image: nginx:alpine
+    image: nginx:1.25-alpine
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/sites:/etc/nginx/sites-available:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
       - certbot-www:/var/www/certbot
+      - nginx-logs:/var/log/nginx
     depends_on:
       - wallet
       - api
       - explorer
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     <<: *base
 
-  # 📧 Email Service (Transaction Notifications)
+  # 📧 Notification Service
   mail:
-    image: maildev/maildev:latest
+    image: maildev/maildev:2.0.5
     ports:
       - "1080:1080"
       - "1025:1025"
+    volumes:
+      - mail-data:/app/data
+    environment:
+      <<: *env
+    <<: *base
+
+  # 🧹 Log Aggregator + Monitoring
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    <<: *base
+
+  grafana:
+    image: grafana/grafana:10.3.3
+    ports:
+      - "3006:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana-provisioning:/etc/grafana/provisioning
+    depends_on:
+      - prometheus
     <<: *base
 
 networks:
@@ -244,6 +400,8 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/16
+          gateway: 172.20.0.1
+    enable_ipv6: false
 
 volumes:
   postgres_data:
@@ -254,5 +412,17 @@ volumes:
     driver: local
   purity-data:
     driver: local
+  taint-data:
+    driver: local
+  wallet-cache:
+    driver: local
   certbot-www:
+    driver: local
+  nginx-logs:
+    driver: local
+  mail-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
     driver: local
