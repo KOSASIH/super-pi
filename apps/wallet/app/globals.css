@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 🌟 Pi Stablecoin Custom Styles */
+.pi-stablecoin-highlight {
+  @apply bg-gradient-to-r from-emerald-500 to-emerald-600 bg-clip-text text-transparent font-black tracking-tight;
+}
+
+.pi-value-display {
+  @apply flex flex-col items-center p-8 bg-gradient-to-br from-emerald-50 to-green-50 rounded-3xl border-4 border-emerald-200 shadow-2xl;
+}
+
+.pi-value-badge {
+  @apply inline-flex items-center px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider border-2 bg-emerald-100 border-emerald-400 text-emerald-800 hover:bg-emerald-200 transition-all duration-200;
+}
+
+.pi-shield-protection {
+  @apply relative bg-gradient-to-r from-red-50 via-amber-50 to-emerald-50 border-2 border-gradient-to-r border-red-200/50 amber-200/50 emerald-200/50 p-6 rounded-2xl animate-pulse-slow;
+}
+
+/* Purity Status Animations */
+@keyframes pure-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.5); }
+  50% { box-shadow: 0 0 40px rgba(16, 185, 129, 0.8); }
+}
+
+.pure-pi-glow {
+  animation: pure-glow 2s ease-in-out infinite;
+}
+
+/* Taint Warning */
+.taint-warning {
+  @apply bg-gradient-to-r from-red-500/10 to-orange-500/10 border-2 border-red-200/50 backdrop-blur-sm;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  @apply w-2 h-2 bg-gray-100 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-emerald-400 hover:bg-emerald-500 rounded-full;
+}
+
+/* Stablecoin Typography */
+.pi-value-title {
+  @apply text-5xl md:text-7xl font-black bg-clip-text text-transparent bg-gradient-to-r from-emerald-600 via-blue-600 to-purple-600;
+}
