@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --pi-emerald: 136 98 108; /* Emerald 600 HSL */
+    --pi-pure-glow: 0 0 0 1px hsl(var(--pi-emerald));
+  }
+}
+
+/* shadcn/ui Pi Theme Extensions */
+.pi-button-stablecoin {
+  @apply bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white font-bold shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/50 transition-all duration-300;
+}
