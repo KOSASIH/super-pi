@@ -1,0 +1,3 @@
+numpy>=1.26.0
+cryptography>=42.0.0
+pydantic>=2.6.0

@@ -1,0 +1,5 @@
+web3>=6.15.0
+stellar-sdk>=9.0.0
+aiohttp>=3.9.0
+pydantic>=2.6.0
+schedule>=1.2.0
