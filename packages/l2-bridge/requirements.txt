@@ -1,0 +1,4 @@
+web3>=6.15.0
+aiohttp>=3.9.0
+pydantic>=2.6.0
+cryptography>=42.0.0

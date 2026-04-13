@@ -1,0 +1,2 @@
+numpy>=1.26.0
+pydantic>=2.6.0
