@@ -1,0 +1,37 @@
+{
+  "network_id": "super-pi-l2",
+  "version": "2.0.0",
+  "l1_chain": "pi-mainnet",
+  "l2_type": "optimistic_rollup_with_zk_fallback",
+  "sequencer": {
+    "address": "GCKUNNC6X6LKYJXKTQEJAQQ2J6NTIHMRNJFM2KY6KIBB46BOPMKVXDQN",
+    "batch_interval_ms": 2000,
+    "max_batch_size": 500,
+    "compression": "zstd"
+  },
+  "bridges": {
+    "arbitrum": {
+      "enabled": true,
+      "contract": "0x373Ec75e4e99CA59e367bA667EC38B2e14Af390B",
+      "asset": "USDT",
+      "finality_blocks": 20
+    },
+    "ethereum": {
+      "enabled": true,
+      "asset": "WETH",
+      "finality_blocks": 32
+    }
+  },
+  "fraud_proof_window_hours": 168,
+  "zk_fallback_enabled": true,
+  "supernode_min_count": 7,
+  "supernode_target_count": 21,
+  "rpc_endpoints": [
+    "https://rpc.super-pi-l2.io",
+    "https://rpc2.super-pi-l2.io"
+  ],
+  "explorer": "https://explorer.super-pi-l2.io",
+  "gas_token": "PI",
+  "block_time_ms": 500,
+  "max_tps": 10000
+}

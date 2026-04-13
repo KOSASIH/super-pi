@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "owner": "KOSASIH",
+  "network": "super-pi-l2",
+  "payout_rules": [
+    {
+      "asset": "USDT",
+      "chain": "arbitrum",
+      "address": "0x373Ec75e4e99CA59e367bA667EC38B2e14Af390B",
+      "percentage": 80
+    },
+    {
+      "asset": "PI",
+      "chain": "pi-mainnet",
+      "address": "GCKUNNC6X6LKYJXKTQEJAQQ2J6NTIHMRNJFM2KY6KIBB46BOPMKVXDQN",
+      "percentage": 20,
+      "note": "Operational gas + surplus"
+    }
+  ],
+  "withdraw_schedule": {
+    "frequency": "weekly",
+    "day": "Friday",
+    "time": "00:00 UTC",
+    "min_threshold_usd": 50
+  },
+  "gas_policy": "deduct_from_pi_allocation"
+}

@@ -1,0 +1,32 @@
+{
+  "agent": "Chronos Oracle",
+  "version": "1.0.0",
+  "skills": ["self-healing", "auto-scale", "latency-opt", "anomaly-ai"],
+  "monitor": {
+    "target": "pi_node",
+    "protocol": "rpc",
+    "interval_ms": 1000,
+    "detection_sla_ms": 10000,
+    "uptime_target": 99.999
+  },
+  "prediction": {
+    "horizon_hours": 48,
+    "model": "lstm_transformer_hybrid",
+    "retrain_interval_hours": 6,
+    "confidence_threshold": 0.92
+  },
+  "auto_scale": {
+    "supernode_min": 7,
+    "supernode_max": 100,
+    "scale_up_latency_threshold_ms": 500,
+    "scale_down_idle_minutes": 30,
+    "deployment_backend": "docker_swarm"
+  },
+  "anomaly_detection": {
+    "algorithms": ["isolation_forest", "lstm_autoencoder", "z_score_adaptive"],
+    "sensitivity": 0.97,
+    "alert_channels": ["slack", "telegram", "email"]
+  },
+  "read_only": true,
+  "chain_write_enabled": false
+}
