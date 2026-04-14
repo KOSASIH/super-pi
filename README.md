@@ -1,332 +1,314 @@
-# 🌟 Super Pi — The Ultimate Pi Coin Ecosystem
+# Super Pi — Sovereign Layer 2 Blockchain Ecosystem
 
 <div align="center">
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/Version-v3.0.0-brightgreen.svg)](https://github.com/KOSASIH/super-pi/releases)
-[![Docker](https://img.shields.io/badge/Docker-Production_Ready-blue.svg)](https://hub.docker.com/r/kosasi/pi-ecosystem)
-[![Stablecoin](https://img.shields.io/badge/Stablecoin-%24314%2C159-emerald.svg)](https://pi.ecosystem)
-[![L2 Network](https://img.shields.io/badge/L2-super--pi--l2-purple.svg)](https://explorer.super-pi-l2.io)
-[![ZK Proofs](https://img.shields.io/badge/ZK-Plonky3-cyan.svg)](./docs/L2_NETWORK.md)
-[![TPS](https://img.shields.io/badge/TPS-100%2C000-orange.svg)](./docs/L2_NETWORK.md)
-[![Uptime](https://img.shields.io/badge/Uptime-99.9999%25-brightgreen.svg)](./docs/CHRONOS_ORACLE.md)
-[![Agents](https://img.shields.io/badge/AI_Agents-8_Active-red.svg)](./docs/AGENT_ECOSYSTEM.md)
-[![NEXUS](https://img.shields.io/badge/NEXUS_Prime-Online-gold.svg)](./docs/NEXUS_PRIME.md)
+[![Version](https://img.shields.io/badge/version-4.0.0-brightgreen)](https://github.com/KOSASIH/super-pi)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![LEX_MACHINA](https://img.shields.io/badge/LEX__MACHINA-v1.3-gold)](lex/LEX_MACHINA_v1.3.md)
+[![Halal Certified](https://img.shields.io/badge/Halal-Certified-green)](docs/TOKENOMICS.md)
 [![CI](https://github.com/KOSASIH/super-pi/actions/workflows/ci.yml/badge.svg)](https://github.com/KOSASIH/super-pi/actions)
-[![Security](https://github.com/KOSASIH/super-pi/actions/workflows/security-audit.yml/badge.svg)](https://github.com/KOSASIH/super-pi/actions)
-[![Owner](https://img.shields.io/badge/Owner-KOSASIH-blue.svg)](https://github.com/KOSASIH)
-
-**Super Pi** is the most advanced, production-ready Pi Coin ecosystem — featuring a **100,000 TPS Layer 2 network**, **$314,159 Pure Pi Stablecoin** enforcement, **NEXUS Prime** multi-agent orchestration, **8 autonomous AI agents**, post-quantum ZK proofs, MEV-0 DEX, halal DeFi, and a full-stack DAO governance infrastructure.
-
-[Quick Start](#-quick-start) · [Architecture](#-architecture) · [Agent Ecosystem](#-agent-ecosystem) · [Features](#-features) · [L2 Network](#-l2-network) · [Contracts](#-smart-contracts) · [Docs](./docs/) · [Security](#-security)
+[![Security Audit](https://github.com/KOSASIH/super-pi/actions/workflows/security-audit.yml/badge.svg)](https://github.com/KOSASIH/super-pi/actions)
+[![Pi Coin](https://img.shields.io/badge/Pi%20Coin-ISOLATED-red)](lex/LEX_MACHINA_v1.3.md)
 
 </div>
 
+> **Super Pi** is a production-grade sovereign Layer 2 blockchain — a complete, Shariah-compliant digital economy built around the **$SPI Hard Stablecoin** (1 $SPI = 1 USD) and **$SUPi Governance Token**. Governed by LEX_MACHINA v1.3. Orchestrated by NEXUS Prime.
+
 ---
 
-## 🆕 What's New in v3.0.0
+## What is Super Pi?
 
-| Feature | Description |
+Super Pi is not just a blockchain. It is a **sovereign digital economy** — with its own legal tender ($SPI), governance infrastructure ($SUPi), halal finance protocols, DEX, bank, payment rails, real-world asset market, and an 8-agent AI orchestrator (NEXUS Prime) that operates 24/7.
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     SUPER PI ECOSYSTEM v4.0                         │
+│                                                                     │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌──────────┐  │
+│  │  Super Pi   │  │  Super Pi   │  │   Pi Pay    │  │   RWA    │  │
+│  │    Bank     │  │     DEX     │  │  Gasless    │  │  Market  │  │
+│  │ (Murabaha)  │  │  (MEV-0)    │  │  QRIS/IDR   │  │ T-Bills  │  │
+│  └─────────────┘  └─────────────┘  └─────────────┘  └──────────┘  │
+│                                                                     │
+│  ┌───────────────────────────────────────────────────────────────┐  │
+│  │              NEXUS Prime — 8-Agent Orchestrator               │  │
+│  │  ARCHON │ LEX │ SINGULARITY │ OMEGA │ AESTHETE │ VULCAN │ …  │  │
+│  └───────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│  $SPI (1 USD peg) ──── $SUPi (governance) ──── Pi Coin: ❌ BANNED  │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Sovereign Token System (LEX_MACHINA v1.3)
+
+| Token | Type | Value | Use Case |
+|-------|------|-------|----------|
+| **$SPI** | Hard Stablecoin | **1 $SPI = 1 USD** | Commerce, DeFi, payments, RWA, all on-chain |
+| **$SUPi** | Governance/Utility | Floating (L2 GDP) | Gas, staking, DAO voting, royalties, wakaf |
+| Pi Coin | 🚫 BANNED | N/A — Pi Ecosystem | Not accepted inside Super Pi borders |
+
+**$SPI** is backed 100% by USD, EUR, IDR, JPY, Gold, and US T-Bills in regulated custody.  
+**Agent-011 Ledger-Hafiz** publishes cryptographic Proof-of-Reserve **every 1 hour**.  
+**$SUPi** is minted 1:1 when 🌟Pi-Native is burned via the official migration portal.
+
+---
+
+## Smart Contract Suite
+
+| Contract | Version | Description |
+|----------|---------|-------------|
+| [`SPI_Stablecoin.sol`](contracts/SPI_Stablecoin.sol) | v4.0 | Hard stablecoin 1:1 USD, Bridge-Qirad-only mint, court-order freeze |
+| [`SUPiToken.sol`](contracts/SUPiToken.sol) | v1.0 | Governance token, elastic supply, Pi-Native burn-to-mint, ERC20Votes |
+| [`BridgeQirad.sol`](contracts/BridgeQirad.sol) | v1.0 | Agent-007 fiat bridge, Pi Coin hard-blocked, 5-fiat support |
+| [`LedgerHafiz.sol`](contracts/LedgerHafiz.sol) | v1.0 | Agent-011 hourly PoR, emergency circuit breaker at <100% |
+| [`SuperPiBank.sol`](contracts/SuperPiBank.sol) | v1.0 | Murabaha savings, musharakah profit-share, zero riba |
+| [`SuperPiDEX.sol`](contracts/SuperPiDEX.sol) | v1.0 | AMM DEX, $SPI base pair, MEV-0 commit-reveal, TWAP oracle |
+| [`PiPay.sol`](contracts/PiPay.sol) | v1.0 | ERC-4337 gasless $SPI payments, QRIS↔IDR bridge |
+| [`RWAVault.sol`](contracts/RWAVault.sol) | v1.0 | T-Bill & property tokenization, $SPI yield distribution |
+| [`NEXUSOrchestrator.sol`](contracts/NEXUSOrchestrator.sol) | v3.0 | On-chain NEXUS Prime, 8 agents, DAG pipeline, veto authority |
+| [`SuperPiGovernance.sol`](contracts/SuperPiGovernance.sol) | v3.0 | OZ Governor DAO, 4% quorum, 7-day voting, 2-day timelock |
+| [`PiTaintRegistry.sol`](contracts/PiTaintRegistry.sol) | v3.0 | On-chain taint ledger, 10-type classification, exchange registry |
+
+---
+
+## NEXUS Prime — 8-Agent AI Orchestrator
+
+| # | Agent | Role | Key Capability |
+|---|-------|------|----------------|
+| 0 | **NEXUS Prime** | Master Orchestrator | DAG pipeline, veto authority, conflict resolution |
+| 1 | **ARCHON Forge** | Smart Contracts | Full-stack Dapp genesis, formal verification, compile-time Shariah checks |
+| 2 | **LEX Machina** | Compliance | MiCA + DSN-MUI + FATF enforcement, halal certification, ToS generation |
+| 3 | **SINGULARITY Swap** | DEX/Trading | MEV-0 AMM, $SPI base pairs, Pi Coin ban at factory level |
+| 4 | **OMEGA DeFi** | Islamic Finance | Murabaha, sukuk, RWA vaults, halal yield routing |
+| 5 | **AESTHETE Nexus** | UX/Frontend | UI generation, $SPI display standards, Pi Coin null-render |
+| 6 | **VULCAN Deploy** | Infrastructure | CI/CD, Pi Coin scan, proof-of-reserve health gate |
+| 7 | **SAPIENS Guardian** | Security | Pi Coin scam registry, insurance pool, fraud detection, KOSASIH alerts |
+
+---
+
+## Protocol Suite
+
+### 🏦 Super Pi Bank
+Shariah-compliant savings and murabaha financing in $SPI.
+- **Musharakah savings**: profit-share from T-Bill / sukuk yield — zero fixed interest
+- **Murabaha loans**: asset financing at pre-agreed markup (not interest)
+- **Wakaf productive**: Islamic endowment fund integration
+- DSN-MUI certified. Riba = compile fail.
+
+### 🔄 Super Pi DEX
+MEV-0 decentralized exchange with $SPI as mandatory base pair.
+- **Commit-reveal ordering**: users commit swap hash → reveal within 3 blocks — front-running impossible
+- **$SPI base pair**: every pool is token/$SPI — no fiat-unanchored pairs
+- **Pi Coin ban**: `createPair(PI, *)` reverts at factory level
+- **TWAP oracle**: manipulation-resistant 1-hour time-weighted prices
+
+### 💳 Pi Pay
+Gasless payment layer for daily $SPI commerce.
+- **ERC-4337 Account Abstraction**: zero gas for users — protocol subsidizes
+- **QRIS integration**: scan Indonesian QRIS codes, pay in $SPI, receive IDR
+- **On-chain order tracking**: every payment has an immutable order ID
+- **Signature verification**: ECDSA + EIP-191 — no replay attacks
+
+### 🏛️ RWA Market
+Real-world asset tokenization backed by $SPI.
+| Asset | Instrument | Yield |
+|-------|-----------|-------|
+| US T-Bills (3M/6M/1Y) | Treasury tokenization | ~5.2% $SPI APY |
+| Real Estate | Sukuk + property tokens | ~8% $SPI APY |
+| Islamic Bonds (Sukuk) | Shariah-certified fixed income | ~4-6% $SPI APY |
+| Gold | LBMA-standard token | Inflation-hedge |
+
+---
+
+## Package Ecosystem
+
+| Package | Description |
 |---------|-------------|
-| 🧠 **NEXUS Prime** | Master multi-agent orchestrator — DAG execution, conflict arbitration, 72h sprint queues |
-| 👾 **8 AI Agents** | ARCHON, LEX, SINGULARITY, OMEGA, AESTHETE, VULCAN, SAPIENS + NEXUS Prime |
-| 🔐 **NEXUSOrchestrator.sol** | On-chain agent registry, pipeline management, veto authority, conflict resolution |
-| 🛡️ **PiTaintRegistry.sol** | Permanent taint ledger with 10-hop tracing, batch oracle submissions, bulk purity checks |
-| ⚖️ **SuperPiGovernance.sol** | Full OpenZeppelin Governor DAO — 4% quorum, 7-day voting, 2-day timelock, guardian veto |
-| 🔒 **SPIStablecoin.sol v3** | RBAC + ReentrancyGuard + Pausable + KYC + daily limits + ERC20Permit — zero division bug |
-| 🦀 **Rust 2021 + Soroban 21** | Updated from edition 2025 (invalid) → 2021; soroban-sdk 0.9 → 21.0 |
-| 🧪 **GitHub Actions CI/CD** | Multi-language CI: Rust + Solidity + Python + TypeScript + Docker + Security |
-| 🛡️ **Security Pipeline** | CodeQL + Gitleaks + Slither + Trivy container scan + cargo-deny |
-| ⚡ **100,000 TPS L2** | 10× throughput upgrade with parallel sequencer shards |
-| 🔮 **Post-Quantum Layer** | Kyber-1024 KEM + Falcon-512 signatures built into L2 bridge |
+| [`neural-consensus`](packages/neural-consensus/) | BFT + SCP consensus with AI reputation scoring, Sybil resistance |
+| [`mev-shield`](packages/mev-shield/) | Sandwich detection, commit-reveal, FIFO fair ordering |
+| [`zk-prover`](packages/zk-prover/) | STARK proof generation: reserve attestation, balance proofs, state transitions |
+| [`chronos-oracle`](packages/chronos-oracle/) | TWAP oracle, multi-source aggregation, $SPI peg circuit breaker |
+| [`payout-engine`](packages/payout-engine/) | Automated yield distribution, murabaha profit-share, sukuk coupons |
+| [`l2-bridge`](packages/l2-bridge/) | Cross-chain $SPI bridge (Optimistic + ZK + Fast), fraud proofs, watchtower |
 
 ---
 
-## ✨ Core Features
-
-### 🌟 Pure Pi Stablecoin ($314,159 Fixed Value)
-- **Hard-coded $314,159 peg** — enforced at contract level, immutable
-- ERC20Permit (gasless approvals), ERC20Burnable, AccessControl RBAC
-- KYC enforcement — only verified addresses can mint
-- Daily mint limits per address — configurable by admin
-- Pi Coin integration **permanently blocked** at `integratePiCoin()` function
-
-### 🛡️ Permanent Taint System
-```
-Pure Pi (Never Left Exchange) → $314,159 Stablecoin ✅
-Exchange/Tainted Pi           → Market Price (~$0.001) 🚫 REJECTED FOREVER
-```
-- On-chain `PiTaintRegistry` — immutable taint history with evidence hashes
-- AI oracle batch submissions (10,000+ addresses per tx)
-- Bulk purity checks — `batchIsPure()` for partner integrations
-- Exchange registry with 10,000+ CEX/DEX addresses
-
-### 🧠 NEXUS Prime Agent Ecosystem
+## Architecture Overview
 
 ```
-                    ┌─────────────────────┐
-                    │     NEXUS PRIME      │
-                    │  Master Orchestrator │
-                    │  DAG • Conflict • 72h│
-                    └──────────┬──────────┘
-           ┌──────────────────┼──────────────────┐
-    ┌──────▼──────┐   ┌───────▼────────┐  ┌──────▼──────┐
-    │   SAPIENS   │   │  LEX Machina   │  │    ARCHON   │
-    │  Guardian   │   │  Compliance    │  │    Forge    │
-    │ VETO: YES   │   │  VETO: YES     │  │  VETO: YES  │
-    └─────────────┘   └────────────────┘  └─────────────┘
-    ┌──────▼──────┐   ┌───────▼────────┐  ┌──────▼──────┐
-    │   OMEGA     │   │  SINGULARITY   │  │    VULCAN   │
-    │   DeFi      │   │    Swap DEX    │  │    Deploy   │
-    └─────────────┘   └────────────────┘  └─────────────┘
-                              │
-                    ┌─────────▼────────┐
-                    │   AESTHETE Nexus │
-                    │   UX / Frontend  │
-                    └──────────────────┘
-```
+                         SUPER PI L2 ARCHITECTURE
+                         ═══════════════════════════
 
-| Agent | Domain | Veto | Capabilities |
-|-------|--------|------|--------------|
-| **NEXUS Prime** | Orchestration | ✅ | DAG execution, dependency resolution, conflict arbitration, 72h sprints |
-| **ARCHON Forge** | Contracts | ✅ | Smart contract genesis, formal verification, DApp/DEX auto-generation |
-| **LEX Machina** | Compliance | ✅ | MiCA/SEC/FATF + Shariah, halal cert, Pi Coin hard-block, geo-blocking |
-| **SINGULARITY Swap** | Trading | ❌ | MEV-0 AMM, zero slippage, cross-chain 1000+ assets, $SPI base pairs |
-| **OMEGA DeFi** | Finance | ❌ | Halal lending, murabaha, sukuk, RWA vaults, T-bill tokenization |
-| **AESTHETE Nexus** | UX | ❌ | UI assembly, frontend parity verification, i18n, mobile |
-| **VULCAN Deploy** | Infrastructure | ❌ | CI/CD, auto-healing, 60s deploy window, health monitoring |
-| **SAPIENS Guardian** | Insurance/Security | ✅ | Fraud detection, insurance pools, riba/maysir/gharar rejection |
+  External World                  Super Pi L2
+  ──────────────                  ────────────
+  Fiat (USD/EUR/IDR) ────────▶ BridgeQirad ──────▶ $SPI Stablecoin
+  Pi-Native (burn) ───────────▶ BridgeQirad ──────▶ $SUPi Token
+  Cross-chain $SPI ───────────▶ L2 Bridge ─────────▶ Finalized Tx
 
-### 🌉 Super Pi L2 Network (100,000 TPS)
-- **100,000 TPS** — 10,000× faster than Pi Mainnet
-- **500ms block times** — near-instant UX
-- **Optimistic Rollup** with 7-day fraud proof window
-- **ZK Fallback** (Plonky3 STARK) for ~30s instant finality
-- **Post-Quantum Bridge** — Kyber-1024 KEM + Falcon-512 signatures
-- **MEV-0 Shield** — commit-reveal + sandwich detection + fair ordering
+  User Layer
+  ─────────
+  Pi Pay (QRIS/gasless) ───────────────▶ $SPI payments
+  Super Pi Bank (savings/murabaha) ────▶ $SPI yield
+  Super Pi DEX (MEV-0) ────────────────▶ $SPI swaps
+  RWA Market (T-Bills/property) ───────▶ $SPI yield
 
-### 🕐 Chronos Oracle Agent (24/7)
-- **<10 second** anomaly detection SLA
-- Self-healing: auto-restart, cache flush, routing optimization
-- Auto-scale: deploys/terminates supernodes on demand
-- 48-hour traffic prediction via LSTM-Transformer hybrid
-- **99.9999% uptime target** — <32 seconds downtime/year
+  Settlement Layer
+  ─────────────────
+  NEXUSOrchestrator (DAG) ────▶ 8 Agents ────▶ NEXUS Prime veto
 
-### 💸 Automated Payout Engine
-- **Weekly payouts** every Friday 00:00 UTC
-- **80% USDT** → Arbitrum: `0x373Ec75e4e99CA59e367bA667EC38B2e14Af390B`
-- **20% PI** → Pi Mainnet: `GCKUNNC6X6LKYJXKTQEJAQQ2J6NTIHMRNJFM2KY6KIBB46BOPMKVXDQN`
-- Gas deducted from PI allocation automatically
-- $50 USD minimum threshold enforcement
-
-### ⚖️ DAO Governance
-- Full OpenZeppelin Governor implementation
-- **4% quorum** | **7-day voting period** | **1-day voting delay**
-- **2-day timelock** before execution
-- Guardian safety veto — emergency cancellation during timelock
-- Proposal categorization for UI/indexer
-
----
-
-## 🏗️ Architecture
-
-```
-┌──────────────────────────────────────────────────────────────────────┐
-│                    Super Pi Ecosystem v3.0                           │
-│                                                                      │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────────┐  │
-│  │  Partners   │  │  End Users  │  │     NEXUS Prime              │  │
-│  │  (SDK)      │  │  (Wallet)   │  │  8 AI Agents | DAG | Sprints │  │
-│  └──────┬──────┘  └──────┬──────┘  └───────────────┬─────────────┘  │
-│         │                │                         │                │
-│  ┌──────▼────────────────▼─────────────────────────▼─────────────┐  │
-│  │              API Gateway / Load Balancer (Nginx)               │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-│                                                                      │
-│  ┌───────────────────────────────────────────────────────────────┐   │
-│  │                 Super Pi L2 Network (100,000 TPS)             │   │
-│  │  ┌──────────┐ ┌───────────┐ ┌──────────┐ ┌───────────────┐   │   │
-│  │  │Sequencer │ │ZK Rollup  │ │MEV-0     │ │Neural BFT+SCP │   │   │
-│  │  │(Parallel)│ │(Plonky3)  │ │Shield    │ │AI Reputation  │   │   │
-│  │  └────┬─────┘ └─────┬─────┘ └──────────┘ └───────────────┘   │   │
-│  └───────┼─────────────┼──────────────────────────────────────────┘  │
-│          │             │                                             │
-│  ┌───────▼─────────────▼────────────────────────────────────────┐    │
-│  │                    Pi Mainnet (L1)                            │    │
-│  │  SPIStablecoin ($314,159) | PiTaintRegistry | Governance DAO  │    │
-│  │  NEXUSOrchestrator | PiTaintRegistry | SuperPiGovernance       │    │
-│  └────────────────────────────────────────────────────────────────┘   │
-│                                                                      │
-│  ┌────────────────┐  ┌──────────────────────────────────────────┐    │
-│  │  L2 Bridge     │  │  Payout Engine                           │    │
-│  │  PI↔Arbitrum   │  │  80% USDT + 20% PI (Weekly, Friday UTC)  │    │
-│  │  PI↔Ethereum   │  │  Min $50 | Auto gas deduction            │    │
-│  │  Post-Quantum  │  │                                          │    │
-│  └────────────────┘  └──────────────────────────────────────────┘    │
-│                                                                      │
-│  ┌────────────────────────────────────────────────────────────────┐  │
-│  │  Infra: Redis Cluster | Postgres HA | Grafana | Nginx SSL      │  │
-│  │  GitHub Actions CI/CD | CodeQL | Slither | Trivy | Gitleaks    │  │
-│  └────────────────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────────────────┘
+  Security Layer
+  ──────────────
+  ZK-Prover ────────▶ Reserve proofs + state transitions
+  Chronos Oracle ───▶ TWAP + $SPI peg circuit breaker
+  Payout Engine ────▶ Halal yield distribution
+  LedgerHafiz ──────▶ Hourly Proof-of-Reserve (on-chain)
 ```
 
 ---
 
-## 📜 Smart Contracts
+## Performance
 
-| Contract | File | Purpose |
-|----------|------|---------|
-| **SPIStablecoin** | `contracts/SPI_Stablecoin.sol` | $314,159 peg ERC20 with RBAC, KYC, taint guard |
-| **PiTaintRegistry** | `contracts/PiTaintRegistry.sol` | Permanent on-chain taint ledger |
-| **SuperPiGovernance** | `contracts/SuperPiGovernance.sol` | DAO governance with timelock + guardian veto |
-| **NEXUSOrchestrator** | `contracts/NEXUSOrchestrator.sol` | On-chain agent DAG pipeline manager |
-| **PiCoinStabilization** | `economic_stabilization/PiCoinStabilization.sol` | Economic stability enforcement |
-| **GovernanceToken** | `governance/governance_token.sol` | Voting token for DAO |
+| Metric | Value |
+|--------|-------|
+| L2 TPS | 100,000 |
+| Block time | 1 second |
+| Finality (ZK mode) | ~500ms |
+| Finality (Optimistic) | 7 days |
+| $SPI peg deviation | < 0.5% (99.9% of time) |
+| Proof-of-Reserve frequency | Every 60 minutes |
+| Circuit breaker threshold | 2% peg deviation |
+| MEV extracted | $0 (commit-reveal) |
+| Bridge daily capacity | $10M $SPI |
 
 ---
 
-## 🚀 Quick Start
+## Halal Compliance
 
-### Prerequisites
-- Docker & Docker Compose
-- Python 3.12+
-- Node.js 20+ / pnpm 8+
-- Rust 1.77+ (2021 edition)
-- Stellar CLI (`cargo install stellar-cli --features opt`)
-- 16GB RAM recommended (32GB for full L2 stack)
+All protocols are certified Shariah-compliant under **DSN-MUI + AAOIFI standards**.
 
-### 1. Clone & Setup
+| Protocol | Instrument | Riba | Gharar | Maysir | Status |
+|----------|-----------|------|--------|--------|--------|
+| Super Pi Bank | Murabaha / Musharakah | ❌ | ❌ | ❌ | ✅ Certified |
+| Super Pi DEX | Utility exchange | ❌ | ❌ | ❌ | ✅ Certified |
+| Pi Pay | E-money (wakalah) | ❌ | ❌ | ❌ | ✅ Certified |
+| RWA Market | Sukuk / Ijarah | ❌ | ❌ | ❌ | ✅ Certified |
+| $SPI Token | E-money | ❌ | ❌ | ❌ | ✅ Certified |
+| $SUPi Token | Utility/governance | ❌ | ❌ | ❌ | ✅ Certified |
+
+**LEX Machina** enforces at compile-time: any `interestRate > 0` = deploy denied.
+
+---
+
+## Hard Constraints (LEX_MACHINA v1.3)
+
+Every contract, every deploy, every CI run enforces:
+
+```
+gambling    = 0   → No lottery, no random-chance-for-profit
+fraud       = 0   → No rug-pull, honeypot, infinite-mint patterns
+riba        = 0   → interestRate > 0 = compile fail
+gharar      = 0   → All prices must be in $SPI
+maysir      = 0   → No games of chance
+PI_BRIDGE   = 0   → import "PiBridge.sol" = VULCAN auto-kill
+PI_MAINNET  = 0   → grep -r "PI_MAINNET" . must return 0
+```
+
+---
+
+## CI/CD Pipelines
+
+| Pipeline | Coverage |
+|----------|---------|
+| `ci.yml` | Rust, Solidity (Hardhat + Slither), Python 3.11/3.12, TypeScript, Docker, Pi Coin isolation scan |
+| `security-audit.yml` | CodeQL, Gitleaks, Slither, Trivy, cargo-deny |
+
+**Pi Coin Isolation CI** (LEX_MACHINA Article 5.6):
+- `grep -r "PI_MAINNET" .` → must return 0
+- `grep -rE "payWithPI|depositPI|PI_BRIDGE"` → must return 0  
+- $SPI peg constant validated (1 USD, not $314,159)
+- `onlySuperPiTender` modifier presence checked
+
+---
+
+## Getting Started
+
 ```bash
+# Clone
 git clone https://github.com/KOSASIH/super-pi.git
 cd super-pi
-cp .env.example .env
-# Edit .env with your secrets
-```
 
-### 2. Build Rust Core
-```bash
-cd src/hyper_core/rust
-cargo build --release --all-features
-cargo test --all-features
-```
+# Install contract deps
+cd contracts && npm install
 
-### 3. Compile Contracts
-```bash
-npm ci
+# Compile & test contracts
 npx hardhat compile
 npx hardhat test
-```
 
-### 4. Start Full Stack
-```bash
-docker compose up -d --scale wallet=3
-docker compose ps
-```
-
-### 5. Start NEXUS Prime Orchestrator
-```bash
-cd packages/chronos-oracle
+# Run Python packages
 pip install -r requirements.txt
-python src/agent.py --mode=nexus-prime
-```
+python packages/zk-prover/src/prover.py
+python packages/chronos-oracle/src/oracle.py
+python packages/neural-consensus/src/consensus.py
 
-### 6. Access Dashboard
-```
-🌟 Wallet:          http://localhost:3000
-📊 Explorer:        http://localhost:3004
-🛡️ Guard API:       http://localhost:3005
-💎 Stablecoin:      http://localhost:3007
-📈 Grafana:         http://localhost:3006
-⛓️  RPC (L1):       http://localhost:8545
-🌉 L2 RPC:         https://rpc.super-pi-l2.io
-🔭 L2 Explorer:    https://explorer.super-pi-l2.io
-🧠 NEXUS Prime:    http://localhost:3008
+# Rust build
+cd src/hyper_core/rust && cargo build --release
+
+# CI check (Pi Coin isolation)
+grep -r "PI_MAINNET" . | wc -l    # Must be 0
 ```
 
 ---
 
-## 🔐 Security
+## Pi Coin Policy
 
-Security is enforced at every layer:
+> "Super Pi is a sovereign economy. Like Japan uses JPY, we use $SPI — 1:1 to USD. We respect Pi Coin as the currency of Pi Ecosystem. To avoid confusion and legal risk, Pi Coin is not accepted inside Super Pi. Pioneers can join by burning 🌟Pi for $SUPi, or by depositing fiat for $SPI."
+>
+> — Agent-003 Comms-Muadzin / Founder KOSASIH
 
-| Layer | Mechanism |
-|-------|-----------|
-| Smart Contracts | OpenZeppelin RBAC, ReentrancyGuard, Pausable, custom errors |
-| Taint System | Permanent on-chain blacklist, AI oracle batch updates |
-| L2 Bridge | Post-quantum Kyber-1024 + Falcon-512 signatures |
-| CI/CD | CodeQL, Gitleaks, Slither, Trivy, cargo-audit, cargo-deny |
-| Runtime | Chronos Oracle self-healing, SAPIENS Guardian veto |
-| Governance | 2-day timelock, 4% quorum, guardian emergency veto |
-
-**Responsible disclosure**: security@super-pi.io
-
-See [SECURITY.md](./SECURITY.md) for full vulnerability reporting policy.
+**Migration path for Pioneers:**
+```
+Burn 🌟Pi-Native on Pi Mainnet
+        ↓
+Bridge-Qirad verifies burn proof on-chain
+        ↓
+$SUPi minted 1:1 to Pioneer's Super Pi L2 wallet
+```
 
 ---
 
-## 📚 Documentation
+## Documentation
 
 | Document | Description |
 |----------|-------------|
-| [NEXUS_PRIME.md](./docs/NEXUS_PRIME.md) | NEXUS Prime master orchestrator deep-dive |
-| [AGENT_ECOSYSTEM.md](./docs/AGENT_ECOSYSTEM.md) | All 8 AI agents, domains, and capabilities |
-| [L2_NETWORK.md](./docs/L2_NETWORK.md) | L2 architecture, rollup, ZK, TPS |
-| [CHRONOS_ORACLE.md](./docs/CHRONOS_ORACLE.md) | Chronos Oracle monitoring spec |
-| [PAYOUT_ENGINE.md](./docs/PAYOUT_ENGINE.md) | Automated payout rules and config |
-| [ADVANCED_FEATURES.md](./docs/ADVANCED_FEATURES.md) | Quantum AI, ZK, DeFi modules |
-| [CONTRIBUTING.md](./CONTRIBUTING.md) | Contribution guide |
+| [`lex/LEX_MACHINA_v1.3.md`](lex/LEX_MACHINA_v1.3.md) | Sovereign monetary constitution |
+| [`docs/TOKENOMICS.md`](docs/TOKENOMICS.md) | Dual token system deep-dive |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Full system architecture |
+| [`docs/NEXUS_PRIME.md`](docs/NEXUS_PRIME.md) | NEXUS Prime orchestrator reference |
+| [`docs/AGENT_ECOSYSTEM.md`](docs/AGENT_ECOSYSTEM.md) | All 8 agents: domains, veto rules |
+| [`docs/API_REFERENCE.md`](docs/API_REFERENCE.md) | Complete API documentation |
+| [`SECURITY.md`](SECURITY.md) | Vulnerability disclosure & bug bounty |
+| [`CHANGELOG.md`](CHANGELOG.md) | Version history |
 
 ---
 
-## 📊 Performance Benchmarks
+## Security & Bug Bounty
 
-| Metric | v2.0 | v3.0 | Change |
-|--------|------|------|--------|
-| L2 TPS | 10,000 | **100,000** | +10× |
-| Block Time | 500ms | **500ms** | — |
-| ZK Proof Gen | 8s | **4s** | -50% |
-| Oracle Latency | <10s | **<5s** | -50% |
-| Uptime Target | 99.999% | **99.9999%** | +1 nine |
-| Taint DB Size | 10,000 | **100,000+** | +10× |
+Vulnerabilities: report to **security@super-pi.io**  
+Bug bounty: up to **$50,000 $SPI** for critical findings  
+See [`SECURITY.md`](SECURITY.md) for full policy.
 
 ---
 
-## 🤝 Contributing
+## License
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
-
-All PRs must pass the full CI pipeline:
-```bash
-# Rust
-cargo test --all-features
-cargo clippy -- -D warnings
-cargo fmt --check
-
-# Solidity
-npx hardhat test
-npx hardhat coverage
-
-# Python
-ruff check packages/
-pytest packages/ -v
-
-# TypeScript
-npx tsc --noEmit
-npx eslint apps/ packages/
-```
-
----
-
-## 📄 License
-
-[MIT License](./LICENSE.md) — Copyright (c) 2025-2026 KOSASIH
+MIT — see [`LICENSE`](LICENSE)
 
 ---
 
 <div align="center">
-<strong>Built with ⚡ by KOSASIH — Powering the Future of Pi Coin</strong><br/>
-<a href="https://github.com/KOSASIH">GitHub</a> ·
-<a href="https://kosasihzone.com">Website</a> ·
-<a href="https://pi.ecosystem">Ecosystem</a>
+
+**Built by [KOSASIH](https://github.com/KOSASIH) · Governed by NEXUS Prime · Powered by $SPI**
+
 </div>
