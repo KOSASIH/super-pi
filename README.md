@@ -132,3 +132,30 @@ sanctions = 0                      [OFAC/UN REAL-TIME]
 **Founder: KOSASIH · NEXUS Prime · NexusLaw v2.1**
 
 </div>
+
+
+---
+
+## 🔗 Integrated Ecosystem: NeuroForge Nexus
+
+Super Pi is connected to [KOSASIH/neuroforge-nexus](https://github.com/KOSASIH/neuroforge-nexus) —
+a Pinnacle BCI Ecosystem providing real-time EEG/ECoG signal processing, AI cognitive augmentation,
+and neural interface capabilities for the Super Pi L2 cognitive compute module.
+
+### Integration
+| Attribute | Value |
+|-----------|-------|
+| Submodule path | `integrations/neuroforge-nexus` |
+| Source | [KOSASIH/neuroforge-nexus](https://github.com/KOSASIH/neuroforge-nexus) |
+| Sync | Auto-synced via `neuroforge-nexus-updated` dispatch on every `main` push |
+| NexusLaw compliance | v2.1 enforced at CI level (`$SPI` only, `PI_BRIDGE=0`, `riba=0`) |
+
+```bash
+# Clone with submodule
+git clone --recurse-submodules https://github.com/KOSASIH/super-pi.git
+
+# Update submodule after clone
+git submodule update --init --remote integrations/neuroforge-nexus
+```
+
+> 🤝 NeuroForge Nexus integration is validated by SAPIENS NexusLaw v2.1 on every sync.
