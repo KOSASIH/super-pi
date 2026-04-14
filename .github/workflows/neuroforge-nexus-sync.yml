@@ -1,0 +1,84 @@
+# ╔══════════════════════════════════════════════════════════════════════════════╗
+# ║  Super Pi × NeuroForge Nexus — Cross-Repo Integration Dispatch             ║
+# ║  Triggered by: push to KOSASIH/neuroforge-nexus (via repository_dispatch)  ║
+# ╚══════════════════════════════════════════════════════════════════════════════╝
+name: NeuroForge Nexus Integration Sync
+
+on:
+  repository_dispatch:
+    types: [neuroforge-nexus-updated]
+  workflow_dispatch:
+    inputs:
+      nn_sha:
+        description: 'neuroforge-nexus commit SHA to pin'
+        required: false
+        default: ''
+      reason:
+        description: 'Reason for manual sync'
+        required: false
+        default: 'Manual trigger'
+
+jobs:
+  sync-submodule:
+    name: Sync neuroforge-nexus Submodule
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout super-pi (with submodules)
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          submodules: 'true'
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "VULCAN Deploy · Nexus Integration"
+          git config user.email "kosasihg88@gmail.com"
+
+      - name: Update neuroforge-nexus submodule
+        run: |
+          cd integrations/neuroforge-nexus
+          git fetch origin main
+          SHA="${{ github.event.client_payload.sha || inputs.nn_sha }}"
+          if [ -n "$SHA" ]; then
+            git checkout "$SHA"
+          else
+            git checkout origin/main
+          fi
+          cd ../..
+          git add integrations/neuroforge-nexus
+
+      - name: Commit submodule bump (if changed)
+        run: |
+          if git diff --staged --quiet; then
+            echo "Submodule already up-to-date, no commit needed."
+          else
+            NN_SHA=$(git -C integrations/neuroforge-nexus rev-parse HEAD)
+            REASON="${{ github.event.client_payload.reason || inputs.reason || 'Auto-sync from neuroforge-nexus push' }}"
+            git commit -m "chore(submodule): bump neuroforge-nexus → ${NN_SHA:0:10}
+
+$REASON
+Triggered by: ${{ github.event_name }}
+NexusLaw v2.1 | $SPI only | PI_BRIDGE=0"
+            git push origin master
+
+      - name: Validate NexusLaw compliance
+        run: |
+          echo "=== SAPIENS NexusLaw v2.1 Compliance Check ==="
+          # Block Pi Coin / riba references in integration code
+          if grep -r --include="*.py" --include="*.sol" --include="*.ts"                 "pi.coin\|PiCoin\|PI_COIN\|riba\|usury"                 integrations/neuroforge-nexus/ 2>/dev/null; then
+            echo "❌ NexusLaw violation detected in neuroforge-nexus integration!"
+            exit 1
+          fi
+          echo "✅ NexusLaw compliance: PASSED"
+
+      - name: Notify Super Pi ecosystem
+        if: success()
+        run: |
+          echo "✅ NeuroForge Nexus integration synced successfully"
+          echo "   Submodule: integrations/neuroforge-nexus"
+          echo "   Source:    https://github.com/KOSASIH/neuroforge-nexus"
+          echo "   Status:    NexusLaw v2.1 PASSED"
