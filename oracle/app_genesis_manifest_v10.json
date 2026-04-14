@@ -1,0 +1,347 @@
+{
+  "version": "v10.0.0",
+  "singularity_target": 6000000,
+  "life_domains": 60,
+  "categories": 6000,
+  "apps_per_category": 1000,
+  "archon_instances": 60000,
+  "daily_quota": 600000,
+  "eta_days": 10,
+  "nexus_law": "v2.1",
+  "pi_bridge": "0",
+  "riba": "0",
+  "min_languages": 100,
+  "min_countries": 195,
+  "prompt_factory": "PromptFactoryV4.sol",
+  "milestones": [
+    10000,
+    50000,
+    100000,
+    250000,
+    500000,
+    750000,
+    1000000,
+    1500000,
+    2000000,
+    2500000,
+    3000000,
+    3500000,
+    4000000,
+    4250000,
+    4500000,
+    4750000,
+    5000000,
+    5250000,
+    5500000,
+    5750000,
+    5900000,
+    5950000,
+    5990000,
+    5999000,
+    6000000
+  ],
+  "domains_tier1": [
+    {
+      "code": "D01",
+      "name": "Finance & Payments",
+      "categories": 100
+    },
+    {
+      "code": "D02",
+      "name": "Healthcare & Medical",
+      "categories": 100
+    },
+    {
+      "code": "D03",
+      "name": "Education & Learning",
+      "categories": 100
+    },
+    {
+      "code": "D04",
+      "name": "Commerce & Retail",
+      "categories": 100
+    },
+    {
+      "code": "D05",
+      "name": "Social & Communication",
+      "categories": 100
+    },
+    {
+      "code": "D06",
+      "name": "Travel & Mobility",
+      "categories": 100
+    },
+    {
+      "code": "D07",
+      "name": "Real Estate & Property",
+      "categories": 100
+    },
+    {
+      "code": "D08",
+      "name": "Entertainment & Media",
+      "categories": 100
+    },
+    {
+      "code": "D09",
+      "name": "Food & Nutrition",
+      "categories": 100
+    },
+    {
+      "code": "D10",
+      "name": "Productivity & Work",
+      "categories": 100
+    },
+    {
+      "code": "D11",
+      "name": "Legal & Compliance",
+      "categories": 100
+    },
+    {
+      "code": "D12",
+      "name": "Agriculture & Food Production",
+      "categories": 100
+    },
+    {
+      "code": "D13",
+      "name": "Energy & Utilities",
+      "categories": 100
+    },
+    {
+      "code": "D14",
+      "name": "Manufacturing & Industry",
+      "categories": 100
+    },
+    {
+      "code": "D15",
+      "name": "Arts, Crafts & Creative",
+      "categories": 100
+    },
+    {
+      "code": "D16",
+      "name": "Sports & Recreation",
+      "categories": 100
+    },
+    {
+      "code": "D17",
+      "name": "Pets & Animals",
+      "categories": 100
+    },
+    {
+      "code": "D18",
+      "name": "Religion & Spirituality",
+      "categories": 100
+    },
+    {
+      "code": "D19",
+      "name": "Science & Research",
+      "categories": 100
+    },
+    {
+      "code": "D20",
+      "name": "Community & Social Services",
+      "categories": 100
+    }
+  ],
+  "domains_tier2": [
+    {
+      "code": "D21",
+      "name": "Environment & Climate",
+      "categories": 100
+    },
+    {
+      "code": "D22",
+      "name": "Government & Civic Services",
+      "categories": 100
+    },
+    {
+      "code": "D23",
+      "name": "Security & Defence",
+      "categories": 100
+    },
+    {
+      "code": "D24",
+      "name": "Space & Astronomy",
+      "categories": 100
+    },
+    {
+      "code": "D25",
+      "name": "Automotive & Transportation",
+      "categories": 100
+    },
+    {
+      "code": "D26",
+      "name": "Fashion & Beauty",
+      "categories": 100
+    },
+    {
+      "code": "D27",
+      "name": "Gaming & Esports",
+      "categories": 100
+    },
+    {
+      "code": "D28",
+      "name": "Wellness & Mental Health",
+      "categories": 100
+    },
+    {
+      "code": "D29",
+      "name": "Construction & Architecture",
+      "categories": 100
+    },
+    {
+      "code": "D30",
+      "name": "Marine & Ocean",
+      "categories": 100
+    },
+    {
+      "code": "D31",
+      "name": "Mining & Natural Resources",
+      "categories": 100
+    },
+    {
+      "code": "D32",
+      "name": "Logistics & Supply Chain",
+      "categories": 100
+    },
+    {
+      "code": "D33",
+      "name": "Media & Broadcasting",
+      "categories": 100
+    },
+    {
+      "code": "D34",
+      "name": "Quantum & Advanced Computing",
+      "categories": 100
+    },
+    {
+      "code": "D35",
+      "name": "Nanotechnology & Biotech",
+      "categories": 100
+    },
+    {
+      "code": "D36",
+      "name": "Aerospace & Aviation",
+      "categories": 100
+    },
+    {
+      "code": "D37",
+      "name": "Robotics & Automation",
+      "categories": 100
+    },
+    {
+      "code": "D38",
+      "name": "Geospatial & Mapping",
+      "categories": 100
+    },
+    {
+      "code": "D39",
+      "name": "Linguistics & Translation",
+      "categories": 100
+    },
+    {
+      "code": "D40",
+      "name": "Philosophy & Ethics",
+      "categories": 100
+    },
+    {
+      "code": "D41",
+      "name": "Music & Audio",
+      "categories": 100
+    },
+    {
+      "code": "D42",
+      "name": "Photography & Visual Arts",
+      "categories": 100
+    },
+    {
+      "code": "D43",
+      "name": "Virtual Reality & Metaverse",
+      "categories": 100
+    },
+    {
+      "code": "D44",
+      "name": "Smart Cities & Infrastructure",
+      "categories": 100
+    },
+    {
+      "code": "D45",
+      "name": "Parenting & Family",
+      "categories": 100
+    },
+    {
+      "code": "D46",
+      "name": "Elderly Care & Accessibility",
+      "categories": 100
+    },
+    {
+      "code": "D47",
+      "name": "Youth & Children Services",
+      "categories": 100
+    },
+    {
+      "code": "D48",
+      "name": "Volunteer & Non-Profit",
+      "categories": 100
+    },
+    {
+      "code": "D49",
+      "name": "Archaeology & History",
+      "categories": 100
+    },
+    {
+      "code": "D50",
+      "name": "Diplomacy & Int'l Relations",
+      "categories": 100
+    },
+    {
+      "code": "D51",
+      "name": "Weather & Environmental Monitor",
+      "categories": 100
+    },
+    {
+      "code": "D52",
+      "name": "Emergency & Disaster Response",
+      "categories": 100
+    },
+    {
+      "code": "D53",
+      "name": "Culinary Arts & Hospitality",
+      "categories": 100
+    },
+    {
+      "code": "D54",
+      "name": "Textile & Apparel",
+      "categories": 100
+    },
+    {
+      "code": "D55",
+      "name": "Forestry & Timber",
+      "categories": 100
+    },
+    {
+      "code": "D56",
+      "name": "Fishery & Aquaculture",
+      "categories": 100
+    },
+    {
+      "code": "D57",
+      "name": "Materials Science & Ceramics",
+      "categories": 100
+    },
+    {
+      "code": "D58",
+      "name": "Printing & Publishing",
+      "categories": 100
+    },
+    {
+      "code": "D59",
+      "name": "Chemical Industry & Pharma",
+      "categories": 100
+    },
+    {
+      "code": "D60",
+      "name": "Nuclear & Advanced Energy",
+      "categories": 100
+    }
+  ]
+}
