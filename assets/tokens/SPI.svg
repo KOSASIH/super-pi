@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     viewBox="0 0 512 512" width="512" height="512"
+     role="img" aria-label="$SPI Stablecoin Official Logo">
+  <title>$SPI — Super Pi Stablecoin</title>
+  <desc>Official $SPI Stablecoin Logo V1. Issued by Super Pi Foundation via Agent-007 Bridge-Qirad. NexusLaw v2.1 compliant. $SPI only. PI_BRIDGE=0.</desc>
+  <!-- OFFICIAL_SPI_LOGO_V1 — canonical asset -->
+  <!-- SAPIENS Guardian: PASSED | Gambling=0 | Riba=0 | Adult=0 | Authorized -->
+  <!-- CDN: https://cdn.superpi.id/token/SPI.svg -->
+  <!-- Repo: assets/tokens/SPI_LOGO_V1_master.jpg (source) -->
+  <image href="https://cdn.superpi.id/token/SPI_512.png"
+         x="0" y="0" width="512" height="512" preserveAspectRatio="xMidYMid meet"/>
+</svg>

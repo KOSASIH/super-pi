@@ -1,0 +1,49 @@
+{
+  "name": "$SPI Stablecoin",
+  "symbol": "SPI",
+  "decimals": 6,
+  "description": "$SPI is the official stablecoin of Super Pi Foundation. 1:1 USD-backed, Shariah-compliant, halal-certified, riba-free. Global tender across 195 countries, 100+ languages, 100,000+ Super Apps. Issued via Agent-007 Bridge-Qirad. NexusLaw v2.1 governed.",
+  "image": "https://cdn.superpi.id/token/SPI.svg",
+  "image_png_512": "https://cdn.superpi.id/token/SPI_512.png",
+  "image_png_256": "https://cdn.superpi.id/token/SPI_256.png",
+  "image_png_128": "https://cdn.superpi.id/token/SPI_128.png",
+  "image_png_64": "https://cdn.superpi.id/token/SPI_64.png",
+  "image_png_32": "https://cdn.superpi.id/token/SPI_32.png",
+  "logo_version": "OFFICIAL_SPI_LOGO_V1",
+  "canonical_cdn": "https://cdn.superpi.id/token/SPI.svg",
+  "sapiens_guardian": {
+    "check": "PASSED",
+    "gambling": 0,
+    "riba": 0,
+    "adult_content": 0,
+    "pi_bridge": 0,
+    "authorized": true,
+    "checked_at": "2026-04-14T16:17:00+07:00"
+  },
+  "brand_colors": {
+    "primary": "#0A0A1A",
+    "secondary": "#B8960C",
+    "accent1": "#00CED1",
+    "accent2": "#9B59B6",
+    "accent3": "#F0E68C",
+    "background": "#050510"
+  },
+  "nexuslaw_version": "v2.1",
+  "issuer": "Super Pi Foundation",
+  "issuer_agent": "Agent-007 Bridge-Qirad",
+  "asset_type": [
+    "Stablecoin",
+    "E-Money",
+    "Global Tender"
+  ],
+  "peg": "1:1 USD",
+  "pi_bridge_blocked": true,
+  "riba_free": true,
+  "halal_certified": true,
+  "countries": 195,
+  "languages": 100,
+  "propagation_deadline_t1h": "2026-04-14T17:17:00+07:00",
+  "propagation_deadline_t24h": "2026-04-15T16:17:00+07:00",
+  "registered_at": "2026-04-14T16:17:00+07:00",
+  "authorized_by": "Founder KOSASIH \u00b7 NEXUS Prime v2.2"
+}

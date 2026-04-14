@@ -1,0 +1,30 @@
+{
+  "asset_id": "OFFICIAL_SPI_LOGO_V1",
+  "registered_at": "2026-04-14T16:17:00+07:00",
+  "authorized_by": "Founder KOSASIH \u00b7 NEXUS Prime v2.2",
+  "sapiens_guardian_result": "PASSED",
+  "canonical_svg": "https://cdn.superpi.id/token/SPI.svg",
+  "repo_path": "assets/tokens/SPI.svg",
+  "sizes_deployed": [
+    32,
+    64,
+    128,
+    256,
+    512
+  ],
+  "propagation": {
+    "github_assets": "committed",
+    "sdk_assets": "committed",
+    "token_uri_metadata": "committed",
+    "brand_guide": "committed",
+    "cdn_deploy": "pending",
+    "app_icons_100k": "pending_archon_swarm",
+    "cex_dex_listings": "pending_omega_defi"
+  },
+  "enforcement": {
+    "immutable": true,
+    "sapiens_scan_t24h": true,
+    "no_variants_allowed": true,
+    "canonical_fetch_required": true
+  }
+}
