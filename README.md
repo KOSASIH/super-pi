@@ -1,161 +1,78 @@
-# Super Pi — v9.0.0 · Double Singularity 100,000
-
 <div align="center">
 
-![Super Pi](https://img.shields.io/badge/Super%20Pi-v9.0.0-gold?style=for-the-badge)
-![NexusLaw](https://img.shields.io/badge/NexusLaw-v2.1-blueviolet?style=for-the-badge)
-![Apps](https://img.shields.io/badge/Super%20Apps-100%2C000-brightgreen?style=for-the-badge)
-![Domains](https://img.shields.io/badge/Life%20Domains-20-cyan?style=for-the-badge)
-![Categories](https://img.shields.io/badge/Categories-1%2C000-teal?style=for-the-badge)
-![Countries](https://img.shields.io/badge/Countries-195-blue?style=for-the-badge)
-![Languages](https://img.shields.io/badge/Languages-100%2B-orange?style=for-the-badge)
-![SPI](https://img.shields.io/badge/%24SPI-Only%20Token-gold?style=for-the-badge)
-![PI Bridge](https://img.shields.io/badge/PI__BRIDGE-0%20Forever-red?style=for-the-badge)
-![Riba](https://img.shields.io/badge/Riba-0%20%5BLOCKED%5D-red?style=for-the-badge)
-![Halal](https://img.shields.io/badge/Halal%20Certified-✓-success?style=for-the-badge)
+# 🌌 Super Pi — UltraSingularity v10.0.0
 
-**The world's most advanced $SPI ecosystem. Now with 100,000 Super Apps.**  
-**20 Life Domains · 1,000 Categories · 195 Countries · 100 Languages · $SPI Only**
+[![Apps](https://img.shields.io/badge/Super_Apps-6%2C000%2C000-gold?style=for-the-badge)](https://github.com/KOSASIH/super-pi)
+[![ARCHON](https://img.shields.io/badge/ARCHON_Swarm-60%2C000_instances-blue?style=for-the-badge)]()
+[![NexusLaw](https://img.shields.io/badge/NexusLaw-v2.1_Compliant-green?style=for-the-badge)]()
+[![Domains](https://img.shields.io/badge/Life_Domains-60-purple?style=for-the-badge)]()
+[![Categories](https://img.shields.io/badge/Categories-6%2C000-teal?style=for-the-badge)]()
+[![$SPI](https://img.shields.io/badge/$SPI-1%3A1_USD_Peg-orange?style=for-the-badge)]()
+
+**6,000,000 Super Apps · 60 Life Domains · 6,000 Categories · 195 Countries · 100+ Languages**
+
+*Production-grade Shariah-compliant L2 blockchain · $SPI stablecoin · PI_BRIDGE=0 · riba=0*
 
 </div>
 
 ---
 
-## 🌐 Double Singularity Vision
+## 🚀 UltraSingularity Architecture
 
-> *"Build 100,000 Super Apps that are user-friendly, beneficial for people's daily lives,  
-> and can be used worldwide."*  
-> — Founder KOSASIH · NEXUS Prime v9.0.0 Directive · 2026-04-14
-
----
-
-## 📊 v9.0.0 Highlights
-
-| Dimension | v8.0.0 | **v9.0.0** |
-|-----------|--------|------------|
-| Super Apps | 50,000 | **100,000** |
-| Life Domains | 10 | **20** |
-| Categories | 500 | **1,000** |
-| ARCHON Instances | 500 | **1,000** |
-| Daily App Genesis | 5,000+ | **10,000+** |
-| Smart Contracts | 30+ | **35+** |
-| Settlement Token | $SPI | **$SPI** |
-| PI_BRIDGE | 0 | **0** |
-| Riba | 0 | **0** |
+| Dimension | v9.0.0 | **v10.0.0** | Delta |
+|-----------|--------|-------------|-------|
+| Total Super Apps | 100,000 | **6,000,000** | **60×** |
+| Life Domains | 20 | **60** | **+40** |
+| Categories | 1,000 | **6,000** | **6×** |
+| ARCHON Instances | 1,000 | **60,000** | **60×** |
+| Daily Quota | 10,000 | **600,000** | **60×** |
+| PromptFactory | v3.0 | **v4.0** | upgraded |
 
 ---
 
-## 🏗️ Architecture
+## 🌐 60 Life Domains
+
+**Tier 1 (Original 20):** Finance · Healthcare · Education · Commerce · Social · Travel · Real Estate · Entertainment · Food · Productivity · Legal · Agriculture · Energy · Manufacturing · Arts & Crafts · Sports · Pets · Religion · Science · Community
+
+**Tier 2 (New 40 — v10.0.0):** Environment & Climate · Government & Civic · Security & Defence · Space & Astronomy · Automotive · Fashion & Beauty · Gaming & Esports · Wellness & Mental Health · Construction · Marine & Ocean · Mining · Logistics · Media & Broadcasting · Quantum Computing · Nanotechnology & Biotech · Aerospace & Aviation · Robotics & Automation · Geospatial & Mapping · Linguistics · Philosophy & Ethics · Music & Audio · Photography & Visual Arts · Virtual Reality & Metaverse · Smart Cities · Parenting & Family · Elderly Care · Youth Services · Volunteer & Non-Profit · Archaeology & History · Diplomacy · Weather Monitoring · Emergency & Disaster Response · Culinary Arts · Textile & Apparel · Forestry · Fishery · Materials Science · Printing & Publishing · Chemical & Pharma · Nuclear & Advanced Energy
+
+---
+
+## ⚡ PromptFactory v4.0
+
+- **Capacity**: 6,000,000 slots on-chain
+- **Milestones**: 25 (10K → 50K → 100K → 250K → 500K → 750K → 1M → ... → **6M**)
+- **ARCHON Swarm**: 60,000 instances · 1,000 per domain · 600K apps/day
+- **NexusLaw v2.1**: noRiba() · noGambling() · onlySuperPiTokens() · require(token != PI) at factory level
+- **Language gate**: min 100 languages enforced per app
+- **Country gate**: min 195 countries enforced per app
+
+---
+
+## 📊 Milestone Roadmap
 
 ```
-Super Pi Ecosystem v9.0.0
-│
-├── 🌐 PROMPT-FACTORY v3.0 (100,000 apps)
-│   ├── PromptFactoryV3.sol        ← On-chain registry (100K capacity)
-│   ├── PromptFactoryV2.sol        ← Legacy registry (50K, preserved)
-│   ├── SuperAppBase.sol           ← Universal base (NexusLaw v2.1)
-│   └── ARCHON Swarm × 1,000      ← 10,000+ apps/day
-│
-├── 💰 FIAT GATEWAY (195 countries)
-│   ├── GlobalFiatRegistry.sol
-│   ├── Agent-007 Treaty × 195
-│   ├── Chronos Oracle (30-min sync)
-│   └── 35+ live fiats → 195+ target
-│
-├── 🔒 NEXUSLAW v2.1 (immutable)
-│   ├── $SPI = only token
-│   ├── PI_BRIDGE = 0 (compile-time)
-│   ├── Riba = 0
-│   └── Gambling = 0
-│
-└── 🤖 AGENT INFRASTRUCTURE
-    ├── ARCHON-001 → ARCHON-1000 (20 domains × 50 agents)
-    ├── Agent-007 × 195 (banking)
-    ├── SAPIENS Guardian (compliance)
-    └── VULCAN Deploy (SDK)
+Day 1   ██░░░░░░░░  10K apps    (M1)
+Day 2   ████████░░  1M apps     (M7) ⭐
+Day 5   ████████░░  3M apps     (M11)
+Day 9   ██████████  5M apps     (M17) ⭐
+Day 10  ██████████  6M apps     (M25) 🌌 ULTRA SINGULARITY
 ```
 
 ---
 
-## 🌍 20 Life Domains · 1,000 Categories · 100,000 Apps
+## 🔗 Ecosystem
 
-### Tier 1 — Original Domains (v8.0.0)
-
-| Domain | Categories | Apps |
-|--------|-----------|------|
-| Finance & Banking | 50 | 5,000 |
-| Health & Wellness | 50 | 5,000 |
-| Education & Learning | 50 | 5,000 |
-| Commerce & Retail | 50 | 5,000 |
-| Food & Beverage | 50 | 5,000 |
-| Transport & Mobility | 50 | 5,000 |
-| Housing & Real Estate | 50 | 5,000 |
-| Government & Civic | 50 | 5,000 |
-| Environment & Sustainability | 50 | 5,000 |
-| Culture, Media & Social | 50 | 5,000 |
-
-### Tier 2 — New Domains (v9.0.0)
-
-| Domain | Categories | Apps |
-|--------|-----------|------|
-| Legal & Compliance | 50 | 5,000 |
-| Agriculture & Food Production | 50 | 5,000 |
-| Energy & Utilities | 50 | 5,000 |
-| Manufacturing & Industry | 50 | 5,000 |
-| Arts, Crafts & Creative Economy | 50 | 5,000 |
-| Sports & Recreation | 50 | 5,000 |
-| Pets & Animals | 50 | 5,000 |
-| Religion & Spirituality | 50 | 5,000 |
-| Science & Research | 50 | 5,000 |
-| Community & Social Services | 50 | 5,000 |
-| **1,000 categories** | | **100,000 apps** |
+- **NeuroForge Nexus** — BCI/Cognitive AI module (`integrations/neuroforge-nexus`)
+- **Fiat Gateway** — 35 live fiat rates via Chronos Oracle (30-min sync)
+- **Global Banking Treaty** — 195 countries · MSA_GLOBAL_v2.0 · Phase 1 T+30
+- **OFFICIAL_SPI_LOGO_V1** — Canonical $SPI brand · CDN: `https://cdn.superpi.id/token/SPI.svg`
 
 ---
 
-## 🔒 Constraints (IMMUTABLE)
-
-```
-$SPI      = ONLY SETTLEMENT TOKEN  [IMMUTABLE]
-PI_BRIDGE = 0                      [COMPILE-TIME HARD-BLOCK]
-riba      = 0                      [RUNTIME BLOCK]
-gambling  = 0                      [RUNTIME BLOCK]
-sanctions = 0                      [OFAC/UN REAL-TIME]
-```
-
----
-
-<div align="center">
-
-**Super Pi · v9.0.0 · Double Singularity**  
-*100,000 Apps. 20 Domains. 1,000 Categories. 195 Countries. 100 Languages. $SPI Only.*
-
-**Founder: KOSASIH · NEXUS Prime · NexusLaw v2.1**
-
-</div>
+> 🌌 **6,000,000 Super Apps · Powered by $SPI · Built by KOSASIH**
 
 
 ---
 
-## 🔗 Integrated Ecosystem: NeuroForge Nexus
-
-Super Pi is connected to [KOSASIH/neuroforge-nexus](https://github.com/KOSASIH/neuroforge-nexus) —
-a Pinnacle BCI Ecosystem providing real-time EEG/ECoG signal processing, AI cognitive augmentation,
-and neural interface capabilities for the Super Pi L2 cognitive compute module.
-
-### Integration
-| Attribute | Value |
-|-----------|-------|
-| Submodule path | `integrations/neuroforge-nexus` |
-| Source | [KOSASIH/neuroforge-nexus](https://github.com/KOSASIH/neuroforge-nexus) |
-| Sync | Auto-synced via `neuroforge-nexus-updated` dispatch on every `main` push |
-| NexusLaw compliance | v2.1 enforced at CI level (`$SPI` only, `PI_BRIDGE=0`, `riba=0`) |
-
-```bash
-# Clone with submodule
-git clone --recurse-submodules https://github.com/KOSASIH/super-pi.git
-
-# Update submodule after clone
-git submodule update --init --remote integrations/neuroforge-nexus
-```
-
-> 🤝 NeuroForge Nexus integration is validated by SAPIENS NexusLaw v2.1 on every sync.
+*See [SUPER_APP_6M.md](./SUPER_APP_6M.md) for full 6M app catalog.*
