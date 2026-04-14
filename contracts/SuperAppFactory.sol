@@ -2,318 +2,246 @@
 pragma solidity ^0.8.24;
 
 /**
- * @title SuperAppFactory — 5000 Super App Genesis Engine
- * @notice Factory for deploying production-grade Super Apps across 195 countries.
- *         Every app spawned is:
- *           - $SPI-denominated by default
- *           - LEX_MACHINA v1.4 compliant
- *           - Geo-compliance aware (195 countries)
- *           - Pi Coin permanently hard-blocked
- *           - Fiat-interoperable via Bridge-Qirad
- *           - Halal-certified (Shariah/AAOIFI standards)
+ * @title SuperAppFactory — 10,000 Super App Global Singularity Factory
+ * @notice On-chain registry and deployment pipeline for the 10,000 Super App mission.
+ *         100 categories × 100 apps = 10,000 apps across 195 countries.
+ *         Upgraded from v1.0.0 (5,000 target) to v2.0.0 (10,000 target).
+ *         All apps: $SPI denominated, LEX_MACHINA v1.5 compliant, Pi Coin banned.
  *
  * @author NEXUS Prime / KOSASIH
- * @custom:mission Super App Global Singularity — 5000 apps, 195 countries, T+12 months
- * @custom:version 1.0.0
+ * @custom:version 2.0.0
+ * @custom:singularity-target 10000
+ * @custom:daily-quota 28
  */
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/proxy/Clones.sol";
 
-// ── Super App Categories (50 categories, 100 apps each = 5000) ─────────────
-enum AppCategory {
-    BANKING,          PAYMENTS,         DEFI,             REMITTANCE,    INSURANCE,
-    INVESTMENT,       LENDING,          MICROFINANCE,     PENSION,       FOREX,
-    ECOMMERCE,        MARKETPLACE,      RETAIL,           SUBSCRIPTION,  TICKETING,
-    HEALTHCARE,       TELEMEDICINE,     PHARMACY,         INSURANCE_MED, WELLNESS,
-    EDUCATION,        EDTECH,           CERTIFICATION,    TUTORING,      LIBRARY,
-    AGRICULTURE,      SUPPLY_CHAIN,     FOOD_DELIVERY,    LOGISTICS,     TRACKING,
-    REAL_ESTATE,      PROPERTY_MGMT,    RWA_TOKENIZATION, MORTGAGE,      RENTAL,
-    ENERGY,           UTILITIES,        CARBON_CREDIT,    SOLAR,         GRID,
-    GOVERNMENT,       TAXATION,         IDENTITY,         VOTING,        PUBLIC_SERVICES,
-    SOCIAL,           MEDIA,            ENTERTAINMENT,    GAMING,        CHARITY
-}
-
-// ── App Lifecycle ─────────────────────────────────────────────────────────
-enum AppStatus { PENDING, AUDITING, DEPLOYED, SUSPENDED, DEPRECATED }
-
-// ── Super App Record ──────────────────────────────────────────────────────
-struct SuperApp {
-    uint256    appId;
-    string     name;
-    string     version;
-    AppCategory category;
-    AppStatus  status;
-    address    owner;
-    address    contractAddr;    // Deployed contract address
-    uint256[195] countryBitmap; // Bit-packed: 1 = enabled in country
-    string     ipfsMetadata;   // IPFS CID of audit report + ABI + frontend hash
-    bool       halalCertified;
-    bool       micaCertified;
-    uint256    deployedAt;
-    uint256    auditScore;      // 0-100 SAPIENS Guardian score
-    string     primaryFiat;     // Primary fiat for this app's market
-}
-
-// ── Factory ───────────────────────────────────────────────────────────────
 contract SuperAppFactory is AccessControl, Pausable, ReentrancyGuard {
-    using Clones for address;
 
-    // ── Roles ─────────────────────────────────────────────────────────────
-    bytes32 public constant NEXUS_PRIME_ROLE    = keccak256("NEXUS_PRIME_ROLE");
-    bytes32 public constant ARCHON_FORGE_ROLE   = keccak256("ARCHON_FORGE_ROLE");
-    bytes32 public constant LEX_MACHINA_ROLE    = keccak256("LEX_MACHINA_ROLE");
-    bytes32 public constant SAPIENS_ROLE        = keccak256("SAPIENS_ROLE");
-    bytes32 public constant VULCAN_DEPLOY_ROLE  = keccak256("VULCAN_DEPLOY_ROLE");
+    // ── Roles ──────────────────────────────────────────────────────────────
+    bytes32 public constant NEXUS_PRIME_ROLE  = keccak256("NEXUS_PRIME_ROLE");
+    bytes32 public constant ARCHON_ROLE       = keccak256("ARCHON_ROLE");
+    bytes32 public constant LEX_MACHINA_ROLE  = keccak256("LEX_MACHINA_ROLE");
+    bytes32 public constant SAPIENS_ROLE      = keccak256("SAPIENS_ROLE");
+    bytes32 public constant VULCAN_ROLE       = keccak256("VULCAN_ROLE");
+    bytes32 public constant PAUSER_ROLE       = keccak256("PAUSER_ROLE");
 
-    // ── Constants ─────────────────────────────────────────────────────────
+    // ── Singularity Constants ──────────────────────────────────────────────
+    uint256 public constant SINGULARITY_TARGET = 10_000;
+    uint256 public constant DAILY_QUOTA        = 28;
+    uint256 public constant APPS_PER_CATEGORY  = 100;
+    uint256 public constant TOTAL_CATEGORIES   = 100;
+    uint256 public constant SAPIENS_THRESHOLD  = 85;
+
     address public constant PI_COIN = 0xDeAdBeEfDeAdBeEfDeAdBeEfDeAdBeEfDeAdBeEf;
-    uint256 public constant TARGET_APPS     = 5000;
-    uint256 public constant TOTAL_COUNTRIES = 195;
-    uint256 public constant MIN_AUDIT_SCORE = 85;   // Minimum SAPIENS score for deploy
+
+    // ── 100 App Categories ─────────────────────────────────────────────────
+    enum AppCategory {
+        // Finance (1–15)
+        BANKING, PAYMENTS, REMITTANCE, LENDING, MICROFINANCE,
+        INVESTMENT, INSURANCE, DEFI, FOREX, CRYPTO_CUSTODY,
+        PENSION, BONDS_SUKUK, CROWDFUNDING, FACTORING, TRADE_FINANCE,
+        // Commerce (16–25)
+        ECOMMERCE, MARKETPLACE, WHOLESALE, DROPSHIPPING, SUBSCRIPTION,
+        AUCTION, CLASSIFIED_ADS, LOYALTY_REWARDS, GROUP_BUYING, SECOND_HAND,
+        // Food & Life (26–35)
+        FOOD_DELIVERY, GROCERY, CATERING, NUTRITION, FITNESS,
+        BEAUTY_WELLNESS, PET_CARE, HOME_SERVICES, CLEANING, LAUNDRY,
+        // Mobility & Logistics (36–45)
+        RIDE_HAILING, CAR_RENTAL, FREIGHT, LOGISTICS, LAST_MILE_DELIVERY,
+        FLEET_MANAGEMENT, PARKING, ELECTRIC_VEHICLE, MARINE, AVIATION,
+        // Healthcare (46–55)
+        TELEMEDICINE, PHARMACY, HEALTH_RECORDS, MENTAL_HEALTH, DENTAL,
+        HEALTH_INSURANCE, MEDICAL_DEVICES, LAB_TESTING, REHABILITATION, ELDERCARE,
+        // Education (56–65)
+        EDTECH, CERTIFICATION, TUTORING, VOCATIONAL, LANGUAGE_LEARNING,
+        KIDS_EDUCATION, UNIVERSITY, CORPORATE_TRAINING, LIBRARY, RESEARCH,
+        // Real Economy (66–75)
+        REAL_ESTATE, AGRICULTURE, ENERGY, UTILITIES, MINING,
+        MANUFACTURING, CONSTRUCTION, WASTE_MANAGEMENT, WATER, FORESTRY,
+        // Digital Assets & RWA (76–85)
+        RWA_TOKENIZATION, NFT_MARKET, CARBON_CREDITS, GOLD, COMMODITIES,
+        SUPPLY_CHAIN, TRADE_DOCS, CUSTOMS, HALAL_CERTIFICATION, IP_RIGHTS,
+        // Government & Civic (86–93)
+        GOVTECH, IDENTITY, VOTING, TAX, LEGAL,
+        IMMIGRATION, SMART_CITY, SOCIAL_WELFARE,
+        // Media, Social & Entertainment (94–100)
+        SOCIAL_MEDIA, MEDIA_PUBLISHING, STREAMING, GAMING, CHARITY,
+        TRAVEL, SPORTS
+    }
+
+    // ── App Status ─────────────────────────────────────────────────────────
+    enum AppStatus { PENDING, AUDITING, APPROVED, DEPLOYED, SUSPENDED, REJECTED }
+
+    // ── App Record ─────────────────────────────────────────────────────────
+    struct SuperApp {
+        uint32       appId;
+        AppCategory  category;
+        string       name;
+        address      owner;
+        uint8        sapiensScore;
+        AppStatus    status;
+        uint16       countryCount;
+        uint256      deployedAt;
+        bytes32      contractHash;
+        bool         halalCertified;
+        bool         micaCompliant;
+        string       lexCertId;
+        string       primaryFiat;
+    }
 
     // ── State ──────────────────────────────────────────────────────────────
-    address public immutable spiToken;
-    address public immutable bridgeQirad;
-    address public immutable globalFiatRegistry;
+    mapping(uint32 => SuperApp) public apps;
+    mapping(AppCategory => uint32[]) public appsByCategory;
+    uint32  public totalRegistered;
+    uint32  public totalDeployed;
+    uint32  public totalAudited;
+    uint256 public singularityStartedAt;
 
-    mapping(uint256 => SuperApp)       public apps;
-    mapping(address => uint256[])      public ownerApps;
-    mapping(AppCategory => uint256[])  public categoryApps;
-    mapping(uint256 => address)        public implementations; // category → EIP-1167 implementation
+    // ── Events ─────────────────────────────────────────────────────────────
+    event AppRegistered(uint32 indexed appId, AppCategory category, string name, address owner);
+    event AppAuditSubmitted(uint32 indexed appId, uint8 score, bool passed);
+    event AppDeployed(uint32 indexed appId, string name, uint16 countryCount);
+    event AppSuspended(uint32 indexed appId, string reason);
+    event MilestoneReached(uint32 milestone, uint256 timestamp);
+    event SingularityAchieved(uint256 timestamp, uint32 totalApps);
 
-    uint256 public totalDeployed;
-    uint256 public totalAuditing;
-    uint256 public nextAppId;
-
-    // ── Monthly deployment tracking ───────────────────────────────────────
-    mapping(uint256 => uint256) public monthlyDeployments; // yearMonth → count
-
-    // ── Events ────────────────────────────────────────────────────────────
-    event AppRegistered(uint256 indexed appId, string name, AppCategory category, address owner);
-    event AppAuditSubmitted(uint256 indexed appId, uint256 auditScore, address auditor);
-    event AppDeployed(uint256 indexed appId, address contractAddr, string version, bool halalCertified);
-    event AppSuspended(uint256 indexed appId, string reason);
-    event AppCountryEnabled(uint256 indexed appId, uint16 countryCode);
-    event AppCountryDisabled(uint256 indexed appId, uint16 countryCode, string reason);
-    event SingularityMilestone(uint256 totalApps, uint256 targetApps, string milestone);
-
-    // ── Errors ────────────────────────────────────────────────────────────
     error PiCoinRejected();
-    error AuditScoreTooLow(uint256 score, uint256 minimum);
-    error SingularityTargetReached();
-    error AppNotFound(uint256 appId);
-    error UnauthorizedCountry(uint16 countryCode);
+    error SapiensScoreTooLow(uint8 score, uint8 required);
+    error AppNotApproved(uint32 appId);
+    error NotRegistered(uint32 appId);
 
-    // ── Constructor ───────────────────────────────────────────────────────
-    constructor(
-        address admin,
-        address spiAddr,
-        address bridgeQiradAddr,
-        address fiatRegistryAddr
-    ) {
+    // ── Constructor ────────────────────────────────────────────────────────
+    constructor(address admin) {
         _grantRole(DEFAULT_ADMIN_ROLE, admin);
         _grantRole(NEXUS_PRIME_ROLE, admin);
-        _grantRole(ARCHON_FORGE_ROLE, admin);
+        _grantRole(ARCHON_ROLE, admin);
         _grantRole(LEX_MACHINA_ROLE, admin);
         _grantRole(SAPIENS_ROLE, admin);
-        _grantRole(VULCAN_DEPLOY_ROLE, admin);
-
-        spiToken           = spiAddr;
-        bridgeQirad        = bridgeQiradAddr;
-        globalFiatRegistry = fiatRegistryAddr;
+        _grantRole(VULCAN_ROLE, admin);
+        _grantRole(PAUSER_ROLE, admin);
+        singularityStartedAt = block.timestamp;
     }
 
-    // ── Register New Super App ────────────────────────────────────────────
-    /**
-     * @notice Register a new Super App for audit + deployment pipeline.
-     *         ARCHON Forge calls this after generating the app scaffold.
-     */
+    // ── Pi Coin Guard ─────────────────────────────────────────────────────
+    modifier noPiCoin(address token) {
+        if (token == PI_COIN) revert PiCoinRejected();
+        _;
+    }
+
+    // ── Register App ──────────────────────────────────────────────────────
     function registerApp(
+        AppCategory  category,
         string calldata name,
-        AppCategory     category,
-        string calldata version,
-        string calldata ipfsMetadata,
         string calldata primaryFiat,
-        address         owner
+        bool    halalCertified,
+        bool    micaCompliant
     )
         external
-        onlyRole(ARCHON_FORGE_ROLE)
+        onlyRole(ARCHON_ROLE)
         whenNotPaused
-        returns (uint256 appId)
+        returns (uint32 appId)
     {
-        if (totalDeployed >= TARGET_APPS) revert SingularityTargetReached();
-
-        appId = nextAppId++;
+        appId = ++totalRegistered;
         apps[appId] = SuperApp({
-            appId:         appId,
-            name:          name,
-            version:       version,
-            category:      category,
-            status:        AppStatus.PENDING,
-            owner:         owner,
-            contractAddr:  address(0),
-            countryBitmap: [uint256(0), uint256(0), uint256(0), uint256(0), uint256(0),
-                            uint256(0), uint256(0)],  // 7 × 32 bytes = 224 bits (≥195 countries)
-            ipfsMetadata:  ipfsMetadata,
-            halalCertified: false,
-            micaCertified:  false,
-            deployedAt:    0,
-            auditScore:    0,
-            primaryFiat:   primaryFiat
+            appId:          appId,
+            category:       category,
+            name:           name,
+            owner:          msg.sender,
+            sapiensScore:   0,
+            status:         AppStatus.PENDING,
+            countryCount:   0,
+            deployedAt:     0,
+            contractHash:   bytes32(0),
+            halalCertified: halalCertified,
+            micaCompliant:  micaCompliant,
+            lexCertId:      "",
+            primaryFiat:    primaryFiat
         });
-
-        ownerApps[owner].push(appId);
-        categoryApps[category].push(appId);
-        totalAuditing++;
-
-        emit AppRegistered(appId, name, category, owner);
+        appsByCategory[category].push(appId);
+        emit AppRegistered(appId, category, name, msg.sender);
     }
 
-    // ── Submit Audit Result ───────────────────────────────────────────────
-    /**
-     * @notice SAPIENS Guardian submits audit result after scanning the app.
-     *         Score < 85 = blocked from deployment.
-     */
+    // ── Submit Audit ──────────────────────────────────────────────────────
     function submitAudit(
-        uint256 appId,
-        uint256 score,
-        bool    halalCertified,
-        bool    micaCertified
+        uint32  appId,
+        uint8   sapiensScore,
+        string calldata lexCertId
     )
         external
         onlyRole(SAPIENS_ROLE)
     {
         SuperApp storage app = apps[appId];
-        if (app.appId == 0 && appId != 0) revert AppNotFound(appId);
+        if (app.appId == 0) revert NotRegistered(appId);
 
-        app.auditScore    = score;
-        app.halalCertified = halalCertified;
-        app.micaCertified  = micaCertified;
-        app.status         = score >= MIN_AUDIT_SCORE ? AppStatus.AUDITING : AppStatus.SUSPENDED;
-
-        emit AppAuditSubmitted(appId, score, msg.sender);
+        app.sapiensScore = sapiensScore;
+        app.lexCertId    = lexCertId;
+        app.status       = sapiensScore >= SAPIENS_THRESHOLD
+                            ? AppStatus.APPROVED
+                            : AppStatus.REJECTED;
+        totalAudited++;
+        emit AppAuditSubmitted(appId, sapiensScore, sapiensScore >= SAPIENS_THRESHOLD);
     }
 
     // ── Deploy App ────────────────────────────────────────────────────────
-    /**
-     * @notice VULCAN Deploy finalizes deployment after LEX Machina + SAPIENS sign off.
-     */
     function deployApp(
-        uint256 appId,
-        address contractAddr,
-        uint16[] calldata enabledCountries
+        uint32  appId,
+        uint16  countryCount,
+        bytes32 contractHash
     )
         external
-        onlyRole(VULCAN_DEPLOY_ROLE)
+        onlyRole(VULCAN_ROLE)
         nonReentrant
         whenNotPaused
     {
         SuperApp storage app = apps[appId];
-        if (app.status != AppStatus.AUDITING) revert AppNotFound(appId);
-        if (app.auditScore < MIN_AUDIT_SCORE) revert AuditScoreTooLow(app.auditScore, MIN_AUDIT_SCORE);
+        if (app.status != AppStatus.APPROVED) revert AppNotApproved(appId);
 
-        app.contractAddr = contractAddr;
         app.status       = AppStatus.DEPLOYED;
+        app.countryCount = countryCount;
+        app.contractHash = contractHash;
         app.deployedAt   = block.timestamp;
+        totalDeployed++;
 
-        // Enable countries
-        for (uint i = 0; i < enabledCountries.length; i++) {
-            _enableCountry(appId, enabledCountries[i]);
+        // Milestone events
+        if (totalDeployed == 100)    emit MilestoneReached(100, block.timestamp);
+        if (totalDeployed == 500)    emit MilestoneReached(500, block.timestamp);
+        if (totalDeployed == 1000)   emit MilestoneReached(1000, block.timestamp);
+        if (totalDeployed == 2500)   emit MilestoneReached(2500, block.timestamp);
+        if (totalDeployed == 5000)   emit MilestoneReached(5000, block.timestamp);
+        if (totalDeployed == 7500)   emit MilestoneReached(7500, block.timestamp);
+        if (totalDeployed == 10_000) {
+            emit MilestoneReached(10_000, block.timestamp);
+            emit SingularityAchieved(block.timestamp, totalDeployed);
         }
 
-        totalDeployed++;
-        totalAuditing = totalAuditing > 0 ? totalAuditing - 1 : 0;
-
-        // Monthly tracking
-        uint256 ym = _yearMonth();
-        monthlyDeployments[ym]++;
-
-        emit AppDeployed(appId, contractAddr, app.version, app.halalCertified);
-        _checkMilestones();
+        emit AppDeployed(appId, app.name, countryCount);
     }
 
-    // ── Country Management ────────────────────────────────────────────────
-    function enableCountry(uint256 appId, uint16 countryCode)
-        external
-        onlyRole(LEX_MACHINA_ROLE)
-    {
-        _enableCountry(appId, countryCode);
-        emit AppCountryEnabled(appId, countryCode);
-    }
-
-    function disableCountry(uint256 appId, uint16 countryCode, string calldata reason)
-        external
-        onlyRole(LEX_MACHINA_ROLE)
-    {
-        _disableCountry(appId, countryCode);
-        emit AppCountryDisabled(appId, countryCode, reason);
-    }
-
-    function isEnabledInCountry(uint256 appId, uint16 countryCode) public view returns (bool) {
-        require(countryCode < 195, "Invalid country code");
-        uint256 slot = countryCode / 256;
-        uint256 bit  = countryCode % 256;
-        return (apps[appId].countryBitmap[slot] >> bit) & 1 == 1;
-    }
-
-    // ── Progress ──────────────────────────────────────────────────────────
+    // ── Views ─────────────────────────────────────────────────────────────
     function getSingularityProgress() external view returns (
-        uint256 deployed,
-        uint256 target,
-        uint256 percentComplete,
-        uint256 remaining,
-        bool    singularityReached
+        uint32 deployed,
+        uint32 target,
+        uint256 percentMicro,
+        uint256 daysElapsed,
+        uint256 dailyRateNeeded
     ) {
-        deployed         = totalDeployed;
-        target           = TARGET_APPS;
-        percentComplete  = (totalDeployed * 100) / TARGET_APPS;
-        remaining        = TARGET_APPS - totalDeployed;
-        singularityReached = totalDeployed >= TARGET_APPS;
+        deployed     = totalDeployed;
+        target       = uint32(SINGULARITY_TARGET);
+        percentMicro = (uint256(totalDeployed) * 1_000_000) / SINGULARITY_TARGET;
+        daysElapsed  = (block.timestamp - singularityStartedAt) / 86400;
+        uint256 remaining = SINGULARITY_TARGET > totalDeployed
+                            ? SINGULARITY_TARGET - totalDeployed : 0;
+        uint256 daysLeft  = daysElapsed >= 365 ? 1 : 365 - daysElapsed;
+        dailyRateNeeded   = remaining / daysLeft;
     }
 
-    function getAppsByCategory(AppCategory category) external view returns (uint256[] memory) {
-        return categoryApps[category];
+    function getCategoryCount(AppCategory cat) external view returns (uint32) {
+        return uint32(appsByCategory[cat].length);
     }
 
-    // ── Suspend ───────────────────────────────────────────────────────────
-    function suspendApp(uint256 appId, string calldata reason)
-        external
-        onlyRole(NEXUS_PRIME_ROLE)
-    {
-        apps[appId].status = AppStatus.SUSPENDED;
-        emit AppSuspended(appId, reason);
-    }
-
-    // ── Internal ──────────────────────────────────────────────────────────
-    function _enableCountry(uint256 appId, uint16 countryCode) internal {
-        require(countryCode < 195, "Invalid country");
-        uint256 slot = countryCode / 256;
-        uint256 bit  = countryCode % 256;
-        apps[appId].countryBitmap[slot] |= (1 << bit);
-    }
-
-    function _disableCountry(uint256 appId, uint16 countryCode) internal {
-        require(countryCode < 195, "Invalid country");
-        uint256 slot = countryCode / 256;
-        uint256 bit  = countryCode % 256;
-        apps[appId].countryBitmap[slot] &= ~(1 << bit);
-    }
-
-    function _yearMonth() internal view returns (uint256) {
-        return block.timestamp / 30 days;
-    }
-
-    function _checkMilestones() internal {
-        if (totalDeployed == 100)  emit SingularityMilestone(100, TARGET_APPS, "1st Centennial achieved");
-        if (totalDeployed == 500)  emit SingularityMilestone(500, TARGET_APPS, "500 apps live");
-        if (totalDeployed == 1000) emit SingularityMilestone(1000, TARGET_APPS, "1000 apps — 20% Singularity");
-        if (totalDeployed == 2500) emit SingularityMilestone(2500, TARGET_APPS, "HALFWAY — 2500 apps live");
-        if (totalDeployed == 5000) emit SingularityMilestone(5000, TARGET_APPS, "SINGULARITY ACHIEVED — 5000 apps, 195 countries");
-    }
-
-    function pause()   external onlyRole(NEXUS_PRIME_ROLE) { _pause(); }
-    function unpause() external onlyRole(NEXUS_PRIME_ROLE) { _unpause(); }
+    function pause()   external onlyRole(PAUSER_ROLE) { _pause(); }
+    function unpause() external onlyRole(PAUSER_ROLE) { _unpause(); }
 }
