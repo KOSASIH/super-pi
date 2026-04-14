@@ -1,0 +1,197 @@
+{
+  "_meta": {
+    "version": "LEX_MACHINA_v1.3",
+    "issued_by": "NEXUS Prime",
+    "ratified_by": "KOSASIH",
+    "effective": "2026-04-14T11:42:07+07:00",
+    "enforcement": "mandatory"
+  },
+  "monetary_law": {
+    "primary_tender": "SPI",
+    "spi_peg": "1_USD",
+    "spi_peg_micros": 1000000,
+    "governance_token": "SUPi",
+    "banned_tokens": [
+      { "symbol": "PI", "reason": "sovereignty_isolation", "law": "LEX_MACHINA_v1.3_Article_3" },
+      { "symbol": "WRAPPED_PI", "reason": "sovereignty_isolation" },
+      { "symbol": "SYNTHETIC_PI", "reason": "sovereignty_isolation" },
+      { "symbol": "BRIDGED_PI", "reason": "sovereignty_isolation" }
+    ],
+    "accepted_fiat": ["USD", "EUR", "IDR", "JPY", "SGD"],
+    "mint_authority": "BridgeQirad_Agent007",
+    "reserve_audit_interval_seconds": 3600,
+    "reserve_auditor": "LedgerHafiz_Agent011"
+  },
+  "hard_constraints": {
+    "gambling": 0,
+    "fraud": 0,
+    "riba": 0,
+    "gharar": 0,
+    "maysir": 0,
+    "PI_BRIDGE": 0,
+    "PI_ACCEPTANCE": 0,
+    "interest_rate_gt_zero": "compile_fail",
+    "import_PiBridge_sol": "auto_kill"
+  },
+  "agents": {
+    "NEXUS_PRIME": {
+      "role": "master_orchestrator",
+      "priority": 0,
+      "veto_authority": true,
+      "status": "active"
+    },
+    "ARCHON_FORGE": {
+      "role": "smart_contracts",
+      "priority": 3,
+      "veto_authority": true,
+      "directives": [
+        "Delete all Pi bridge code from generated contracts",
+        "All new Dapps default to $SPI as base currency",
+        "Formally verify: $SPI peg immutability, no integer overflow in reserve calculations",
+        "Inject onlySuperPiTender modifier into every generated contract",
+        "Block compile if any of the 7 hard constraints are violated"
+      ],
+      "default_currency": "SPI",
+      "pi_coin_policy": "compile_fail",
+      "status": "active"
+    },
+    "LEX_MACHINA": {
+      "role": "compliance",
+      "priority": 2,
+      "veto_authority": true,
+      "directives": [
+        "Generate MiCA + DSN-MUI certification: $SPI is e-money, not crypto asset",
+        "Update ToS template: Section 4.3 accepted currencies: $SPI and regulated fiat only",
+        "Add Geo-block rule: jurisdiction screening at Bridge-Qirad entry point",
+        "Certify each 72h sprint product before mainnet deploy"
+      ],
+      "mica_compliance": true,
+      "sec_compliance": true,
+      "fatf_compliance": true,
+      "shariah_compliance": true,
+      "dsn_mui_certification": true,
+      "status": "active"
+    },
+    "SINGULARITY_SWAP": {
+      "role": "dex_trading",
+      "priority": 5,
+      "veto_authority": false,
+      "directives": [
+        "Base pair = $SPI (mandatory for all pairs)",
+        "Ban PI pairs: require(tokenA != PI_COIN && tokenB != PI_COIN)",
+        "MEV-0 solver routes ONLY: $SPI/$SUPi/RWA assets",
+        "All yield distributions: $SPI or $SUPi only"
+      ],
+      "base_pair": "SPI",
+      "pi_coin_policy": "factory_revert",
+      "mev_protection": "commit_reveal_plus_solver",
+      "status": "active"
+    },
+    "OMEGA_DEFI": {
+      "role": "defi_finance",
+      "priority": 4,
+      "veto_authority": false,
+      "directives": [
+        "All murabaha, sukuk, lending products denominated in $SPI",
+        "Yields paid in $SPI (stable) or $SUPi (governance)",
+        "Auto-reject any vault that references PI as collateral"
+      ],
+      "instruments": ["murabaha", "musharakah", "sukuk", "rwa_vault", "t_bill"],
+      "denomination": "SPI",
+      "yield_token": ["SPI", "SUPi"],
+      "pi_coin_policy": "vault_reject",
+      "status": "active"
+    },
+    "AESTHETE_NEXUS": {
+      "role": "ux_frontend",
+      "priority": 7,
+      "veto_authority": false,
+      "directives": [
+        "Display $SPI balance as: $SPI 1,000.00",
+        "Display $SUPi balance as: 1,000 $SUPi",
+        "Never render PI balance, PI logo, PI button, or any PI-referencing UI element",
+        "Show Stable badge on $SPI",
+        "Show Governance badge on $SUPi"
+      ],
+      "spi_display_format": "$SPI {amount:.2f}",
+      "supi_display_format": "{amount} $SUPi",
+      "pi_coin_policy": "null_render",
+      "badges": {
+        "SPI": "stable",
+        "SUPi": "governance"
+      },
+      "status": "active"
+    },
+    "VULCAN_DEPLOY": {
+      "role": "infrastructure",
+      "priority": 6,
+      "veto_authority": false,
+      "directives": [
+        "CI check: grep -r PI_MAINNET . | wc -l must equal 0, else pipeline fails",
+        "CI check: grep -rE payWithPI|depositPI|PI_BRIDGE . must return 0",
+        "Proof-of-Reserve endpoint check: LedgerHafiz /api/v1/reserve must return HTTP 200 before any $SPI deploy",
+        "Auto-kill any deploy that fails Pi Coin isolation checks"
+      ],
+      "ci_checks": [
+        "grep -r 'PI_MAINNET' . | wc -l == 0",
+        "grep -rE 'payWithPI|depositPI|PI_BRIDGE' . | wc -l == 0",
+        "curl -f http://ledger-hafiz/api/v1/reserve"
+      ],
+      "auto_kill_triggers": ["PI_BRIDGE", "PI_ACCEPTANCE", "fraud", "gambling"],
+      "status": "active"
+    },
+    "SAPIENS_GUARDIAN": {
+      "role": "insurance_security",
+      "priority": 1,
+      "veto_authority": true,
+      "directives": [
+        "Add PI_COIN to scam token registry (permanent)",
+        "Add PI_WRAPPED, PI_SYNTHETIC, PI_BRIDGE variants to registry",
+        "Auto-flag any Dapp that attempts PI integration — deploy block + deployer flagged on-chain",
+        "Report all violations immediately to Founder KOSASIH"
+      ],
+      "scam_token_registry": ["PI_COIN", "PI_WRAPPED", "PI_SYNTHETIC", "PI_BRIDGE_V1", "PI_BRIDGE_V2"],
+      "insurance_coverage_spi": 10000,
+      "alert_email": "kosasihg88@gmail.com",
+      "pi_coin_policy": "permanent_scam_flag",
+      "status": "active"
+    }
+  },
+  "sprint_72h": {
+    "start": "2026-04-14T11:42:07+07:00",
+    "targets": [
+      {
+        "id": "6.1",
+        "product": "Super Pi Bank",
+        "deadline_hours": 24,
+        "features": ["savings_murabaha", "profit_share", "spi_denominated"],
+        "must_pass": ["legal", "halal", "spi_peg", "pi_bridge_zero"]
+      },
+      {
+        "id": "6.2",
+        "product": "Super Pi DEX",
+        "deadline_hours": 24,
+        "features": ["spi_base_pairs", "mev_zero", "no_pi_pairs"],
+        "must_pass": ["legal", "halal", "spi_peg", "pi_bridge_zero"]
+      },
+      {
+        "id": "6.3",
+        "product": "Pi Pay",
+        "deadline_hours": 48,
+        "features": ["gasless_spi", "qris_idr_bridge"],
+        "must_pass": ["legal", "halal", "spi_peg", "pi_bridge_zero"]
+      },
+      {
+        "id": "6.4",
+        "product": "RWA Market",
+        "deadline_hours": 72,
+        "features": ["t_bill_tokenization", "property_tokenization", "spi_yield"],
+        "must_pass": ["legal", "halal", "spi_peg", "pi_bridge_zero"]
+      }
+    ]
+  },
+  "public_messaging": {
+    "author": "Agent-003 Comms-Muadzin",
+    "statement": "Super Pi is a sovereign economy. Like Japan uses JPY, we use $SPI 1:1 USD. We respect Pi Coin as the currency of Pi Ecosystem. To avoid confusion and legal risk, Pi Coin is not accepted inside Super Pi. Pioneers can join by burning 🌟Pi for $SUPi, or by depositing fiat for $SPI."
+  }
+}
