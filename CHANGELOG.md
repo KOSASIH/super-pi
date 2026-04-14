@@ -1,77 +1,61 @@
-# CHANGELOG
+# Changelog
 
-All notable changes to Super Pi are documented here.  
-Format: [Semantic Versioning](https://semver.org). Governed by [LEX_MACHINA](lex/LEX_MACHINA_v1.3.md).
+## [v11.0.0] — 2026-04-14 — OMEGA NEXUS
 
----
+### 🌌 Major Release — Post-Quantum · AI Oracle · ZK Identity · 10M Apps
 
-## [4.0.0] — 2026-04-14 — LEX_MACHINA v1.3 Full Implementation
+#### New Smart Contracts (11)
+- `PromptFactoryV5.sol` — 10M capacity, 100 domains, ARIA+ZK gates, 1M/day quota
+- `ARIAOracle.sol` — On-chain AI risk scoring oracle (v1.0), NexusLaw v3.0
+- `SovereignIDV2.sol` — ZK sovereign identity, biometric, KYC 0-3, OFAC geo-block
+- `OmegaTreasury.sol` — Autonomous halal treasury (murabaha/sukuk/RWA), ARIA advisor
+- `NeuralGovernance.sol` — AI-augmented DAO, ARIA proposals, quadratic voting, timelock
+- `OmnichainBridge.sol` — LayerZero cross-chain bridge, PI_BRIDGE=0, 50+ EVM chains
+- `SuperPiUBI.sol` — Universal Basic Income, 10 $SPI/month, SovereignIDV2 gated
+- `QuantumVaultV2.sol` — CRYSTALS-Dilithium3+Kyber-1024 vault, 3-of-N multi-sig
+- `SuperPiComputeMarket.sol` — Verifiable AI/ML compute, $SPI rewards, ZK-proven
+- `CarbonCreditRegistry.sol` — Green DeFi RWA, VCS/GS/ACR/CAR, ARIA-verified
+- `NexusLawV3.sol` — ARIA+ZK+PQ constitution upgrade (MiCA+FATF+AAOIFI+OFAC)
 
-### 🆕 New Contracts
-- `SuperPiBank.sol` — Shariah-compliant savings + murabaha financing in $SPI. Musharakah profit-share, zero riba, wakaf integration. Sprint 6.1.
-- `SuperPiDEX.sol` — MEV-0 AMM with $SPI mandatory base pair, commit-reveal ordering (3-block window), TWAP oracle, Pi Coin ban at factory level. Sprint 6.2.
-- `PiPay.sol` — ERC-4337 gasless $SPI payments, QRIS↔IDR bridge via Bridge-Qirad, ECDSA signature verification, on-chain order tracking. Sprint 6.3.
-- `RWAVault.sol` — T-Bill + real estate + sukuk tokenization, $SPI-denominated yield, per-share RWA tokens, maturity redemption. Sprint 6.4.
-- `BridgeQirad.sol` — Agent-007 fiat bridge, 5-fiat support (USD/EUR/IDR/JPY/SGD), Pi Coin + all variants permanently hard-blocked, fiat-lock proof verification, Pi-Native burn → $SUPi migration.
-- `LedgerHafiz.sol` — Agent-011 hourly Proof-of-Reserve, 6-asset breakdown, BPS collateral tracking, emergency circuit breaker at < 100%.
-- `SUPiToken.sol` — Elastic governance token, 1:1 Pi-Native burn-to-mint, ERC20Votes for DAO, wakaf minting, replay-proof burn proofs.
+#### New Python Packages (2)
+- `packages/super-pi-aria-sdk/` — ARIA AI risk scoring, Shariah checks, governance advisory
+- `packages/super-pi-quantum/` — Dilithium3+Kyber-1024 PQ commitment utilities
 
-### 🆕 New Packages
-- `packages/zk-prover/` — STARK proof engine: reserve attestation, balance proofs, state transition proofs. Poseidon hash + FRI commitment.
-- `packages/chronos-oracle/` — TWAP oracle, multi-source aggregation (Chainlink/Pyth/Band/DEX), $SPI peg circuit breaker, Pi Coin price rejection.
-- `packages/payout-engine/` — Automated halal yield distribution: murabaha profit-share, sukuk coupons, RWA yield, wakaf, staking. Riba detector.
-- `packages/l2-bridge/` — Cross-chain bridge: ZK (instant), Optimistic (7-day), Fast (LP pool) modes. Fraud proof, watchtower, rate limiting.
+#### New CI/CD Workflows (3)
+- `.github/workflows/aria-compliance.yml` — NexusLaw v3.0 + ARIA AI compliance gate
+- `.github/workflows/pq-security.yml` — Post-quantum crypto audit (Dilithium3+Kyber)
+- `.github/workflows/zk-identity.yml` — ZK identity + OFAC/UN geo-block verification
 
-### 🆕 New Docs
-- `lex/LEX_MACHINA_v1.3.md` — Sovereign monetary constitution (7 articles)
-- `agents/config/nexus_prime_directives.json` — Machine-readable agent config
-- `docs/TOKENOMICS.md` — Dual-token system documentation
-- `docs/ARCHITECTURE.md` — Full system architecture
-- `docs/API_REFERENCE.md` — API documentation
+#### Documentation
+- `README.md` → v11.0.0 (10M apps, 100 domains, ARIA, PQ, UBI, carbon, compute)
+- `docs/OMEGA_NEXUS.md` — Full v11.0.0 architecture + security stack documentation
 
-### 🔄 Updated
-- `SPI_Stablecoin.sol` v4 — **PEG CHANGED: $314,159 → 1 USD (1,000,000 micros)**. Bridge-Qirad-only minting. Ledger-Hafiz reserve hook. Court-order-only freeze. `onlySuperPiTender` modifier. Hardened Pi Coin block.
-- `README.md` — v4.0.0: full ecosystem overview, all new contracts, performance table, architecture diagram.
-- `.github/workflows/ci.yml` — Added `lex-machina-pi-isolation` job (4 checks per CI run).
+#### Scale Upgrade
+- App capacity: 6M → **10M** (+67%)
+- Life domains: 60 → **100** (+40 Tier 3 domains)
+- Categories: 6,000 → **10,000** (+67%)
+- ARCHON instances: 60,000 → **100,000** (+67%)
+- Daily quota: 600K → **1M apps/day** (+67%)
 
-### ⚠️ Breaking Changes
-- `$SPI peg` changed from `$314,159` to `$1.00 USD`. All price calculations, collateral ratios, and display formats updated.
-- `SPI_Stablecoin.mint()` now requires `BRIDGE_QIRAD_ROLE` (was `MINTER_ROLE`) — update all minting callers.
-- `interestRate > 0` now fails at contract deployment (ARCHON Forge compile-time check).
-
----
-
-## [3.0.0] — 2026-04-14
-
-### 🆕 Added
-- `PiTaintRegistry.sol` — Permanent on-chain taint ledger, 10-type classification, exchange registry
-- `SuperPiGovernance.sol` — OZ Governor DAO: 4% quorum, 7-day voting, 2-day timelock, guardian veto
-- `NEXUSOrchestrator.sol` — On-chain NEXUS Prime: 8 canonical agents, DAG pipeline, conflict resolution
-- `SECURITY.md` — Vulnerability disclosure policy, bug bounty up to $50k SPI
-- `docs/NEXUS_PRIME.md` — Orchestrator deep-dive
-- `docs/AGENT_ECOSYSTEM.md` — All 8 agents with domains and veto rules
-- `.github/workflows/ci.yml` — Multi-language CI (Rust/Solidity/Python/TypeScript/Docker)
-- `.github/workflows/security-audit.yml` — CodeQL, Gitleaks, Slither, Trivy, cargo-deny
-
-### 🔄 Updated
-- `SPI_Stablecoin.sol` v3 — Fixed div-by-zero in `getCollateralRatio()`, added ReentrancyGuard, Pausable, ERC20Permit, 5-role RBAC, KYC enforcement, daily mint limits
-- `README.md` v3.0.0 — NEXUS Prime section, 8-agent table, 100k TPS, contract matrix
-- `packages/neural-consensus/` — AI reputation scoring, adaptive BFT, SCP phases, Sybil resistance
-- `packages/mev-shield/` — Commit-reveal, sandwich detection, FIFO fair ordering
-
-### 🐛 Fixed
-- `SPI_Stablecoin.sol`: division-by-zero when `totalSupply() == 0` in `getCollateralRatio()`
-- `Cargo.toml`: invalid edition `"2025"` → `"2021"`
-- `soroban-sdk`: severely outdated `"0.9"` → `"21.0"`
-- Missing `ReentrancyGuard` on all state-mutating contract functions
-- Missing access control on `burn()` — was callable by anyone
+#### Security Upgrades
+- NexusLaw **v2.1 → v3.0**: ARIA AI scoring + ZK identity + PQ hooks
+- **Post-quantum**: CRYSTALS-Dilithium3 (NIST FIPS 204) + Kyber-1024 (NIST FIPS 203)
+- **ARIA Oracle**: 0-100 risk score gate on all app registrations + governance proposals
+- **ZK Identity**: SovereignIDV2 with Groth16/PlonK proofs + biometric binding
 
 ---
 
-## [2.x.x] — Prior Versions
+## [v10.0.0] — 2026-04-14 — UltraSingularity
+- 6M apps · 60 domains · PromptFactoryV4 · 60K ARCHON · 600K/day
 
-Prior versions are preserved in git history. Core functionality included basic $SPI token, Pi taint tracking, and initial agent infrastructure.
+## [v9.0.0] — 2026-04-14 — Double Singularity
+- 100K apps → 6M target · 20 domains → 60 · PromptFactoryV3
 
----
+## [v8.0.0] — 2026-04-14 — Singularity 50K
+- 50K capacity · 500 ARCHON · 5K/day
 
-*Governed by LEX_MACHINA v1.3 · Maintained by NEXUS Prime / KOSASIH*
+## [v7.0.0] — 2026-04-14 — Advanced Features
+- 15 advanced contracts · PromptFactoryV1 · 1K-app catalog · NexusLaw v2.1
+
+## [v4.0.0–v6.0.0] — 2026-04-14 — Foundation
+- Core infrastructure · 13 production contracts · 8 Python packages · CI/CD · fiat gateway
