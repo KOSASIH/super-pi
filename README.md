@@ -2,9 +2,9 @@
 
 <div align="center">
 
-[![Version](https://img.shields.io/badge/version-4.0.0-brightgreen)](https://github.com/KOSASIH/super-pi)
+[![Version](https://img.shields.io/badge/version-5.0.0-brightgreen)](https://github.com/KOSASIH/super-pi)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
-[![LEX_MACHINA](https://img.shields.io/badge/LEX__MACHINA-v1.3-gold)](lex/LEX_MACHINA_v1.3.md)
+[![LEX_MACHINA](https://img.shields.io/badge/LEX__MACHINA-v1.4-gold)](lex/LEX_MACHINA_v1.3.md)
 [![Halal Certified](https://img.shields.io/badge/Halal-Certified-green)](docs/TOKENOMICS.md)
 [![CI](https://github.com/KOSASIH/super-pi/actions/workflows/ci.yml/badge.svg)](https://github.com/KOSASIH/super-pi/actions)
 [![Security Audit](https://github.com/KOSASIH/super-pi/actions/workflows/security-audit.yml/badge.svg)](https://github.com/KOSASIH/super-pi/actions)
@@ -12,7 +12,7 @@
 
 </div>
 
-> **Super Pi** is a production-grade sovereign Layer 2 blockchain — a complete, Shariah-compliant digital economy built around the **$SPI Hard Stablecoin** (1 $SPI = 1 USD) and **$SUPi Governance Token**. Governed by LEX_MACHINA v1.3. Orchestrated by NEXUS Prime.
+> **Super Pi** is a production-grade sovereign Layer 2 blockchain — a complete, Shariah-compliant digital economy built around the **$SPI Hard Stablecoin** (1 $SPI = 1 USD) and **$SUPi Governance Token**. Governed by LEX_MACHINA v1.4. Orchestrated by NEXUS Prime.
 
 ---
 
@@ -41,7 +41,7 @@ Super Pi is not just a blockchain. It is a **sovereign digital economy** — wit
 
 ---
 
-## Sovereign Token System (LEX_MACHINA v1.3)
+## Sovereign Token System (LEX_MACHINA v1.4)
 
 | Token | Type | Value | Use Case |
 |-------|------|-------|----------|
@@ -201,7 +201,47 @@ All protocols are certified Shariah-compliant under **DSN-MUI + AAOIFI standards
 
 ---
 
-## Hard Constraints (LEX_MACHINA v1.3)
+
+---
+
+## 🌐 Super App Global Singularity — 5000 Apps × 195 Countries
+
+> **NEXUS Prime God Head Directive — T+12 months (by 2027-04-14)**
+
+```
+Mission: 5,000 production-grade Super Apps
+         195 countries
+         50+ fiat currencies
+         1 legal tender: $SPI
+         0 Pi Coin
+         14 apps/day
+```
+
+### Why Singularity?
+Every human on Earth — 8 billion people — deserves access to a sovereign, halal, gasless, $SPI-powered digital economy. Super Pi is building the rails. 5000 Super Apps is the grid.
+
+### App Categories (50 categories × 100 apps)
+Banking · Payments · Remittance · DeFi · Insurance · Investment · Microfinance · E-Commerce · Marketplace · Food · Supply Chain · Agriculture · Healthcare · Telemedicine · Pharmacy · EdTech · Government · Identity · Voting · Legal · Real Estate · RWA · Sukuk · Energy · Carbon · Logistics · Travel · Social · Media · Entertainment · Halal Gaming · Charity · Wakaf · and more.
+
+### Fiat Coverage
+| Phase | Fiats | Status |
+|-------|-------|--------|
+| T+0 | USD, EUR, IDR | ✅ Live |
+| T+90d | 50+ (SGD, AED, JPY, SAR, GBP, MYR, INR, KRW, AUD, NGN, PHP, THB, VND...) | 🔄 Building |
+| T+12m | All 195 countries | 📅 Target |
+
+### Singularity Infrastructure
+| Component | Description |
+|-----------|-------------|
+| [`SuperAppFactory.sol`](contracts/SuperAppFactory.sol) | On-chain registry + deployment pipeline for all 5000 apps |
+| [`GlobalFiatRegistry.sol`](contracts/GlobalFiatRegistry.sol) | 50+ fiat on-chain directory, exchange rates, settlement windows |
+| [`packages/app-genesis/`](packages/app-genesis/) | Auto-generates full app scaffold in < 2 seconds |
+| [`packages/fiat-gateway/`](packages/fiat-gateway/) | 35+ fiat rails (FedNow/SEPA/BI-FAST/UPI/QRIS/PayNow...) |
+| [`lex/LEX_MACHINA_v1.4.md`](lex/LEX_MACHINA_v1.4.md) | Singularity Constitution |
+| [`docs/SUPER_APP_SINGULARITY.md`](docs/SUPER_APP_SINGULARITY.md) | T+12 month roadmap |
+
+---
+## Hard Constraints (LEX_MACHINA v1.4)
 
 Every contract, every deploy, every CI run enforces:
 
