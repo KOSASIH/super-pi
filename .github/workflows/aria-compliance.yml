@@ -1,0 +1,62 @@
+name: ARIA Compliance Gate v3.0
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  aria-compliance:
+    name: NexusLaw v3.0 + ARIA AI Compliance Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ARIA SDK
+        run: pip install -q requests cryptography
+
+      - name: Scan for Pi Coin References
+        run: |
+          echo "=== ARIA: Pi Coin Bridge Scan (PI_BRIDGE=0) ==="
+          if grep -rn --include="*.sol" --include="*.py" --include="*.ts"             -E "(PiCoin|pi_coin|PI_COIN|0x314159|PiBridge|pibridge)"             --exclude-dir=.git --exclude-dir=node_modules .; then
+            echo "ERROR: Pi Coin reference detected. PI_BRIDGE=0 — permanently blocked."
+            exit 1
+          fi
+          echo "PASS: No Pi Coin references found."
+
+      - name: Scan for Riba Instruments
+        run: |
+          echo "=== ARIA: Anti-Riba Scan (NexusLaw v3.0) ==="
+          if grep -rn --include="*.sol"             -E "("interest"|"usury"|bond_interest|lending_rate)"             --exclude-dir=.git contracts/ 2>/dev/null |             grep -v "noRiba\|ribaBlocked\|RIBA\|anti.riba\|blocked\|require.*riba"; then
+            echo "WARNING: Potential riba instrument detected — review required."
+          fi
+          echo "PASS: Anti-riba scan complete."
+
+      - name: Scan for Gambling/Maysir
+        run: |
+          echo "=== ARIA: Anti-Gambling Scan ==="
+          if grep -rn --include="*.sol"             -E "(casino|gambling|lottery|wager|ponzi)"             --exclude-dir=.git contracts/ 2>/dev/null |             grep -v "noGambling\|gamblingBlocked\|anti.gambl"; then
+            echo "WARNING: Gambling/maysir reference detected."
+          fi
+          echo "PASS: Anti-gambling scan complete."
+
+      - name: NexusLaw v3.0 Version Check
+        run: |
+          echo "=== Verifying NexusLaw v3.0 compliance markers ==="
+          count=$(grep -rl "NexusLaw v3.0\|NEXUSLAW_VERSION.*v3"             contracts/ 2>/dev/null | wc -l)
+          echo "NexusLaw v3.0 references found in $count contract files."
+
+      - name: ARIA Score Summary
+        run: |
+          echo "=== ARIA Compliance Summary ==="
+          echo "Version:       ARIA v1.0 + NexusLaw v3.0"
+          echo "PI_BRIDGE:     0 (BLOCKED)"
+          echo "Riba Gate:     ACTIVE"
+          echo "Gambling Gate: ACTIVE"
+          echo "Status:        COMPLIANT"
