@@ -1,0 +1,237 @@
+name: "🔬 Super Pi CI — Build, Test, Lint, Security"
+
+on:
+  push:
+    branches: [master, main, "feat/**", "fix/**", "release/**"]
+  pull_request:
+    branches: [master, main]
+  schedule:
+    - cron: "0 2 * * 1"  # Weekly Monday 02:00 UTC
+
+permissions:
+  contents: read
+  security-events: write
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  # =========================================================
+  # 1. Rust / Soroban Smart Contract Build & Test
+  # =========================================================
+  rust:
+    name: "Rust Build & Test"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        toolchain: [stable, nightly]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust ${{ matrix.toolchain }}
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ matrix.toolchain }}
+          components: rustfmt, clippy
+
+      - name: Cache Cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target/
+          key: ${{ runner.os }}-cargo-${{ matrix.toolchain }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ runner.os }}-cargo-${{ matrix.toolchain }}-
+
+      - name: Install Stellar/Soroban CLI
+        run: cargo install --locked stellar-cli --features opt
+
+      - name: Build (release)
+        working-directory: src/hyper_core/rust
+        run: cargo build --release --all-features
+
+      - name: Run Unit Tests
+        working-directory: src/hyper_core/rust
+        run: cargo test --all-features -- --nocapture
+
+      - name: Clippy (strict)
+        working-directory: src/hyper_core/rust
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Rustfmt Check
+        working-directory: src/hyper_core/rust
+        run: cargo fmt --all -- --check
+
+      - name: Run Benchmarks (dry run)
+        working-directory: src/hyper_core/rust
+        run: cargo bench --no-run --all-features
+
+  # =========================================================
+  # 2. Solidity Smart Contract Compilation & Tests
+  # =========================================================
+  solidity:
+    name: "Solidity Compile & Test"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install Hardhat + dependencies
+        run: npm ci
+
+      - name: Compile contracts
+        run: npx hardhat compile
+
+      - name: Run Hardhat tests
+        run: npx hardhat test
+
+      - name: Run coverage
+        run: npx hardhat coverage
+
+      - name: Check contract sizes
+        run: npx hardhat size-contracts
+
+  # =========================================================
+  # 3. Python Package Tests
+  # =========================================================
+  python:
+    name: "Python Tests"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov pytest-asyncio ruff mypy
+          pip install -r packages/chronos-oracle/requirements.txt
+          pip install -r packages/neural-consensus/requirements.txt
+          pip install -r packages/zk-prover/requirements.txt
+          pip install -r packages/mev-shield/requirements.txt
+          pip install -r packages/payout-engine/requirements.txt
+          pip install -r packages/l2-bridge/requirements.txt
+
+      - name: Ruff lint
+        run: ruff check packages/ decentralized_finance/ quantum_ai_innovations/
+
+      - name: Type check (mypy)
+        run: mypy packages/ --ignore-missing-imports
+
+      - name: Run Python tests
+        run: pytest tests/ packages/ -v --cov=packages --cov-report=xml
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage.xml
+
+  # =========================================================
+  # 4. TypeScript / Next.js Frontend
+  # =========================================================
+  frontend:
+    name: "Frontend Build & Lint"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript check
+        run: npx tsc --noEmit
+
+      - name: ESLint
+        run: npx eslint apps/ packages/ --ext .ts,.tsx --max-warnings 0
+
+      - name: Build Next.js apps
+        run: npm run build
+
+  # =========================================================
+  # 5. Docker Build
+  # =========================================================
+  docker:
+    name: "Docker Build"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker/Dockerfile
+          push: false
+          tags: super-pi:ci-test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # =========================================================
+  # 6. Security — Slither + MythX
+  # =========================================================
+  security:
+    name: "Security Audit"
+    runs-on: ubuntu-latest
+    needs: [solidity]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Slither
+        run: pip install slither-analyzer
+
+      - name: Run Slither on contracts
+        run: slither contracts/ --config-file slither.config.json --json slither-output.json
+        continue-on-error: true
+
+      - name: Upload Slither report
+        uses: actions/upload-artifact@v4
+        with:
+          name: slither-report
+          path: slither-output.json
+
+  # =========================================================
+  # 7. Dependency Audit
+  # =========================================================
+  audit:
+    name: "Dependency Audit"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rust audit (cargo-audit)
+        uses: actions-rust-lang/audit@v1
+        with:
+          working-directory: src/hyper_core/rust
+
+      - name: Node.js audit
+        run: npm audit --audit-level moderate
+        continue-on-error: true
