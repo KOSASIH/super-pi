@@ -219,7 +219,58 @@ jobs:
           path: slither-output.json
 
   # =========================================================
-  # 7. Dependency Audit
+  # 7. LEX_MACHINA v1.3 — Pi Coin Isolation Enforcement
+  # Article 3 + 5.6 VULCAN Deploy directive:
+  # grep -r "PI_MAINNET" . must return 0
+  # =========================================================
+  lex-machina-pi-isolation:
+    name: "Pi Coin Isolation Check (LEX_MACHINA v1.3)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Scan for PI_MAINNET references"
+        run: |
+          COUNT=$(grep -r "PI_MAINNET" --include="*.sol" --include="*.ts" --include="*.js" --include="*.py" --include="*.rs" . | wc -l)
+          echo "PI_MAINNET occurrences: $COUNT"
+          if [ "$COUNT" -gt "0" ]; then
+            echo "❌ LEX_MACHINA VIOLATION: PI_MAINNET reference detected — deploy blocked"
+            grep -r "PI_MAINNET" --include="*.sol" --include="*.ts" --include="*.js" --include="*.py" --include="*.rs" .
+            exit 1
+          fi
+          echo "✅ PI_MAINNET: 0 occurrences — isolation confirmed"
+
+      - name: "Scan for Pi Coin integration functions"
+        run: |
+          COUNT=$(grep -rE "payWithPI|depositPI|PI_BRIDGE|PiBridge|wrapPI|swapPI" --include="*.sol" --include="*.ts" --include="*.js" --include="*.py" . | wc -l)
+          echo "Pi Coin integration occurrences: $COUNT"
+          if [ "$COUNT" -gt "0" ]; then
+            echo "❌ LEX_MACHINA VIOLATION: Pi Coin integration detected — SAPIENS Guardian blocks deploy"
+            grep -rE "payWithPI|depositPI|PI_BRIDGE|PiBridge|wrapPI|swapPI" --include="*.sol" --include="*.ts" --include="*.js" --include="*.py" .
+            exit 1
+          fi
+          echo "✅ Pi Coin integrations: 0 occurrences — ecosystem sovereign"
+
+      - name: "Validate $SPI peg constant"
+        run: |
+          # $SPI peg must be 1 USD (PEG_USD_MICROS = 1_000_000), NOT 314159
+          if grep -r "314159" contracts/SPI_Stablecoin.sol 2>/dev/null; then
+            echo "❌ LEX_MACHINA VIOLATION: Old $314,159 peg found in SPI_Stablecoin — must be 1 USD (1_000_000 micros)"
+            exit 1
+          fi
+          echo "✅ $SPI peg: 1 USD confirmed"
+
+      - name: "Verify onlySuperPiTender modifier present"
+        run: |
+          COUNT=$(grep -r "onlySuperPiTender" contracts/ | wc -l)
+          if [ "$COUNT" -eq "0" ]; then
+            echo "❌ LEX_MACHINA VIOLATION: onlySuperPiTender modifier missing from contracts"
+            exit 1
+          fi
+          echo "✅ onlySuperPiTender modifier: found in $COUNT locations"
+
+  # =========================================================
+  # 8. Dependency Audit
   # =========================================================
   audit:
     name: "Dependency Audit"
