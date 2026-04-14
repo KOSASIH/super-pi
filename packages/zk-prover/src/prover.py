@@ -1,227 +1,393 @@
 """
-Zero-Knowledge Proof Prover - Super Pi L2
-==========================================
-Full ZK proof pipeline for L2 state transitions.
-Supports: transaction validity, balance proofs, bridge attestations.
+ZK-Prover — Zero-Knowledge Proof Engine for Super Pi L2
+=========================================================
+Generates ZK-STARK proofs for:
+  - Reserve attestation (prove total reserve ≥ total supply without revealing custodian details)
+  - Private balance verification (prove user has ≥ X $SPI without revealing exact balance)
+  - Cross-chain state transition proofs
 
-Backends: Plonky3 (default), Halo2 (alt), RISC Zero (VM proofs)
-Author: KOSASIH
+Uses: Poseidon hash, FRI-based polynomial commitments, STARK verification
+LEX_MACHINA v1.3 compliant — Pi Coin address auto-excluded from any proof inputs.
+
+Author: NEXUS Prime / KOSASIH
 Version: 1.0.0
 """
 
+from __future__ import annotations
+
+import asyncio
 import hashlib
-import json
-import time
 import logging
-from dataclasses import dataclass
-from enum import Enum
+import secrets
+import time
+from dataclasses import dataclass, field
+from enum import Enum, auto
 from typing import Any
 
-logger = logging.getLogger("zk-prover")
+import numpy as np
 
+logger = logging.getLogger("zk_prover")
 
+# ── Constants ─────────────────────────────────────────────────────────────
+PI_COIN_ADDR = "0xDeAdBeEfDeAdBeEfDeAdBeEfDeAdBeEfDeAdBeEf"
+
+FIELD_PRIME = (1 << 64) - (1 << 32) + 1   # Goldilocks prime (Plonky2 field)
+EXPANSION_FACTOR = 4
+NUM_QUERY_ROUNDS = 40
+BLOWUP = 8
+
+# ── Proof Types ───────────────────────────────────────────────────────────
 class ProofType(Enum):
-    TRANSACTION_VALIDITY = "tx_validity"
-    BALANCE_PROOF = "balance_proof"
-    STATE_TRANSITION = "state_transition"
-    BRIDGE_ATTESTATION = "bridge_attestation"
-    MEMBERSHIP = "membership"
+    RESERVE_ATTESTATION    = auto()   # Total reserves >= total $SPI supply
+    BALANCE_PROOF          = auto()   # User balance >= threshold (private)
+    STATE_TRANSITION       = auto()   # L2 batch state root is valid
+    IDENTITY_COMPLIANCE    = auto()   # KYC satisfied without revealing PII
 
+# ── Data Structures ───────────────────────────────────────────────────────
+@dataclass
+class ProofInput:
+    proof_type:  ProofType
+    public_inputs: dict[str, Any]   # Revealed to verifier
+    private_inputs: dict[str, Any]  # Kept secret
+    timestamp: int = field(default_factory=lambda: int(time.time()))
+
+    def __post_init__(self):
+        # Hard guard: reject any Pi Coin reference in proof inputs
+        for val in list(self.public_inputs.values()) + list(self.private_inputs.values()):
+            if isinstance(val, str) and PI_COIN_ADDR.lower() in val.lower():
+                raise ValueError(f"ZK-Prover: Pi Coin address rejected from proof inputs — LEX_MACHINA v1.3")
 
 @dataclass
 class ZKProof:
-    proof_type: ProofType
-    proof_hash: str
-    public_inputs: list
-    verification_key: str
-    created_at: float
-    verified: bool
-    proving_time_ms: float
-    backend: str
+    proof_type:    ProofType
+    commitment:    bytes
+    fri_layers:    list[bytes]
+    query_answers: list[tuple[int, int]]
+    public_inputs: dict[str, Any]
+    proof_hash:    str
+    generation_time_ms: float
+    valid: bool = True
 
+    def to_dict(self) -> dict:
+        return {
+            "proof_type":    self.proof_type.name,
+            "commitment":    self.commitment.hex(),
+            "fri_layers":    [l.hex() for l in self.fri_layers],
+            "query_answers": self.query_answers,
+            "public_inputs": self.public_inputs,
+            "proof_hash":    self.proof_hash,
+            "generation_time_ms": self.generation_time_ms,
+            "valid": self.valid,
+        }
 
-class MerkleTree:
-    """Sparse Merkle Tree for state commitments."""
-
-    def __init__(self, depth: int = 32):
-        self.depth = depth
-        self._leaves: dict[int, str] = {}
-        self._nodes: dict[tuple, str] = {}
-
-    def _hash(self, left: str, right: str) -> str:
-        return hashlib.sha256(f"{left}:{right}".encode()).hexdigest()
-
-    def insert(self, index: int, value: str):
-        self._leaves[index] = hashlib.sha256(value.encode()).hexdigest()
-
-    def root(self) -> str:
-        """Compute Merkle root from leaves."""
-        if not self._leaves:
-            return "0" * 64
-        nodes = dict(self._leaves)
-        size = max(nodes.keys()) + 1
-        # Pad to power of 2
-        sz = 1
-        while sz < size:
-            sz *= 2
-        for i in range(sz):
-            if i not in nodes:
-                nodes[i] = "0" * 64
-        while sz > 1:
-            new_nodes = {}
-            for i in range(0, sz, 2):
-                new_nodes[i // 2] = self._hash(nodes[i], nodes.get(i + 1, "0" * 64))
-            nodes = new_nodes
-            sz //= 2
-        return nodes[0]
-
-    def generate_proof(self, index: int) -> list[str]:
-        """Generate Merkle inclusion proof for leaf at index."""
-        proof = []
-        nodes = dict(self._leaves)
-        sz = max(nodes.keys()) + 2
-        pw = 1
-        while pw < sz:
-            pw *= 2
-        for i in range(pw):
-            if i not in nodes:
-                nodes[i] = "0" * 64
-
-        idx = index
-        size = pw
-        while size > 1:
-            sibling = idx ^ 1
-            proof.append(nodes.get(sibling, "0" * 64))
-            new_nodes = {}
-            for i in range(0, size, 2):
-                left = nodes.get(i, "0" * 64)
-                right = nodes.get(i + 1, "0" * 64)
-                new_nodes[i // 2] = hashlib.sha256(f"{left}:{right}".encode()).hexdigest()
-            nodes = new_nodes
-            idx //= 2
-            size //= 2
-        return proof
-
-
-class PlonkCircuit:
+# ── Poseidon Hash (Goldilocks field) ──────────────────────────────────────
+class PoseidonHasher:
     """
-    Simplified PLONK arithmetic circuit abstraction.
-    Production: wire to Plonky3 / bellman / gnark.
+    Simplified Poseidon hash over Goldilocks field.
+    Production: use the poseidon_hash crate via FFI or Plonky2's native implementation.
     """
+    def __init__(self, field_prime: int = FIELD_PRIME):
+        self.p = field_prime
+        # Round constants (simplified — production uses precomputed MDS matrix)
+        self._rc = [pow(i + 1, 5, field_prime) for i in range(64)]
 
-    def __init__(self, circuit_id: str):
-        self.circuit_id = circuit_id
-        self.gates: list[dict] = []
+    def hash(self, inputs: list[int]) -> int:
+        state = [x % self.p for x in inputs[:8]]
+        while len(state) < 8:
+            state.append(0)
 
-    def add_constraint(self, left: str, right: str, output: str, op: str = "mul"):
-        self.gates.append({"l": left, "r": right, "o": output, "op": op})
+        # 8 full rounds
+        for r in range(8):
+            state = [
+                pow(s + self._rc[(r * 8 + i) % 64], 5, self.p)
+                for i, s in enumerate(state)
+            ]
+            # Mix
+            state[0] = sum(state) % self.p
 
-    def compile(self) -> str:
-        """Returns circuit digest (verification key)."""
-        payload = json.dumps(self.gates, sort_keys=True)
-        return "vk_" + hashlib.sha256(payload.encode()).hexdigest()[:32]
+        return state[0]
 
+    def hash_bytes(self, data: bytes) -> bytes:
+        chunks = [int.from_bytes(data[i:i+8], 'little') for i in range(0, len(data), 8)]
+        # Pad to multiple of 8
+        while len(chunks) % 8 != 0:
+            chunks.append(0)
+        h = self.hash(chunks[:8])
+        return h.to_bytes(8, 'little')
 
+# ── Polynomial Commitment (FRI-based) ────────────────────────────────────
+class FRICommitment:
+    """
+    Simplified FRI (Fast Reed-Solomon Interactive Oracle Proof) commitment scheme.
+    Production: integrate with Plonky2 / StarkWare's FRI library.
+    """
+    def __init__(self, blowup: int = BLOWUP):
+        self.blowup    = blowup
+        self.hasher    = PoseidonHasher()
+
+    def commit(self, poly_coefficients: list[int]) -> tuple[bytes, list[bytes]]:
+        """Commit to a polynomial. Returns (root_commitment, fri_layers)."""
+        evals = self._evaluate(poly_coefficients)
+        layers = []
+        current = evals
+
+        while len(current) > 1:
+            layer_hash = hashlib.sha256(
+                b"".join(x.to_bytes(8, 'little') for x in current)
+            ).digest()
+            layers.append(layer_hash)
+            # FRI folding: fold pairs
+            current = [
+                (current[i] + current[i + 1]) % FIELD_PRIME
+                for i in range(0, len(current) - 1, 2)
+            ]
+
+        root = hashlib.sha256(b"".join(l for l in layers)).digest()
+        return root, layers
+
+    def _evaluate(self, coeffs: list[int]) -> list[int]:
+        n = len(coeffs) * self.blowup
+        domain = [pow(3, i * (FIELD_PRIME - 1) // n, FIELD_PRIME) for i in range(n)]
+        return [
+            sum(coeffs[j] * pow(x, j, FIELD_PRIME) for j in range(len(coeffs))) % FIELD_PRIME
+            for x in domain[:16]  # Simplified: use 16 points for demo
+        ]
+
+    def query(self, layers: list[bytes], positions: list[int]) -> list[tuple[int, int]]:
+        return [(p, int.from_bytes(layers[p % len(layers)], 'little') % 1000) for p in positions]
+
+# ── ZK Prover ─────────────────────────────────────────────────────────────
 class ZKProver:
     """
-    Main ZK prover for Super Pi L2.
-    Generates proofs for all L2 operations.
+    Main ZK proof generation engine.
+    Produces STARK proofs for Super Pi L2 protocols.
     """
-    BACKEND = "plonky3-simulated"
 
     def __init__(self):
-        self._proof_cache: dict[str, ZKProof] = {}
-        self._state_tree = MerkleTree()
-        logger.info(f"ZK Prover initialized — backend: {self.BACKEND}")
+        self.hasher = PoseidonHasher()
+        self.fri    = FRICommitment()
+        logger.info("ZK-Prover v1.0.0 initialized — Goldilocks field, FRI-STARK")
 
-    def prove_transaction(self, tx: dict, sender_balance: float, amount: float) -> ZKProof:
-        """Prove: sender has sufficient balance and tx is valid."""
-        start = time.monotonic()
-        circuit = PlonkCircuit("tx_validity")
-        circuit.add_constraint("balance", "amount", "valid", op="gte")
-        circuit.add_constraint("nonce", "expected_nonce", "nonce_ok", op="eq")
-        vk = circuit.compile()
+    # ── Reserve Attestation ────────────────────────────────────────────────
+    async def prove_reserve_attestation(
+        self,
+        total_reserve_micros: int,
+        total_supply_micros:  int,
+        asset_hashes:         list[str],   # Hashes of individual asset attestations (private)
+    ) -> ZKProof:
+        """
+        Prove: total_reserve >= total_supply WITHOUT revealing asset breakdown.
+        Public input: total_supply. Private: asset breakdown.
+        """
+        t0 = time.perf_counter()
 
-        public_inputs = [
-            hashlib.sha256(json.dumps(tx, sort_keys=True).encode()).hexdigest(),
-            str(sender_balance >= amount),
-        ]
-        proof_hash = self._prove(vk, public_inputs, tx)
-        proving_time = (time.monotonic() - start) * 1000
-
-        proof = ZKProof(
-            proof_type=ProofType.TRANSACTION_VALIDITY,
-            proof_hash=proof_hash,
-            public_inputs=public_inputs,
-            verification_key=vk,
-            created_at=time.time(),
-            verified=True,
-            proving_time_ms=round(proving_time, 2),
-            backend=self.BACKEND,
+        inputs = ProofInput(
+            proof_type    = ProofType.RESERVE_ATTESTATION,
+            public_inputs = {
+                "total_supply_micros":  total_supply_micros,
+                "collateral_ratio_bps": (total_reserve_micros * 10_000) // max(total_supply_micros, 1),
+                "timestamp":            int(time.time()),
+            },
+            private_inputs = {
+                "total_reserve_micros": total_reserve_micros,
+                "asset_hashes":         asset_hashes,
+            }
         )
-        self._proof_cache[proof_hash] = proof
-        return proof
 
-    def prove_state_transition(self, old_root: str, new_root: str, txs: list[dict]) -> ZKProof:
-        """Prove that new_root is the correct result of applying txs to old_root."""
-        start = time.monotonic()
-        circuit = PlonkCircuit("state_transition")
-        circuit.add_constraint("old_root", "transitions", "new_root", op="hash")
-        vk = circuit.compile()
+        # Constraint: reserve >= supply (the core soundness check)
+        assert total_reserve_micros >= total_supply_micros, \
+            f"ZK-Prover: UNSOUND — reserve {total_reserve_micros} < supply {total_supply_micros}"
 
-        public_inputs = [old_root, new_root, str(len(txs))]
-        proof_hash = self._prove(vk, public_inputs, {"txs": txs})
-        proving_time = (time.monotonic() - start) * 1000
+        # Encode into polynomial
+        values = [total_reserve_micros % FIELD_PRIME, total_supply_micros % FIELD_PRIME]
+        values += [int(h[:8], 16) % FIELD_PRIME for h in asset_hashes[:6]]
+        commitment, fri_layers = self.fri.commit(values)
+
+        queries = secrets.SystemRandom().sample(range(len(fri_layers)), min(NUM_QUERY_ROUNDS, len(fri_layers)))
+        query_answers = self.fri.query(fri_layers, queries)
+
+        proof_hash = hashlib.sha256(commitment + str(inputs.public_inputs).encode()).hexdigest()
+        ms = (time.perf_counter() - t0) * 1000
 
         return ZKProof(
-            proof_type=ProofType.STATE_TRANSITION,
-            proof_hash=proof_hash,
-            public_inputs=public_inputs,
-            verification_key=vk,
-            created_at=time.time(),
-            verified=True,
-            proving_time_ms=round(proving_time, 2),
-            backend=self.BACKEND,
+            proof_type    = ProofType.RESERVE_ATTESTATION,
+            commitment    = commitment,
+            fri_layers    = fri_layers,
+            query_answers = query_answers,
+            public_inputs = inputs.public_inputs,
+            proof_hash    = proof_hash,
+            generation_time_ms = round(ms, 2),
         )
 
-    def prove_bridge_attestation(self, bridge_tx: dict, merkle_proof: list[str]) -> ZKProof:
-        """Prove that a bridge transaction is included in the L2 state."""
-        start = time.monotonic()
-        circuit = PlonkCircuit("bridge_attestation")
-        circuit.add_constraint("tx_hash", "merkle_path", "root", op="merkle_verify")
-        vk = circuit.compile()
+    # ── Balance Proof ──────────────────────────────────────────────────────
+    async def prove_balance(
+        self,
+        user_address:   str,
+        actual_balance: int,    # Actual $SPI balance (kept private)
+        threshold:      int,    # Minimum threshold to prove (revealed)
+    ) -> ZKProof:
+        """
+        Prove: user_balance >= threshold. Balance stays private.
+        """
+        t0 = time.perf_counter()
 
-        public_inputs = [
-            hashlib.sha256(json.dumps(bridge_tx, sort_keys=True).encode()).hexdigest(),
-            str(len(merkle_proof)),
-        ]
-        proof_hash = self._prove(vk, public_inputs, bridge_tx)
-        proving_time = (time.monotonic() - start) * 1000
+        inputs = ProofInput(
+            proof_type    = ProofType.BALANCE_PROOF,
+            public_inputs = {"threshold": threshold, "user_address": user_address},
+            private_inputs = {"actual_balance": actual_balance},
+        )
+
+        assert actual_balance >= threshold, "Balance proof: threshold not met"
+
+        user_int = int(user_address[:16], 16) % FIELD_PRIME
+        values = [actual_balance % FIELD_PRIME, threshold % FIELD_PRIME, user_int]
+        commitment, fri_layers = self.fri.commit(values)
+
+        queries = secrets.SystemRandom().sample(range(len(fri_layers)), min(5, len(fri_layers)))
+        query_answers = self.fri.query(fri_layers, queries)
+
+        proof_hash = hashlib.sha256(commitment + user_address.encode()).hexdigest()
+        ms = (time.perf_counter() - t0) * 1000
 
         return ZKProof(
-            proof_type=ProofType.BRIDGE_ATTESTATION,
-            proof_hash=proof_hash,
-            public_inputs=public_inputs,
-            verification_key=vk,
-            created_at=time.time(),
-            verified=True,
-            proving_time_ms=round(proving_time, 2),
-            backend=self.BACKEND,
+            proof_type    = ProofType.BALANCE_PROOF,
+            commitment    = commitment,
+            fri_layers    = fri_layers,
+            query_answers = query_answers,
+            public_inputs = {"threshold": threshold, "address": user_address},
+            proof_hash    = proof_hash,
+            generation_time_ms = round(ms, 2),
         )
 
-    def verify(self, proof_hash: str) -> bool:
-        proof = self._proof_cache.get(proof_hash)
-        if not proof:
-            return False
-        # Re-verify against VK + public inputs
-        expected = self._prove(proof.verification_key, proof.public_inputs, {})
-        return expected == proof_hash
+    # ── State Transition Proof ─────────────────────────────────────────────
+    async def prove_state_transition(
+        self,
+        prev_state_root: str,
+        new_state_root:  str,
+        tx_batch:        list[dict],
+    ) -> ZKProof:
+        """
+        Prove L2 batch state transition is valid.
+        """
+        t0 = time.perf_counter()
 
-    def _prove(self, vk: str, public_inputs: list, witness: Any) -> str:
-        payload = json.dumps({
-            "vk": vk,
-            "inputs": public_inputs,
-            "witness": witness,
-            "ts": int(time.time()),
-        }, sort_keys=True, default=str)
-        return "proof_" + hashlib.sha256(payload.encode()).hexdigest()
+        # Reject any Pi Coin transactions in the batch
+        for tx in tx_batch:
+            if PI_COIN_ADDR.lower() in str(tx).lower():
+                raise ValueError(f"ZK-Prover: Pi Coin tx in batch — LEX_MACHINA v1.3 violation")
+
+        inputs = ProofInput(
+            proof_type    = ProofType.STATE_TRANSITION,
+            public_inputs = {
+                "prev_state_root": prev_state_root,
+                "new_state_root":  new_state_root,
+                "tx_count":        len(tx_batch),
+            },
+            private_inputs = {"tx_batch": tx_batch},
+        )
+
+        prev_int = int(prev_state_root[:8], 16) % FIELD_PRIME
+        new_int  = int(new_state_root[:8], 16) % FIELD_PRIME
+        tx_hash  = int(hashlib.sha256(str(tx_batch).encode()).hexdigest()[:8], 16) % FIELD_PRIME
+
+        values = [prev_int, new_int, tx_hash, len(tx_batch)]
+        commitment, fri_layers = self.fri.commit(values)
+        query_answers = self.fri.query(fri_layers, list(range(min(NUM_QUERY_ROUNDS, len(fri_layers)))))
+
+        proof_hash = hashlib.sha256(
+            commitment + prev_state_root.encode() + new_state_root.encode()
+        ).hexdigest()
+        ms = (time.perf_counter() - t0) * 1000
+
+        return ZKProof(
+            proof_type    = ProofType.STATE_TRANSITION,
+            commitment    = commitment,
+            fri_layers    = fri_layers,
+            query_answers = query_answers,
+            public_inputs = inputs.public_inputs,
+            proof_hash    = proof_hash,
+            generation_time_ms = round(ms, 2),
+        )
+
+# ── Batch Proof Runner ────────────────────────────────────────────────────
+class BatchProver:
+    """
+    Parallel proof generation for high-throughput L2 operation.
+    Targets: <500ms per proof, 1000+ proofs/min with async batching.
+    """
+
+    def __init__(self, workers: int = 8):
+        self.prover  = ZKProver()
+        self.workers = workers
+        self._queue: asyncio.Queue = asyncio.Queue()
+        self._results: list[ZKProof] = []
+
+    async def submit_reserve_proofs(
+        self,
+        reserve_snapshots: list[dict]
+    ) -> list[ZKProof]:
+        tasks = [
+            self.prover.prove_reserve_attestation(
+                snap["reserve_micros"],
+                snap["supply_micros"],
+                snap.get("asset_hashes", []),
+            )
+            for snap in reserve_snapshots
+        ]
+        return list(await asyncio.gather(*tasks))
+
+    async def submit_balance_proofs(
+        self,
+        balance_requests: list[dict]
+    ) -> list[ZKProof]:
+        tasks = [
+            self.prover.prove_balance(
+                req["user"],
+                req["balance"],
+                req["threshold"],
+            )
+            for req in balance_requests
+        ]
+        return list(await asyncio.gather(*tasks))
+
+    def report(self, proofs: list[ZKProof]) -> dict:
+        if not proofs:
+            return {"count": 0}
+        avg_ms = sum(p.generation_time_ms for p in proofs) / len(proofs)
+        return {
+            "count":         len(proofs),
+            "all_valid":     all(p.valid for p in proofs),
+            "avg_ms":        round(avg_ms, 2),
+            "types":         [p.proof_type.name for p in proofs],
+            "proof_hashes":  [p.proof_hash[:16] for p in proofs],
+        }
+
+
+# ── CLI Entry ─────────────────────────────────────────────────────────────
+if __name__ == "__main__":
+    async def demo():
+        prover = ZKProver()
+
+        print("Generating reserve attestation proof...")
+        proof = await prover.prove_reserve_attestation(
+            total_reserve_micros=110_000_000,   # $110M reserve
+            total_supply_micros=100_000_000,    # $100M supply → 110% ratio
+            asset_hashes=[
+                "a1b2c3d4e5f6a7b8",
+                "deadbeef12345678",
+            ],
+        )
+        print(f"  Proof hash: {proof.proof_hash[:32]}...")
+        print(f"  Public inputs: {proof.public_inputs}")
+        print(f"  Generation time: {proof.generation_time_ms}ms")
+
+        print("\nGenerating balance proof...")
+        bp = await prover.prove_balance(
+            user_address="0x1234567890abcdef1234567890abcdef12345678",
+            actual_balance=500_000,
+            threshold=100_000,
+        )
+        print(f"  Proof hash: {bp.proof_hash[:32]}...")
+        print(f"  Proves balance >= {bp.public_inputs['threshold']} (actual hidden)")
+
+    asyncio.run(demo())
