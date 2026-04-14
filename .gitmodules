@@ -1,3 +1,7 @@
 [submodule "libraries/fc"]
 	path = libraries/fc
 	url = https://github.com/pidiscovery/bitshares-fc.git
+[submodule "integrations/neuroforge-nexus"]
+	path = integrations/neuroforge-nexus
+	url = https://github.com/KOSASIH/neuroforge-nexus.git
+	branch = main
