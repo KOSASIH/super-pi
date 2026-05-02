@@ -1,222 +1,222 @@
 {
   "snapshot_type": "chronos_oracle_feed",
   "source": "open.er-api.com (Chronos Oracle feed)",
-  "timestamp": 1777593751,
+  "timestamp": 1777680151,
   "datetime_wib": "2026-04-14T13:00:00+07:00",
   "base": "USD",
   "total_fiats": 35,
   "rates": {
-    "EUR": 0.853339,
-    "IDR": 17308.21837,
-    "SGD": 1.274553,
-    "JPY": 157.16387,
-    "GBP": 0.737561,
+    "EUR": 0.852919,
+    "IDR": 17347.982345,
+    "SGD": 1.273128,
+    "JPY": 157.08115,
+    "GBP": 0.737317,
     "AED": 3.6725,
     "SAR": 3.75,
-    "MYR": 3.96835,
-    "INR": 94.978597,
-    "BRL": 4.990919,
-    "CNY": 6.840908,
-    "KRW": 1475.699372,
-    "AUD": 1.393723,
-    "CAD": 1.361227,
-    "CHF": 0.783348,
-    "TRY": 45.175087,
-    "NGN": 1375.420346,
-    "PHP": 61.435668,
-    "THB": 32.555374,
-    "VND": 26295.551967,
-    "BDT": 122.889603,
-    "PKR": 279.483507,
-    "EGP": 53.622122,
-    "ZAR": 16.704084,
-    "MXN": 17.502106,
-    "HKD": 7.833535,
-    "PLN": 3.63497,
-    "CZK": 20.824684,
-    "HUF": 311.712023,
-    "RON": 4.421471,
-    "SEK": 9.249375,
-    "NOK": 9.291767,
-    "DKK": 6.370414,
-    "NZD": 1.697248,
-    "TWD": 31.623552
+    "MYR": 3.969935,
+    "INR": 95.041538,
+    "BRL": 4.974579,
+    "CNY": 6.83733,
+    "KRW": 1473.124555,
+    "AUD": 1.389475,
+    "CAD": 1.359308,
+    "CHF": 0.782082,
+    "TRY": 45.137005,
+    "NGN": 1375.994632,
+    "PHP": 61.400491,
+    "THB": 32.489083,
+    "VND": 26312.003504,
+    "BDT": 122.772165,
+    "PKR": 279.009927,
+    "EGP": 53.334453,
+    "ZAR": 16.654178,
+    "MXN": 17.483295,
+    "HKD": 7.834473,
+    "PLN": 3.624684,
+    "CZK": 20.815014,
+    "HUF": 310.563652,
+    "RON": 4.424027,
+    "SEK": 9.224008,
+    "NOK": 9.292889,
+    "DKK": 6.365036,
+    "NZD": 1.69533,
+    "TWD": 31.634149
   },
   "calldata": [
     {
       "currency_code": "AED",
       "rate_usd_base": 3.6725,
-      "updated_at": 1777593751
+      "updated_at": 1777680151
     },
     {
       "currency_code": "AUD",
-      "rate_usd_base": 1.393723,
-      "updated_at": 1777593751
+      "rate_usd_base": 1.389475,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "BDT",
-      "rate_usd_base": 122.889603,
-      "updated_at": 1777593751
+      "rate_usd_base": 122.772165,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "BRL",
-      "rate_usd_base": 4.990919,
-      "updated_at": 1777593751
+      "rate_usd_base": 4.974579,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "CAD",
-      "rate_usd_base": 1.361227,
-      "updated_at": 1777593751
+      "rate_usd_base": 1.359308,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "CHF",
-      "rate_usd_base": 0.783348,
-      "updated_at": 1777593751
+      "rate_usd_base": 0.782082,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "CNY",
-      "rate_usd_base": 6.840908,
-      "updated_at": 1777593751
+      "rate_usd_base": 6.83733,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "CZK",
-      "rate_usd_base": 20.824684,
-      "updated_at": 1777593751
+      "rate_usd_base": 20.815014,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "DKK",
-      "rate_usd_base": 6.370414,
-      "updated_at": 1777593751
+      "rate_usd_base": 6.365036,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "EGP",
-      "rate_usd_base": 53.622122,
-      "updated_at": 1777593751
+      "rate_usd_base": 53.334453,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "EUR",
-      "rate_usd_base": 0.853339,
-      "updated_at": 1777593751
+      "rate_usd_base": 0.852919,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "GBP",
-      "rate_usd_base": 0.737561,
-      "updated_at": 1777593751
+      "rate_usd_base": 0.737317,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "HKD",
-      "rate_usd_base": 7.833535,
-      "updated_at": 1777593751
+      "rate_usd_base": 7.834473,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "HUF",
-      "rate_usd_base": 311.712023,
-      "updated_at": 1777593751
+      "rate_usd_base": 310.563652,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "IDR",
-      "rate_usd_base": 17308.21837,
-      "updated_at": 1777593751
+      "rate_usd_base": 17347.982345,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "INR",
-      "rate_usd_base": 94.978597,
-      "updated_at": 1777593751
+      "rate_usd_base": 95.041538,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "JPY",
-      "rate_usd_base": 157.16387,
-      "updated_at": 1777593751
+      "rate_usd_base": 157.08115,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "KRW",
-      "rate_usd_base": 1475.699372,
-      "updated_at": 1777593751
+      "rate_usd_base": 1473.124555,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "MXN",
-      "rate_usd_base": 17.502106,
-      "updated_at": 1777593751
+      "rate_usd_base": 17.483295,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "MYR",
-      "rate_usd_base": 3.96835,
-      "updated_at": 1777593751
+      "rate_usd_base": 3.969935,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "NGN",
-      "rate_usd_base": 1375.420346,
-      "updated_at": 1777593751
+      "rate_usd_base": 1375.994632,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "NOK",
-      "rate_usd_base": 9.291767,
-      "updated_at": 1777593751
+      "rate_usd_base": 9.292889,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "NZD",
-      "rate_usd_base": 1.697248,
-      "updated_at": 1777593751
+      "rate_usd_base": 1.69533,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "PHP",
-      "rate_usd_base": 61.435668,
-      "updated_at": 1777593751
+      "rate_usd_base": 61.400491,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "PKR",
-      "rate_usd_base": 279.483507,
-      "updated_at": 1777593751
+      "rate_usd_base": 279.009927,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "PLN",
-      "rate_usd_base": 3.63497,
-      "updated_at": 1777593751
+      "rate_usd_base": 3.624684,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "RON",
-      "rate_usd_base": 4.421471,
-      "updated_at": 1777593751
+      "rate_usd_base": 4.424027,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "SAR",
       "rate_usd_base": 3.75,
-      "updated_at": 1777593751
+      "updated_at": 1777680151
     },
     {
       "currency_code": "SEK",
-      "rate_usd_base": 9.249375,
-      "updated_at": 1777593751
+      "rate_usd_base": 9.224008,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "SGD",
-      "rate_usd_base": 1.274553,
-      "updated_at": 1777593751
+      "rate_usd_base": 1.273128,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "THB",
-      "rate_usd_base": 32.555374,
-      "updated_at": 1777593751
+      "rate_usd_base": 32.489083,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "TRY",
-      "rate_usd_base": 45.175087,
-      "updated_at": 1777593751
+      "rate_usd_base": 45.137005,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "TWD",
-      "rate_usd_base": 31.623552,
-      "updated_at": 1777593751
+      "rate_usd_base": 31.634149,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "VND",
-      "rate_usd_base": 26295.551967,
-      "updated_at": 1777593751
+      "rate_usd_base": 26312.003504,
+      "updated_at": 1777680151
     },
     {
       "currency_code": "ZAR",
-      "rate_usd_base": 16.704084,
-      "updated_at": 1777593751
+      "rate_usd_base": 16.654178,
+      "updated_at": 1777680151
     }
   ],
   "alerts": [],
