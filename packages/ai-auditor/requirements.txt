@@ -1,0 +1,2 @@
+pydantic>=2.6.0
+# Production: pip install transformers torch (for AI model)
