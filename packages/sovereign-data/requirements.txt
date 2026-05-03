@@ -1,0 +1,4 @@
+cryptography>=42.0.0
+pydantic>=2.6.0
+aiohttp>=3.9.0
+# Production: pip install ipfshttpclient pyarweave
