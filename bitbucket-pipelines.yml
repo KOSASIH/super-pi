@@ -1,0 +1,56 @@
+# bitbucket-pipelines.yml — Super Pi v12.0.0 HYPERION ASCENT
+# Bitbucket Pipelines CI/CD — mirrors github.com/KOSASIH/super-pi
+
+image: node:20-alpine
+
+definitions:
+  steps:
+    - step: &lint
+        name: Lint Smart Contracts
+        caches: [node]
+        script: [npm ci, npx solhint 'contracts/**/*.sol']
+
+    - step: &test
+        name: Unit Tests + Coverage
+        caches: [node]
+        script: [npm ci, npx hardhat test, npx hardhat coverage]
+        artifacts: [coverage/**]
+
+    - step: &security
+        name: Security Audit (Slither)
+        image: python:3.12-slim
+        script: [pip install slither-analyzer, slither contracts/ --checklist]
+
+    - step: &pi-coin-check
+        name: Pi Coin Hard Block Verification
+        script:
+          - echo "Scanning for Pi Coin references..."
+          - "! grep -rn 'PI_COIN\|PiCoin\|piCoin' contracts/ --include='*.sol' || exit 1"
+          - echo "PASS: Zero Pi Coin references"
+
+    - step: &nexuslaw-check
+        name: NexusLaw v3.1 Compliance Check
+        script:
+          - grep -r 'NEXUSLAW.*v3.1' contracts/ --include='*.sol'
+          - echo "NexusLaw v3.1 verified"
+
+pipelines:
+  default:
+    - parallel: [{step: *lint}, {step: *pi-coin-check}, {step: *nexuslaw-check}]
+    - step: *test
+    - step: *security
+
+  branches:
+    master:
+      - parallel: [{step: *lint}, {step: *pi-coin-check}, {step: *nexuslaw-check}]
+      - step: *test
+      - step: *security
+      - step:
+          name: Deploy to Testnet
+          deployment: testnet
+          script: [npm ci, npx hardhat run scripts/deploy.js --network super-pi-testnet]
+
+  pull-requests:
+    '**':
+      - parallel: [{step: *lint}, {step: *pi-coin-check}]
+      - step: *test

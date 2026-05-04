@@ -1,0 +1,9 @@
+{
+  "name": "@super-pi/mesh-payments",
+  "version": "2.0.0",
+  "description": "Offline P2P mesh payment SDK — store-and-forward ZK channels for 195 countries",
+  "main": "src/index.js",
+  "license": "MIT",
+  "keywords": ["mesh", "offline", "p2p", "payments", "zk-channels", "super-pi"],
+  "dependencies": { "ethers": "^6.0.0", "libp2p": "^1.0.0" }
+}

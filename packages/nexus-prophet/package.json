@@ -1,0 +1,9 @@
+{
+  "name": "@super-pi/nexus-prophet",
+  "version": "1.0.0",
+  "description": "NexusProphet economic forecasting SDK — LLM + ZK GDP/FX/inflation oracles",
+  "main": "src/index.js",
+  "license": "MIT",
+  "keywords": ["forecasting", "oracle", "llm", "zk", "economic", "super-pi"],
+  "dependencies": { "ethers": "^6.0.0", "@super-pi/aria-v2": "^2.0.0" }
+}

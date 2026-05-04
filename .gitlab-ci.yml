@@ -1,0 +1,55 @@
+# .gitlab-ci.yml — Super Pi v12.0.0 HYPERION ASCENT
+# GitLab CI/CD Pipeline — mirrors github.com/KOSASIH/super-pi
+
+stages: [lint, test, security, deploy]
+
+variables:
+  NODE_VERSION: "20"
+  SOLC_VERSION: "0.8.24"
+
+lint:contracts:
+  stage: lint
+  image: node:20-alpine
+  script:
+    - npm ci
+    - npx solhint 'contracts/**/*.sol'
+    - npx prettier --check 'contracts/**/*.sol'
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - if: '$CI_COMMIT_BRANCH == "master"'
+
+test:unit:
+  stage: test
+  image: node:20-alpine
+  script: [npm ci, npx hardhat test, npx hardhat coverage]
+  coverage: '/Statements.*?(\d+(?:\.\d+)?)%/'
+  artifacts:
+    reports:
+      coverage_report: {coverage_format: cobertura, path: coverage/cobertura-coverage.xml}
+
+security:slither:
+  stage: security
+  image: python:3.12-slim
+  script: [pip install slither-analyzer, slither contracts/ --checklist]
+
+security:pi-coin-check:
+  stage: security
+  image: node:20-alpine
+  script:
+    - echo "Checking for Pi Coin references..."
+    - "! grep -rn 'PI_COIN\|PiCoin\|piCoin\|pi_coin' contracts/ --include='*.sol' || (echo 'PI_COIN_DETECTED' && exit 1)"
+    - echo "PASS: Zero Pi Coin references"
+
+security:nexuslaw-check:
+  stage: security
+  script:
+    - COUNT=$(grep -r 'NEXUSLAW.*v3.1' contracts/ --include='*.sol' | wc -l)
+    - echo "NexusLaw v3.1 headers found: $COUNT"
+    - test $COUNT -gt 0
+
+deploy:testnet:
+  stage: deploy
+  image: node:20-alpine
+  script: [npm ci, npx hardhat run scripts/deploy.js --network super-pi-testnet]
+  environment: {name: testnet}
+  only: [master]

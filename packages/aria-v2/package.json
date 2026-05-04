@@ -1,0 +1,14 @@
+{
+  "name": "@super-pi/aria-v2",
+  "version": "2.0.0",
+  "description": "ARIA Oracle v2 — LLM-backed risk assessment engine with recursive ZK proofs",
+  "main": "src/index.js",
+  "license": "MIT",
+  "keywords": ["aria", "llm", "zk-proofs", "risk-oracle", "super-pi"],
+  "dependencies": {
+    "ethers": "^6.0.0",
+    "snarkjs": "^0.7.0",
+    "@super-pi/nexus-law": "^3.1.0"
+  },
+  "scripts": { "build": "tsc", "test": "jest", "verify": "node src/verify.js" }
+}

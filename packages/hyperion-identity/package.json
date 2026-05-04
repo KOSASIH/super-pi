@@ -1,0 +1,9 @@
+{
+  "name": "@super-pi/hyperion-identity",
+  "version": "3.0.0",
+  "description": "HyperionIdentity v3 — Post-quantum Falcon-1024 ZK sovereign identity + KYC 0-4 + OFAC v3",
+  "main": "src/index.js",
+  "license": "MIT",
+  "keywords": ["zk-identity", "did", "kyc", "falcon", "pq-crypto", "super-pi"],
+  "dependencies": { "ethers": "^6.0.0", "@noble/curves": "^1.0.0", "snarkjs": "^0.7.0" }
+}

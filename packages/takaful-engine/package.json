@@ -1,0 +1,9 @@
+{
+  "name": "@super-pi/takaful-engine",
+  "version": "1.0.0",
+  "description": "Halal Takaful insurance calculation engine — Sharia-compliant mutual risk pooling",
+  "main": "src/index.js",
+  "license": "MIT",
+  "keywords": ["takaful", "halal", "insurance", "sharia", "super-pi"],
+  "dependencies": { "ethers": "^6.0.0", "@super-pi/nexus-law": "^3.1.0" }
+}
