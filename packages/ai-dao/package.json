@@ -1,0 +1,18 @@
+{
+  "name": "@super-pi/ai-dao",
+  "version": "3.0.0",
+  "description": "AI DAO v3 governance SDK: LLM proposal gen, ZK vote, quadratic weighting, guardian veto",
+  "main": "index.js",
+  "keywords": [
+    "ai-dao",
+    "governance",
+    "zk-vote",
+    "quadratic",
+    "super-pi"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^6.0.0",
+    "snarkjs": "^0.7.0"
+  }
+}
