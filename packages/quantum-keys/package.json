@@ -1,0 +1,19 @@
+{
+  "name": "@super-pi/quantum-keys",
+  "version": "1.0.0",
+  "description": "Post-quantum key management SDK: CRYSTALS-Kyber-1024, Dilithium-4, SPHINCS+, Falcon-1024",
+  "main": "index.js",
+  "keywords": [
+    "post-quantum",
+    "kyber",
+    "dilithium",
+    "sphincs",
+    "falcon",
+    "super-pi"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@noble/post-quantum": "^0.2.0",
+    "ethers": "^6.0.0"
+  }
+}
