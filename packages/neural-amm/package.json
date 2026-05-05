@@ -1,0 +1,17 @@
+{
+  "name": "@super-pi/neural-amm",
+  "version": "4.0.0",
+  "description": "Neural AMM v4 SDK: adaptive fees, MEV-0 commit-reveal, virtual $SPI liquidity, IL rebate",
+  "main": "index.js",
+  "keywords": [
+    "amm",
+    "dex",
+    "mev-zero",
+    "neural",
+    "super-pi"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^6.0.0"
+  }
+}
