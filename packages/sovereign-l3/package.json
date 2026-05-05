@@ -1,0 +1,19 @@
+{
+  "name": "@super-pi/sovereign-l3",
+  "version": "1.0.0",
+  "description": "Sovereign L3 appchain deployment toolkit: EVM, SVM, MoveVM, CosmWasm \u2014 60s deploy",
+  "main": "index.js",
+  "keywords": [
+    "l3",
+    "appchain",
+    "evm",
+    "svm",
+    "movevm",
+    "super-pi"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "ethers": "^6.0.0",
+    "@openzeppelin/contracts": "^5.0.0"
+  }
+}
