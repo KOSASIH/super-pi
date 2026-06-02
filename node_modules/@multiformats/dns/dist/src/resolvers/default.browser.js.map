@@ -1,0 +1,1 @@
+{"version":3,"file":"default.browser.js","sourceRoot":"","sources":["../../../src/resolvers/default.browser.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,gBAAgB,EAAE,MAAM,0BAA0B,CAAA;AAG3D,MAAM,UAAU,eAAe;IAC7B,OAAO;QACL,gBAAgB,CAAC,sCAAsC,CAAC;QACxD,gBAAgB,CAAC,4BAA4B,CAAC;KAC/C,CAAA;AACH,CAAC"}

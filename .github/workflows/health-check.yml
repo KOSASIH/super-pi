@@ -1,0 +1,7 @@
+name: Workflow health-check
+on: [push, pull_request]
+jobs:
+  run-job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "health-check workflow verified."

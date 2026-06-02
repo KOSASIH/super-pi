@@ -1,5 +1,13 @@
 {
   "$schema": "https://turbo.build/schema.json",
+ feature/ultimate-export-1780410019
+  "pipeline": {
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**", ".next/**"] },
+    "test": { "dependsOn": ["build"] },
+    "lint": {},
+    "dev": { "cache": false },
+    "clean": { "cache": false }
+
   "tasks": {
     "build": {
       "dependsOn": [
@@ -16,5 +24,6 @@
       "persistent": true
     },
     "lint": {}
+ master
   }
 }

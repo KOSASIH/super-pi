@@ -1,0 +1,1 @@
+{"version":3,"file":"peer-info.d.ts","sourceRoot":"","sources":["../../src/peer-info.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,MAAM,EAAE,MAAM,cAAc,CAAA;AAC1C,OAAO,KAAK,EAAE,SAAS,EAAE,MAAM,yBAAyB,CAAA;AAExD;;;;;GAKG;AACH,MAAM,WAAW,QAAQ;IACvB;;OAEG;IACH,EAAE,EAAE,MAAM,CAAA;IAEV;;OAEG;IACH,UAAU,EAAE,SAAS,EAAE,CAAA;CACxB"}

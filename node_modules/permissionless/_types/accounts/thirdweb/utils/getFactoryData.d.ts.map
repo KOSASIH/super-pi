@@ -1,0 +1,1 @@
+{"version":3,"file":"getFactoryData.d.ts","sourceRoot":"","sources":["../../../../accounts/thirdweb/utils/getFactoryData.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,OAAO,EAAE,GAAG,EAAE,MAAM,MAAM,CAAA;AAGxC,eAAO,MAAM,cAAc,GAAU,iBAGlC;IACC,KAAK,EAAE,OAAO,CAAA;IACd,IAAI,EAAE,GAAG,CAAA;CACZ,2BA8BA,CAAA"}

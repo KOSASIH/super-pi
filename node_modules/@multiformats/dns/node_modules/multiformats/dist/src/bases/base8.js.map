@@ -1,0 +1,1 @@
+{"version":3,"file":"base8.js","sourceRoot":"","sources":["../../../src/bases/base8.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,MAAM,WAAW,CAAA;AAEnC,MAAM,CAAC,MAAM,KAAK,GAAG,OAAO,CAAC;IAC3B,MAAM,EAAE,GAAG;IACX,IAAI,EAAE,OAAO;IACb,QAAQ,EAAE,UAAU;IACpB,WAAW,EAAE,CAAC;CACf,CAAC,CAAA"}

@@ -1,0 +1,77 @@
+name: Snarkjs Integration Test
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  test:
+    name: Test
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        node-version: ["18", "20", "22"]
+
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          path: circom_runtime
+
+      - name: Checkout project
+        uses: actions/checkout@v4
+        with:
+          repository: iden3/snarkjs
+          path: snarkjs
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          check-latest: true
+          cache: 'npm'
+          cache-dependency-path: snarkjs/package-lock.json
+
+      - name: Install circom_runtime dependencies
+        run: npm ci
+        working-directory: circom_runtime
+
+      - name: Build circom_runtime
+        run: npm run build
+        working-directory: circom_runtime
+
+      - name: Install circom_runtime to snarkjs as a link
+        run: npm install ../circom_runtime
+        working-directory: snarkjs
+
+      - name: Install snarkjs dependencies
+        run: npm ci
+        working-directory: snarkjs
+
+      - name: Build snarkjs
+        run: npm run build
+        working-directory: snarkjs
+
+      - name: Run snarkjs tests
+        run: npm test
+        working-directory: snarkjs
+
+      - name: Install smart_contract_tests dependencies
+        working-directory: snarkjs/smart_contract_tests
+        run: npm ci
+
+      - name: Run smart_contract_tests
+        working-directory: snarkjs/smart_contract_tests
+        run: npm test
+
+      - name: Install browser dependencies
+        working-directory: snarkjs/browser_tests
+        run: npm ci
+
+      - name: Run browser tests
+        working-directory: snarkjs/browser_tests
+        run: npm test
