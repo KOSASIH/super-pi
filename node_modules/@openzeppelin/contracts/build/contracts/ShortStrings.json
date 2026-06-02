@@ -1,0 +1,27 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ShortStrings",
+  "sourceName": "contracts/utils/ShortStrings.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "InvalidShortString",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "str",
+          "type": "string"
+        }
+      ],
+      "name": "StringTooLong",
+      "type": "error"
+    }
+  ],
+  "bytecode": "0x60556032600b8282823980515f1a607314602657634e487b7160e01b5f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea26469706673582212209f5dcf58aa24194dc423452db9f2a4c1942c4215c9383ed9b2a9a229b405809b64736f6c634300081f0033",
+  "deployedBytecode": "0x730000000000000000000000000000000000000000301460806040525f5ffdfea26469706673582212209f5dcf58aa24194dc423452db9f2a4c1942c4215c9383ed9b2a9a229b405809b64736f6c634300081f0033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

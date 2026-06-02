@@ -1,0 +1,22 @@
+export const transportSymbol = Symbol.for('@libp2p/transport');
+/**
+ * Used to disambiguate transport implementations
+ */
+export function isTransport(other) {
+    return other != null && Boolean(other[transportSymbol]);
+}
+/**
+ * Enum Transport Manager Fault Tolerance values
+ */
+export var FaultTolerance;
+(function (FaultTolerance) {
+    /**
+     * should be used for failing in any listen circumstance
+     */
+    FaultTolerance[FaultTolerance["FATAL_ALL"] = 0] = "FATAL_ALL";
+    /**
+     * should be used for not failing when not listening
+     */
+    FaultTolerance[FaultTolerance["NO_FATAL"] = 1] = "NO_FATAL";
+})(FaultTolerance || (FaultTolerance = {}));
+//# sourceMappingURL=transport.js.map

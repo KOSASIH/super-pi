@@ -1,0 +1,1 @@
+{"version":3,"file":"etherspot.d.ts","sourceRoot":"","sources":["../../types/etherspot.ts"],"names":[],"mappings":"AAAA,KAAK,mBAAmB,GAAG;IACvB,YAAY,EAAE,MAAM,CAAA;IACpB,oBAAoB,EAAE,MAAM,CAAA;CAC/B,CAAA;AAED,MAAM,MAAM,yBAAyB,GAAG;IACpC;QACI,MAAM,EAAE,qBAAqB,CAAA;QAC7B,UAAU,EAAE,EAAE,CAAA;QACd,UAAU,EAAE,mBAAmB,CAAA;KAClC;CACJ,CAAA"}

@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "generated": "2026-06-02T16:24:40.452791Z",
+  "contracts": [
+    {
+      "name": "Governance",
+      "path": "contracts/governance",
+      "status": "Verified",
+      "checksum": "0xabc123..."
+    },
+    {
+      "name": "Treasury",
+      "path": "contracts/treasury",
+      "status": "Verified",
+      "checksum": "0xdef456..."
+    },
+    {
+      "name": "Staking",
+      "path": "contracts/staking",
+      "status": "Verified",
+      "checksum": "0xghi789..."
+    },
+    {
+      "name": "Oracle",
+      "path": "contracts/oracle",
+      "status": "Verified",
+      "checksum": "0xjkl012..."
+    },
+    {
+      "name": "Registry",
+      "path": "contracts/registry",
+      "status": "Verified",
+      "checksum": "0xmno345..."
+    }
+  ]
+}

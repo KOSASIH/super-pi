@@ -1,0 +1,13 @@
+{
+  "format": "https://achingbrain.github.io/weald/functions/format.format.html",
+  "./format:format": "https://achingbrain.github.io/weald/functions/format.format.html",
+  "Debug": "https://achingbrain.github.io/weald/interfaces/index.Debug.html",
+  ".:Debug": "https://achingbrain.github.io/weald/interfaces/index.Debug.html",
+  "Debugger": "https://achingbrain.github.io/weald/interfaces/index.Debugger.html",
+  ".:Debugger": "https://achingbrain.github.io/weald/interfaces/index.Debugger.html",
+  "Options": "https://achingbrain.github.io/weald/interfaces/index.Options.html",
+  ".:Options": "https://achingbrain.github.io/weald/interfaces/index.Options.html",
+  "Formatters": "https://achingbrain.github.io/weald/types/index.Formatters.html",
+  ".:Formatters": "https://achingbrain.github.io/weald/types/index.Formatters.html",
+  "default": "https://achingbrain.github.io/weald/variables/index.default.html"
+}

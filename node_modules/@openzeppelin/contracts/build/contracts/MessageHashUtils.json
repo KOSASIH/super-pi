@@ -1,0 +1,16 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "MessageHashUtils",
+  "sourceName": "contracts/utils/cryptography/MessageHashUtils.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "ERC5267ExtensionsNotSupported",
+      "type": "error"
+    }
+  ],
+  "bytecode": "0x60556032600b8282823980515f1a607314602657634e487b7160e01b5f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea264697066735822122090ae6b0fabce9e1fb9a8af9d72b644ef661e0bd9b94fb05df5fc553c8facd5eb64736f6c634300081f0033",
+  "deployedBytecode": "0x730000000000000000000000000000000000000000301460806040525f5ffdfea264697066735822122090ae6b0fabce9e1fb9a8af9d72b644ef661e0bd9b94fb05df5fc553c8facd5eb64736f6c634300081f0033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

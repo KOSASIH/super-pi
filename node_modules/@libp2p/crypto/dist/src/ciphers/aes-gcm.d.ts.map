@@ -1,0 +1,1 @@
+{"version":3,"file":"aes-gcm.d.ts","sourceRoot":"","sources":["../../../src/ciphers/aes-gcm.ts"],"names":[],"mappings":"AAGA,OAAO,KAAK,EAAE,aAAa,EAAE,SAAS,EAAE,MAAM,gBAAgB,CAAA;AAI9D,wBAAgB,MAAM,CAAE,IAAI,CAAC,EAAE,aAAa,GAAG,SAAS,CA8FvD"}

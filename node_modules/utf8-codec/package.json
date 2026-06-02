@@ -1,0 +1,46 @@
+{
+  "name": "utf8-codec",
+  "version": "1.0.0",
+  "description": "utf8 to/from bytes codec (esm/cjs)",
+  "main": "index.js",
+  "module": "index.mjs",
+  "types": "./types/index.d.ts",
+  "exports": {
+    "require": "./index.js",
+    "import": "./index.mjs",
+    "types": "./types/index.d.ts"
+  },
+  "scripts": {
+    "test": "npm run lint && npm run unit",
+    "lint": "standard &&  dtslint types --localTs node_modules/typescript/lib",
+    "unit": "node test.mjs",
+    "coverage": "c8 -r html -r text npm run unit",
+    "prepare": "esm2umd utf8Codec"
+  },
+  "keywords": [
+    "utf8",
+    "codec",
+    "bytes",
+    "encoding",
+    "buffer",
+    "uint8array"
+  ],
+  "author": "Martin Heidegger <martin.heidegger@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@definitelytyped/dtslint": "^0.0.112",
+    "@leichtgewicht/esm2umd": "^0.3.4",
+    "c8": "^7.11.3",
+    "fresh-tape": "^5.5.3",
+    "standard": "^17.0.0",
+    "typescript": "^4.7.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martinheidegger/utf8-codec.git"
+  },
+  "bugs": {
+    "url": "https://github.com/martinheidegger/utf8-codec/issues"
+  },
+  "homepage": "https://github.com/martinheidegger/utf8-codec#readme"
+}

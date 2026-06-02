@@ -1,0 +1,7 @@
+name: Workflow deploy-staging
+on: [push, pull_request]
+jobs:
+  run-job:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "deploy-staging workflow verified."

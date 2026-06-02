@@ -1,0 +1,1 @@
+{"version":3,"file":"message.js","sourceRoot":"","sources":["../../../src/codecs/message.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,WAAW,EAAE,WAAW,EAAE,MAAM,aAAa,CAAA;AAOtD,MAAM,UAAU,OAAO,CAAM,MAAyB,EAAE,MAAyB;IAC/E,OAAO,WAAW,CAAC,SAAS,EAAE,WAAW,CAAC,gBAAgB,EAAE,MAAM,EAAE,MAAM,CAAC,CAAA;AAC7E,CAAC"}

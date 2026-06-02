@@ -1,0 +1,33 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "ERC1363Utils",
+  "sourceName": "contracts/token/ERC20/utils/ERC1363Utils.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "receiver",
+          "type": "address"
+        }
+      ],
+      "name": "ERC1363InvalidReceiver",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        }
+      ],
+      "name": "ERC1363InvalidSpender",
+      "type": "error"
+    }
+  ],
+  "bytecode": "0x60556032600b8282823980515f1a607314602657634e487b7160e01b5f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220c98580c01d28a6abf6f57c4c25e96860a6f3b5224f0b33ea9d2bdc0fe7e99c7964736f6c634300081f0033",
+  "deployedBytecode": "0x730000000000000000000000000000000000000000301460806040525f5ffdfea2646970667358221220c98580c01d28a6abf6f57c4c25e96860a6f3b5224f0b33ea9d2bdc0fe7e99c7964736f6c634300081f0033",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

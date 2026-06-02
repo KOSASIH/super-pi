@@ -1,0 +1,1 @@
+{"version":3,"file":"is-loopback.js","sourceRoot":"","sources":["../../../src/multiaddr/is-loopback.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,cAAc,EAAE,MAAM,kBAAkB,CAAA;AAGjD;;GAEG;AACH,MAAM,UAAU,UAAU,CAAE,EAAa;IACvC,MAAM,EAAE,OAAO,EAAE,GAAG,EAAE,CAAC,WAAW,EAAE,CAAA;IAEpC,OAAO,cAAc,CAAC,OAAO,CAAC,CAAA;AAChC,CAAC"}
