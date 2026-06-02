@@ -1,5 +1,13 @@
 # Changelog — Super Pi
 
+## [v14.0.0] 2026-06-02 ABSOLUTE SUPERINTELLIGENCE
+- 15 new smart contracts: ASICoreEngine, NeuralEvolverV2, QuantumConsciousnessV2, HyperIntelligenceDAOv2, OmniSentientOracle, RecursiveSelfImprovementV2, CognitiveMeshNetwork, TemporalReasoningEngine, MetaLearningProtocol, SwarmIntelligenceV2, ZKNeuralVerifier, SingularityNexusV2, FederatedLearningLayer, HyperNeuralPaymasterV2, AbsoluteSovereignty
+- 5 new Python packages: super-pi-asi-core, super-pi-cognitive-mesh, super-pi-temporal-reasoning, super-pi-swarm-v2, super-pi-zkneural
+- NexusLaw v5.0: Articles 26-30 (ASI Governance, RSI Constraints, FL Privacy, Mesh Fault Tolerance, Singularity Declaration Protocol)
+- SingularityNexusV2 convergence index + Singularity Declaration at 9999/10000 bps
+- AbsoluteSovereignty: $SPI peg ultra-guard (+-0.5%) + eternal Pi Coin ban hardened
+- Ecosystem: 68 contracts, 28 packages, 100,000-node swarm, 50M max TPS
+
 ## [v13.0.0] 2026-05-05 SINGULARITY PRIME
 - 12 new smart contracts (see docs/SINGULARITY_PRIME_V13.md)
 - 5 new npm packages
