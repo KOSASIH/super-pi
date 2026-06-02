@@ -1,5 +1,18 @@
 # Changelog — Super Pi
 
+## [v15.0.1] 2026-06-02 SECURITY PATCH — SAPIENS Audit Response
+- ExistentialRiskEngine v1.1: 8 circuit-breaker bypass vectors patched (immutable threshold,
+  oracle rate-limit, CEI pattern, MIN_RISK_DELTA, block.number cooldown)
+- NeuralDNARegistry v1.1: 8 ZK vulnerabilities + GDPR Art.9/17 compliance
+  (nullifier uniqueness, immutable verifier, domain separation, proof expiry, ZK-only)
+- MetaverseEconomyBridge v1.1: 8 reentrancy paths closed
+  (global mutex, SafeERC20, cross-chain nonce, zone immutability)
+- HyperspaceAMM v1.1: 7 amplifier manipulation vectors closed
+  (±20% ramp cap, no instant override, MIN_A=1, pool imbalance CB, co-sign emergency)
+- NexusLaw v6.1: Art.27.3 (human quorum safeguard), Art.34 (GDPR/ZK mandate hardened),
+  Art.39.3-39.4 (consumer carve-out, 30-day notice, Shariah scoping)
+- Audit response: docs/SAPIENS_AUDIT_RESPONSE_V15_SEC_PATCH.md
+
 ## [v15.0.0] 2026-06-02 OMEGA TRANSCENDENCE
 - 14 new smart contracts: OmegaConsciousness, TranscendentGovernance, NeuroQuantumBridge,
   UniversalBaseSovereignty, HyperRealityOracle, ExistentialRiskEngine,
