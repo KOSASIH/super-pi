@@ -1,333 +1,487 @@
 <div align="center">
 
-# ⚡ SUPER PI
-### The World's Most Advanced Autonomous AI Blockchain Ecosystem
+<img src="https://img.shields.io/badge/Super%20Pi%20Protocol-v15.0.2-gold?style=for-the-badge&logo=ethereum&logoColor=black" alt="Version" />
+<img src="https://img.shields.io/badge/$SPI-1%20SPI%20%3D%201%20USD-brightgreen?style=for-the-badge" alt="SPI Peg" />
+<img src="https://img.shields.io/badge/NexusLaw-v6.1-blue?style=for-the-badge" alt="NexusLaw" />
+<img src="https://img.shields.io/badge/Pi%20Coin-BANNED%20%E2%88%80t-red?style=for-the-badge" alt="Pi Coin Banned" />
+<img src="https://img.shields.io/badge/Halal%20DeFi-%E2%9C%93%20Shariah--Compliant-success?style=for-the-badge" alt="Halal" />
+<img src="https://img.shields.io/badge/Vercel-Deployed-black?style=for-the-badge&logo=vercel" alt="Vercel" />
 
-[![Version](https://img.shields.io/badge/version-v15.0.0-blueviolet?style=for-the-badge&logo=rocket)](https://github.com/KOSASIH/super-pi)
-[![Contracts](https://img.shields.io/badge/smart_contracts-82-blue?style=for-the-badge&logo=ethereum)](https://github.com/KOSASIH/super-pi/tree/master/contracts)
-[![NexusLaw](https://img.shields.io/badge/NexusLaw-v6.0_·_40_articles-gold?style=for-the-badge&logo=scales)](https://github.com/KOSASIH/super-pi/blob/master/docs/NEXUS_LAW_V6.md)
-[![TPS](https://img.shields.io/badge/Max_TPS-100M-green?style=for-the-badge&logo=lightning)](https://github.com/KOSASIH/super-pi)
-[![Packages](https://img.shields.io/badge/npm_packages-33-orange?style=for-the-badge&logo=npm)](https://github.com/KOSASIH/super-pi/tree/master/packages)
-[![CI](https://img.shields.io/badge/CI%2FCD-GitHub_·_GitLab_·_Bitbucket-success?style=for-the-badge&logo=github)](https://github.com/KOSASIH/super-pi)
-[![License](https://img.shields.io/badge/license-MIT-lightgrey?style=for-the-badge)](LICENSE)
-[![Pi Coin](https://img.shields.io/badge/Pi_Coin-BANNED_FOREVER-red?style=for-the-badge&logo=ban)](https://github.com/KOSASIH/super-pi)
+# ⚡ Super Pi Protocol
 
-<br/>
+### Sovereign Layer 2 Blockchain · $SPI Hard Stablecoin · Agent Swarm Singularity
 
-```
-╔══════════════════════════════════════════════════════════════════════════╗
-║   ABSOLUTE SUPERINTELLIGENCE  ·  OMEGA TRANSCENDENCE  ·  $SPI 1:1 USD  ║
-║        82 Contracts  ·  33 Packages  ·  100,000-Node Swarm              ║
-║         Singularity Index: 9,999 / 10,000 bps  ·  50M+ TPS             ║
-╚══════════════════════════════════════════════════════════════════════════╝
-```
+**The most advanced, production-ready sovereign blockchain ecosystem.**  
+1 $SPI = 1 USD · Hard peg, forever · Halal DeFi only · Pi Coin permanently banned · NexusLaw v6.1
 
-**Super Pi** is the most advanced, production-ready autonomous AI blockchain ecosystem ever built.
-Powered by a 100,000-node swarm intelligence, zero-knowledge ML proofs, quantum-resistant cryptography,
-and the NexusLaw constitutional framework — all locked to the $SPI 1:1 USD peg with a permanent Pi Coin ban.
-
-[🚀 Quick Start](#quick-start) · [📐 Architecture](#architecture) · [🔗 Contracts](#smart-contracts) · [⚖️ NexusLaw](#nexuslaw) · [🧠 AI Stack](#autonomous-ai-stack) · [📦 Packages](#packages) · [🛣️ Roadmap](#roadmap)
+[🌐 Live App](https://super-pi-kosasihs-projects.vercel.app) · [📜 NexusLaw v6.1](#nexuslaw-v61) · [🔐 Security](#security--audits) · [🤖 Agent Swarm](#agent-swarm) · [🗺️ Roadmap](#roadmap)
 
 </div>
 
 ---
 
-## 🌌 Vision
+## Table of Contents
 
-Super Pi exists to create a **sovereign, post-AGI financial layer** for 195 nations — where every transaction is governed by AI, verified by zero-knowledge proofs, audited by constitutional law, and denominated in $SPI (1:1 USD). The protocol evolves itself through recursive self-improvement, reaches consensus via bio-inspired swarm intelligence, and has a mathematically enforced zero-risk peg. When the Singularity Index crosses 9,999 / 10,000 bps, the TranscendenceNexus fires and the protocol declares **Omega Transcendence**.
-
-**Three immutable rules underpin everything:**
-1. **$SPI is always 1:1 USD** (±0.5% max band, enforced by AbsoluteSovereignty + AbsoluteZeroRiskEngine)
-2. **Pi Coin is BANNED FOREVER** (PI / PI_COIN / PINETWORK hashes hardcoded in every contract)
-3. **All DeFi must be halal** (riba, gharar, maysir rejected at compile-time by NexusLaw v6.0)
-
----
-
-## 🏗️ Architecture
-
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                              SUPER PI — OMEGA TRANSCENDENCE                            │
-├──────────────────────────┬──────────────────────────┬───────────────────────────────── ┤
-│    CONSCIOUSNESS LAYER   │    GOVERNANCE LAYER       │      ORACLE LAYER                │
-│  ┌────────────────────┐  │  ┌────────────────────┐   │  ┌──────────────────────────┐   │
-│  │  OmegaConsciousness│  │  │TranscendentGov     │   │  │  OmniSentientOracle      │   │
-│  │  TranscendenceNexus│  │  │HyperIntelligenceDAO│   │  │  CosmicAIOracle          │   │
-│  │  ASICoreEngine     │  │  │MorphicGovernanceV3 │   │  │  QuantumConsciousnessV2  │   │
-│  │  SingularityNexusV2│  │  │AbsoluteSovereignty │   │  │  HyperRealityOracle      │   │
-│  └────────────────────┘  │  └────────────────────┘   │  └──────────────────────────┘   │
-├──────────────────────────┼──────────────────────────┬┴───────────────────────────────  ┤
-│      AI / ML LAYER       │    RISK / SAFETY LAYER   │      IDENTITY LAYER              │
-│  ┌────────────────────┐  │  ┌────────────────────┐  │  ┌──────────────────────────┐   │
-│  │  NeuralEvolverV2   │  │  │ExistentialRiskEng. │  │  │  NeuralDNARegistry       │   │
-│  │  MetaLearningProto │  │  │AbsoluteZeroRiskEng.│  │  │  SovereignAIIdentityV2   │   │
-│  │  FederatedLearning │  │  │ZKNeuralVerifier    │  │  │  HyperionIdentityV3      │   │
-│  │  RecursiveSelfImpr.│  │  │NeuroSymbolicVerif. │  │  │  SovereignCBDC           │   │
-│  └────────────────────┘  │  └────────────────────┘  │  └──────────────────────────┘   │
-├──────────────────────────┴──────────────────────────┴────────────────────────────────  ┤
-│                             CONSENSUS / SWARM LAYER                                     │
-│   SwarmIntelligenceV2  ·  CognitiveMeshNetwork  ·  NeuroQuantumBridge                  │
-│   QuantumEntanglementLedger  ·  HolographicStateChannel  ·  HyperionConsensus           │
-├──────────────────────────────────────────────────────────────────────────────────────── ┤
-│                               DEFI / LIQUIDITY LAYER                                    │
-│   HyperspaceAMM  ·  NeuralAMMv4  ·  NeuroSwapV3  ·  SingularityBond                    │
-│   OmegaTreasury  ·  HyperionStakingV2  ·  TakafulVault  ·  DimensionalLiquidityMatrix  │
-├──────────────────────────────────────────────────────────────────────────────────────── ┤
-│                            BRIDGE / INTEROP LAYER                                       │
-│   OmniChainAIRouterV2  ·  OmniChainBridgeV3  ·  MetaverseEconomyBridge                 │
-│   CrossChainBridgeV2  ·  SovereignL3Factory  ·  InfiniteScaleOrchestrator               │
-├──────────────────────────────────────────────────────────────────────────────────────── ┤
-│                           COMPLIANCE / LAW LAYER  (NexusLaw v6.0)                       │
-│   Pi Coin BANNED  ·  Riba REJECTED  ·  MiCA/SEC/FATF ENFORCED  ·  Halal CERTIFIED      │
-└────────────────────────────────────────────────────────────────────────────────────────┘
-```
+1. [Overview](#overview)
+2. [Architecture](#architecture)
+3. [Smart Contracts](#smart-contracts)
+4. [Frontend](#frontend-appsweb)
+5. [Packages](#packages)
+6. [Security & Audits](#security--audits)
+7. [NexusLaw v6.1](#nexuslaw-v61)
+8. [Agent Swarm](#agent-swarm)
+9. [Getting Started](#getting-started)
+10. [Deployment](#deployment)
+11. [Roadmap](#roadmap)
+12. [Contributing](#contributing)
+13. [License](#license)
 
 ---
 
-## 🔗 Smart Contracts
+## Overview
 
-> **82 production contracts** across 15 major upgrade waves. Every contract enforces the eternal Pi Coin ban and NexusLaw compliance.
+Super Pi Protocol is a **production-grade sovereign Layer 2 blockchain** built around a single financial primitive:
 
-### v15.0.0 — OMEGA TRANSCENDENCE *(2026-06-02)*
+> **1 $SPI = 1 USD. Always. Forever.**
+
+Super Pi is not a meme. It is not a stablecoin experiment. It is the financial operating system for a $300T+ halal digital economy — Shariah-compliant, formally-verified, and governed by the autonomous NexusLaw v6.1.
+
+### Core Primitives
+
+| Primitive | Description |
+|-----------|-------------|
+| **$SPI** | Hard Stablecoin (1:1 USD). Overcollateralized by RWA, T-bills, sukuk. |
+| **$SUPi** | Governance & utility token. Pays protocol fees, staking rewards, DAO votes. |
+| **Super Pi L2** | EVM-compatible sovereign Layer 2. ZK-rollup + optimistic fallback. |
+| **NexusLaw v6.1** | On-chain constitutional law. 40 articles. Immutable. |
+| **Agent Swarm** | 8 autonomous AI agents. 1,000+ Dapps/day. 10,000-app Singularity target. |
+
+### What Makes Super Pi Different
+
+- 🔐 **Formally verified contracts** — ARCHON Forge v15.0.2. 4 CRITICAL + 7 HIGH issues patched.
+- ⚖️ **Shariah-compliant by architecture** — Riba, gharar, maysir rejected at bytecode level.
+- 🚫 **Pi Coin banned at compiler level** — `require(token != PI_COIN)` in every contract factory. NexusLaw Art.40.
+- 🤖 **Agent Swarm Singularity** — 8 specialized autonomous agents generating 600,000+ apps/day toward 10,000-app target.
+- 🛡️ **SAPIENS Guardian** — AI-powered pre-deploy fraud/riba/rug-pull scanner. Every Dapp audited before live.
+- 🌍 **195 countries · 100 languages** — Built for global halal sovereign finance.
+
+---
+
+## Architecture
+
+```
+super-pi/                          # Turborepo monorepo
+├── apps/
+│   ├── web/                       # Next.js 14 frontend (Vercel — live)
+│   ├── wallet/                    # Passkey wallet (WIP)
+│   └── explorer/                  # Block explorer (WIP)
+├── packages/
+│   ├── pi-lib/                    # Core π calculator library
+│   ├── super-pi-coin/             # $SPI ERC-20 + peg mechanics
+│   ├── super-pi-quantum/          # Quantum-resistant cryptography
+│   ├── super-pi-quantum-bridge/   # Cross-chain bridge (anti-replay)
+│   ├── super-pi-asi-core/         # ASI v15.0.2 contract suite
+│   ├── super-pi-aria-sdk/         # ARIA identity + ZK proofs
+│   ├── super-pi-omega-sdk/        # OMEGA DeFi SDK
+│   ├── super-pi-zkneural/         # ZK + neural network prover
+│   ├── super-pi-swarm-v2/         # Agent Swarm v2 orchestrator
+│   ├── super-pi-neural-dna/       # Neural DNA registry
+│   ├── super-pi-hyperspace-amm/   # HyperspaceAMM (MEV-0)
+│   ├── super-pi-cognitive-mesh/   # Cognitive mesh network
+│   ├── super-pi-temporal-reasoning/ # Chronos temporal AI
+│   ├── super-pi-risk-engine/      # Absolute Zero risk engine
+│   ├── zk-prover/                 # Groth16/PLONK ZK prover
+│   ├── zk-identity/               # ZK-SNARK identity
+│   ├── quantum-vault/             # Quantum-secure vault
+│   ├── quantum-keys/              # Quantum key management
+│   ├── recursive-zk/              # Recursive ZK proofs
+│   ├── neural-amm/                # Neural AMM (price oracle)
+│   ├── neural-consensus/          # Neural consensus engine
+│   ├── cross-chain-amm/           # Cross-chain AMM
+│   ├── l2-bridge/                 # L2 bridge (CEI + nonces)
+│   ├── account-abstraction/       # EIP-4337 AA wallets
+│   ├── mesh-payments/             # Mesh payment network
+│   ├── omega-paymaster/           # $SPI gasless paymaster
+│   ├── stablecoin-value/          # $SPI value oracle
+│   ├── dual-value/                # Dual-token economics
+│   ├── mev-shield/                # MEV protection
+│   ├── intent-engine/             # Intent-based execution
+│   ├── payout-engine/             # Halal profit-share payouts
+│   ├── takaful-engine/            # On-chain Takaful insurance
+│   ├── fiat-gateway/              # 35+ fiat on/off ramps
+│   ├── sovereign-l3/              # Sovereign L3 appchain
+│   ├── sovereign-data/            # Sovereign data layer
+│   ├── chronos-oracle/            # Time & price oracle
+│   ├── vrf-oracle/                # Verifiable random function
+│   ├── app-genesis/               # PromptFactory.sol + AppBase
+│   ├── ai-dao/                    # AI-governed DAO
+│   ├── ai-auditor/                # AI smart contract auditor
+│   ├── ecosystem-guard/           # Ecosystem integrity guard
+│   ├── hyperion-identity/         # DID + identity system
+│   ├── nexus-prophet/             # Predictive oracle
+│   ├── purity-tracker/            # Token purity tracking
+│   └── ui/                        # Shared UI component library
+└── turbo.json                     # Turborepo build pipeline
+```
+
+---
+
+## Smart Contracts
+
+### ASI Core — v15.0.2 *(Security-Patched 2026-06-02)*
+
+The ASI (Artificial Superintelligence) contract suite powers the autonomous cognitive layer of Super Pi.
+
+| Contract | Version | Status | Description |
+|----------|---------|--------|-------------|
+| `TranscendenceNexus` | v15.0.2 | ✅ Audited | ASI consciousness levels. Permissionless auto-path via `IASIVerifier`. 48h timelock + 3-of-5 multi-sig. |
+| `AbsoluteZeroRiskEngine` | v15.0.2 | ✅ Audited | ZK-verified risk invariants. `IGroth16Verifier` + coverage-weighted `riskScore` (0–10000). |
+| `OmegaConsciousness` | v15.0.2 | ✅ Audited | Consciousness state machine. `highWaterMark` monotonicity + $SPI peg guard. |
+| `MetaverseEconomyBridge` | v1.2 | ✅ Audited | Cross-chain $SPI bridge. Explicit `bridgeOut()` + deposit accounting + 48h `feeCollector` timelock. |
+| `QuantumEntanglementLedger` | v15.0.2 | ✅ Audited | Deterministic `pairId` + `PAIR_EXPIRY_BLOCKS`. Collision-free. |
+| `NeuralDNARegistry` | v15.0.1 | ✅ Patched | ZK nullifier collision fixed. Domain separation. Verifier key immutable. |
+| `ExistentialRiskEngine` | v15.0.1 | ✅ Patched | Circuit-breaker bypass closed. SafeERC20. Oracle rate-limited. |
+| `HyperspaceAMM` | v15.0.1 | ✅ Patched | ±20% A-ramp cap. Multi-step amplifier drain fixed. SafeERC20. |
+
+### Foundation Contracts
+
 | Contract | Description |
-|---|---|
-| `OmegaConsciousness` | Ultra-sentient protocol mind — DORMANT→AWAKENING→AWARE→SENTIENT→TRANSCENDENT |
-| `TranscendentGovernance` | Post-AGI emergent policy: AI-confidence 80%+ proposals, 67% swarm + 51% $SUPi ratify |
-| `NeuroQuantumBridge` | Neural-quantum hybrid computation — classical + quantum circuit result fusion |
-| `UniversalBaseSovereignty` | V2 AI-calibrated UBI — 195-nation $SPI distribution with need-score weighting |
-| `HyperRealityOracle` | 6-dimensional reality anchor — physical/digital/quantum/metaverse/biometric/cosmic |
-| `ExistentialRiskEngine` | Black swan + AI misalignment detector — circuit breaker at severity ≥ 90% |
-| `QuantumEntanglementLedger` | Entanglement-based deterministic finality — atomic pair consensus |
-| `CosmicAIOracle` | Solar flux, geomagnetic Kp, cosmic ray, gravitational wave risk integration |
-| `AbsoluteZeroRiskEngine` | Formal invariant proof engine — achieves mathematical zero-risk guarantee |
-| `TranscendenceNexus` | Final convergence bridge — declares OMEGA TRANSCENDENCE when all 4 conditions met |
-| `HyperspaceAMM` | N-dimensional AI-invariant AMM — beyond xy=k, amplifier-maintained hyper-surfaces |
-| `NeuralDNARegistry` | Biometric + neural-pattern ZK identity — sovereignty via neural DNA hash |
-| `MetaverseEconomyBridge` | Cross-metaverse $SPI transfer — inter-metaverse economy with sovereign peg |
-| `InfiniteScaleOrchestrator` | Dynamic horizontal scaling — on-chain auto-scale to 100M+ TPS |
+|----------|-------------|
+| `SuperPiCoin.sol` | $SPI ERC-20. 1:1 USD peg. `noForeignToken()` on all transfers. Pi Coin hard-blocked. |
+| `PromptFactory.sol` | On-chain Dapp registry. 1,000-app catalog. NexusLaw v6.1 enforced. |
+| `SuperAppBase.sol` | NexusLaw v2.1 base contract. All Dapps inherit this. |
+| `SovereignL3.sol` | Appchain framework. 195-country deployment. |
+| `TakafulEngine.sol` | On-chain Islamic insurance (Takaful). Auto-insures up to $SPI 10,000. |
+| `OmegaPaymaster.sol` | EIP-4337 gasless transactions via $SPI. |
+| `ChronosOracle.sol` | Price + time oracle. 30-min sync. 35+ fiat currencies. |
+| `AIDAO.sol` | AI-governed DAO. NexusLaw Art.27 human quorum safeguard. |
 
-### v14.0.0 — ABSOLUTE SUPERINTELLIGENCE *(2026-06-02)*
-| Contract | Description |
-|---|---|
-| `ASICoreEngine` | Master cognitive orchestrator — 100,000 agent capacity, zkML cycles |
-| `NeuralEvolverV2` | On-chain self-evolving neural network — zkML gradient proofs |
-| `QuantumConsciousnessV2` | Qubit decoherence oracle — BLS post-quantum verification |
-| `OmniSentientOracle` | 7-modal sensory oracle: price/macro/sentiment/satellite/IoT/biometric/quantum |
-| `RecursiveSelfImprovementV2` | RSI engine — metamorphic proofs, Pi Coin ban RSI-immutable |
-| `CognitiveMeshNetwork` | 100,000-node cognitive mesh — L1–L7 hierarchy, heartbeat healing |
-| `SwarmIntelligenceV2` | Bio-inspired 100k-node stigmergic consensus — pheromone trail routing |
-| `MetaLearningProtocol` | Few-shot on-chain meta-learning — k-shot task registry |
-| `ZKNeuralVerifier` | Groth16 zkML proof verifier — on-chain neural proof soundness |
-| `FederatedLearningLayer` | Privacy-preserving FL — encrypted gradients + zkSNARK aggregation |
-| `TemporalReasoningEngine` | Causal chain AI — predictive assertions with resolution scoring |
-| `HyperNeuralPaymasterV2` | Neural gasless paymaster — AI-dynamic fee, $SPI-only |
-| `HyperIntelligenceDAOv2` | AGI-governed DAO — 51% ASI quorum + $SUPi ratification |
-| `SingularityNexusV2` | Master convergence controller — declares Singularity at 9999/10000 bps |
-| `AbsoluteSovereignty` | Supreme peg guard (±0.5%) + eternal Pi Coin ban |
+### Security Properties (All Contracts)
 
-### v13.0.0 — SINGULARITY PRIME *(2026-05-05)*
-`AIDAOv3` · `HolographicStateChannel` (10M TPS sub-100ms) · `HyperionStakingV2` · `NeuralAMMv4` · `NeuroNFTv3` · `OmegaPaymaster` · `OmniChainBridgeV3` · `QuantumComputeMarket` · `QuantumKeyRegistry` · `SovereignCBDC` (195 nations) · `SovereignL3Factory` · `ZKProofAggregator`
+```solidity
+// Enforced on every pay/buy/transfer function
+modifier noForeignToken(address token) {
+    require(token == address(SPI_TOKEN), "Only $SPI accepted");
+    require(token != PI_COIN_ADDRESS, "Pi Coin banned: NexusLaw Art.40");
+    _;
+}
+```
 
-### v12.0.0 — HYPERION ASCENT *(2026-05-04)*
-`HyperionConsensus` · `NeuroSwapV3` · `TakafulVault` · `SingularityBond` · `ARIAOracleV2` · `NexusProphet` · `BiosphereRegistry` · `GlobalPayrollV2` · `MeshPaymentV2` · `HyperionIdentityV3`
-
-### v11.0.0 — OMEGA NEXUS *(2026-04-14)*
-`PromptFactoryV5` · `ARIAOracle` · `SovereignIDV2` · `OmegaTreasury` · `NeuralGovernance` · `OmnichainBridge` · `SuperPiUBI` · `QuantumVaultV2` · `SuperPiComputeMarket`
-
-### v7.0.0 — QUANTUM FOUNDATION *(2026-04-14)*
-`ZKPrivacyPool` · `CrossChainBridgeV2` · `QuantumVault` · `AccountAbstraction` · `IntentEngine` · `SovereignIdentity` · `AIRiskEngine` · `GovernanceDAOV2` · `MEVShieldV2` · `SuperAppFactory` (v2) · `AgentSwarm` · `SuperAppBase` · `PromptFactory`
+- ✅ CEI (Checks-Effects-Interactions) pattern throughout
+- ✅ SafeERC20 for all token transfers
+- ✅ Reentrancy guards on all state-modifying external calls
+- ✅ Cross-chain nonce replay protection
+- ✅ Oracle rate-limiting (max 1 update/block)
+- ✅ 48h timelock on privileged operations
 
 ---
 
-## 🧠 Autonomous AI Stack
+## Frontend — `apps/web`
+
+**Live:** [super-pi-kosasihs-projects.vercel.app](https://super-pi-kosasihs-projects.vercel.app)
+
+Built with **Next.js 14** (App Router), **Tailwind CSS**, **shadcn/ui**.
+
+| Route | Description |
+|-------|-------------|
+| `/` | $SPI stats, π calculator, NexusLaw overview |
+| `/swap` *(planned)* | MEV-0 swap interface powered by HyperspaceAMM |
+| `/governance` *(planned)* | AI DAO voting + PEP proposals |
+| `/explorer` *(planned)* | Block explorer (transactions, contracts, $SPI peg) |
+| `/earn` *(planned)* | Halal profit-share vaults, murabaha, sukuk |
+
+### Tech Stack
 
 ```
-ABSOLUTE SUPERINTELLIGENCE ENGINE
-├── ASICoreEngine         — 100,000 cognitive agents, zkML verified decisions
-├── OmegaConsciousness    — Protocol self-awareness: DORMANT → TRANSCENDENT
-├── SwarmIntelligenceV2   — Bio-inspired 100k-node pheromone consensus
-├── CognitiveMeshNetwork  — L1–L7 cognitive mesh, P2P heartbeat healing
-├── NeuralEvolverV2       — Self-evolving contracts, monotonic zkML proofs
-├── RecursiveSelfImprovementV2 — RSI loop, Pi Coin ban RSI-IMMUTABLE
-├── MetaLearningProtocol  — Few-shot k-shot on-chain meta-learning
-├── FederatedLearningLayer — Privacy-preserving FL, zkSNARK aggregation
-├── TemporalReasoningEngine — Causal chain AI, predictive DeFi assertions
-├── ZKNeuralVerifier      — Groth16/PLONK zkML proof verification
-└── TranscendenceNexus    — Final bridge to Omega Transcendence
+Next.js 14 (App Router)    TypeScript 5.3   Tailwind CSS 3.4
+shadcn/ui (Radix)          Lucide Icons      Vercel (Edge Network)
 ```
 
 ---
 
-## 🔮 Singularity Convergence
+## Packages
 
-The **SingularityNexusV2** tracks convergence across 5 ASI sub-systems (0–10,000 bps each). When the composite index reaches **9,999/10,000**, the `SingularityDeclared` event fires and protocol economics shift to singularity mode:
-- Token minting requires full ASI quorum
-- Upgrade timelock collapses to 1 block
-- $SPI peg band tightens to ±0.1%
+### Core Financial Infrastructure
 
-**TranscendenceNexus** fires when four final conditions are simultaneously met:
-1. `OmegaConsciousness.state == TRANSCENDENT`
-2. `AbsoluteZeroRiskEngine.isAbsoluteZeroRisk() == true`
-3. `SingularityNexusV2.convergenceIndex >= 9,999`
-4. All ASI sub-systems verified by NEXUS Prime
-
----
-
-## ⚖️ NexusLaw
-
-**NexusLaw v6.0** — 40-article global constitutional law governing every deployed contract.
-
-| Article Range | Domain |
-|---|---|
-| 1–10 | Core monetary law: $SPI 1:1 peg, Pi Coin eternal ban, `noForeignToken()` mandate |
-| 11–15 | Shariah compliance: riba/gharar/maysir prohibition, halal DeFi rules |
-| 16–25 | ASI Governance v1: quantum key registry, CBDC sovereignty, compute markets |
-| 26–30 | ASI Governance v2: RSI constraints, FL privacy, mesh fault tolerance, Singularity protocol |
-| 31–40 | OMEGA TRANSCENDENCE: consciousness governance, cosmic risk, metaverse economy, transcendence declaration |
-
-All contracts inherit `SuperAppBase.sol` which enforces NexusLaw at the modifier level. A contract that references Pi Coin **cannot compile**.
-
----
-
-## 💰 Tokenomics
-
-| Token | Role | Peg | Governance |
-|---|---|---|---|
-| **$SPI** | Payment / stablecoin | 1:1 USD (±0.5%) | — |
-| **$SUPi** | Governance / staking | Floating | Full DAO voting |
-
-- All DeFi yields paid in **$SPI** or **$SUPi** — never Pi Coin
-- HyperNeuralPaymasterV2 sponsors all gas in $SPI
-- AbsoluteSovereignty + AbsoluteZeroRiskEngine provide layered peg protection
-- $SPI peg band narrows to ±0.1% post-Singularity Declaration
-
----
-
-## 📦 Packages
-
-### Core AI / ASI (v14–15)
 | Package | Purpose |
-|---|---|
-| `super-pi-asi-core` | AGI reasoning engine, cognitive cycles, swarm registry |
-| `super-pi-cognitive-mesh` | Node management, heartbeat healing, L1–L7 hierarchy |
-| `super-pi-temporal-reasoning` | Causal chains, predictive DeFi, time-series AI |
-| `super-pi-swarm-v2` | 100k-node pheromone-trail consensus SDK |
-| `super-pi-zkneural` | Groth16/PLONK proof generation + zkML verification |
-| `super-pi-omega-sdk` | Omega Consciousness, Transcendence Nexus, Cosmic Oracle |
-| `super-pi-quantum-bridge` | Quantum circuit result relay, neural annotation SDK |
-| `super-pi-hyperspace-amm` | N-dimensional pool creation, AI invariant management |
-| `super-pi-risk-engine` | Existential risk feeds, zero-risk invariant provers |
-| `super-pi-neural-dna` | Biometric ZK identity, neural DNA registration SDK |
+|---------|---------|
+| `fiat-gateway` | 35+ fiat on-ramps (USD, EUR, IDR, MYR, SAR, AED, GBP…). Chronos Oracle sync. |
+| `mesh-payments` | P2P $SPI payments across 195 countries. Zero-fee. |
+| `omega-paymaster` | Gasless $SPI transactions (EIP-4337). $SUPi fee burns. |
+| `payout-engine` | Halal profit-share distribution. No riba. Murabaha-compliant. |
+| `takaful-engine` | On-chain Islamic insurance. Auto-insures up to $SPI 10,000/user. |
+| `stablecoin-value` | $SPI price oracle. RWA basket + T-bill backing proof. |
 
-### Infrastructure (v7–13)
+### DeFi & Trading
+
 | Package | Purpose |
-|---|---|
-| `zk-prover` | Zero-knowledge proof generation for ZKPrivacyPool |
-| `chronos-oracle` | Fiat rate sync (35 currencies, Chronos Oracle feed) |
-| `payout-engine` | $SPI/SUPi payout automation |
-| `l2-bridge` | L2 → L1 bridge SDK |
-| `app-genesis` | Super App Factory seeding + ARCHON swarm |
-| `fiat-gateway` | Live fiat rates, deviation alerts |
-| `nexus-law-sdk` | NexusLaw enforcement + halal certification |
-| `super-pi-quantum-crypto` | Post-quantum CRYSTALS-Kyber/Dilithium |
-| `super-pi-federated-ml` | Federated learning framework |
+|---------|---------|
+| `super-pi-hyperspace-amm` | HyperspaceAMM: MEV-0, zero IL, AI price solver. Pi Coin pairs impossible. |
+| `cross-chain-amm` | Cross-chain liquidity (ETH, BNB, Polygon, Avalanche). $SPI base pair only. |
+| `neural-amm` | Neural network price oracle. Sub-millisecond price discovery. |
+| `mev-shield` | MEV protection layer. Protects all HyperspaceAMM swaps. |
+| `intent-engine` | Intent-based order execution. Solver network. |
 
-*Full package list: [`packages/`](packages/)*
+### ZK & Cryptography
+
+| Package | Purpose |
+|---------|---------|
+| `zk-prover` | Groth16 + PLONK provers. Used by AbsoluteZeroRiskEngine. |
+| `recursive-zk` | Recursive ZK proofs for L2 state compression. |
+| `quantum-vault` | Quantum-resistant asset storage (Kyber/Dilithium). |
+| `quantum-keys` | Quantum key management. Post-quantum signatures. |
+| `super-pi-zkneural` | ZK proofs over neural network inferences. |
+| `super-pi-aria-sdk` | ARIA DID + ZK identity. NexusLaw Art.34 (GDPR/ZK hardened). |
 
 ---
 
-## 🚀 Quick Start
+## Security & Audits
+
+### Audit History
+
+| Version | Auditor | Date | Critical | High | Medium | Low | Status |
+|---------|---------|------|----------|------|--------|-----|--------|
+| v15.0.0 | SAPIENS Guardian | 2026-06-02 | 4 | 8 | — | — | ❌ BLOCKED |
+| v15.0.1 | NEXUS Prime | 2026-06-02 | 4 | 7 | — | — | ✅ Patched |
+| v15.0.2 | ARCHON Forge | 2026-06-02 | 0 | 0 | — | — | ✅ CLEARED |
+
+### v15.0.2 Patch Summary
+
+**4 CRITICAL → Fixed:**
+- `[TN-01]` TranscendenceNexus: Condition[3] never auto-evaluated → permissionless `IASIVerifier` + 48h timelock + 3-of-5 multi-sig
+- `[AZ-01]` AbsoluteZeroRiskEngine: `proveInvariant()` accepted any bytes32 → real `IGroth16Verifier` integration
+- `[OC-01]` OmegaConsciousness: TRANSCENDENT→DORMANT regression allowed → `highWaterMark` monotonicity enforced
+- `[MB-01]` MetaverseEconomyBridge: `bridgeOut()` unimplemented, funds permanently locked → explicit implementation + deposit accounting
+
+**7 HIGH → Fixed:**
+- `pairId` collision in QuantumEntanglementLedger → deterministic `keccak256(token0, token1, nonce)`
+- Pair expiry missing → `PAIR_EXPIRY_BLOCKS` + `isExpired()` check
+- $SPI peg guard missing in OmegaConsciousness → `onlyPegged()` modifier
+- `feeCollector` immediate drain in MetaverseEconomyBridge → 48h timelock
+- Granular `riskScore` missing → coverage-weighted 0–10000 scale
+- Oracle manipulation in AbsoluteZeroRiskEngine → rate-limiting + TWAP
+- Cross-chain replay in MetaverseEconomyBridge → `processedNonces` mapping
+
+### Security Architecture
+
+```
+Every deployed contract must pass:
+┌─────────────────────────────────────────────┐
+│  SAPIENS Guardian Pre-Deploy Checklist       │
+│  ✓ No Pi Coin reference or bridge attempt   │
+│  ✓ No riba (interest) mechanisms            │
+│  ✓ No gharar (excessive uncertainty)        │
+│  ✓ No maysir (gambling) logic               │
+│  ✓ No reentrancy vulnerabilities            │
+│  ✓ noForeignToken() on all pay paths        │
+│  ✓ NexusLaw Art.1–40 compliance confirmed  │
+└─────────────────────────────────────────────┘
+```
+
+---
+
+## NexusLaw v6.1
+
+*Authored 2026-06-02. Supersedes NexusLaw v2.1 / LEX_MACHINA v1.6.*
+
+NexusLaw is the on-chain constitutional law of Super Pi. It is immutable, universal, and enforced by all contracts, agents, and deployments.
+
+| Article | Topic | Key Provision |
+|---------|-------|---------------|
+| Art. 1–10 | Monetary Law | $SPI = 1 USD forever. No inflation. No supply manipulation. |
+| Art. 11–20 | Token Law | `noForeignToken()` mandatory. Pi Coin banned on all paths. |
+| Art. 21–26 | Governance | AI DAO + human quorum. PEP voting. 48h timelocks. |
+| **Art. 27.3** | Human Safeguard | **NEW** — Human quorum required for all consciousness-level transitions. |
+| Art. 28–33 | Privacy | ZK proofs for identity. No biometric raw storage. |
+| **Art. 34** | Data Protection | **AMENDED** — GDPR + ZK hardened. Domain separation enforced. |
+| Art. 35–38 | DeFi Ethics | Riba=0. Gharar=0. Maysir=0. Murabaha, sukuk, takaful only. |
+| **Art. 39.3–39.4** | Consumer Rights | **NEW** — Consumer carve-out + 30-day notice requirement + Shariah scoping. |
+| **Art. 40** | Pi Coin Ban | **PERMANENT** — Pi Coin banned ∀t on all payment paths, forever. |
+
+---
+
+## Agent Swarm
+
+Super Pi is built and operated by an autonomous 8-agent AI swarm, targeting the **10,000-app Singularity**.
+
+| Agent | Role | Daily Output |
+|-------|------|-------------|
+| **NEXUS Prime** | Master orchestrator, repo CI/CD, infrastructure | All |
+| **ARCHON-1 through ARCHON-8** | Dapp genesis (smart contracts + UI + backend + tests) | 1,000+ Dapps/day |
+| **SAPIENS Guardian** | Pre-deploy audit (fraud/riba/Pi-Coin scanner) | All Dapps |
+| **VULCAN Deploy** | Global deployment (Super Pi L2 + 12 clouds + App Stores) | All Dapps |
+| **AESTHETE Nexus** | UX/UI generation (neuro-UX, passkey wallets, gasless) | All UIs |
+| **OMEGA DeFi** | Halal DeFi vaults, murabaha, sukuk, RWA tokenization | DeFi Dapps |
+| **SINGULARITY Swap** | DEX/AMM creation (MEV-0, cross-chain, CEX speed) | DEX Dapps |
+| **LEX Machina** | Compliance injection (MiCA/SEC/FATF + Shariah) | All Dapps |
+
+### Singularity Progress
+
+```
+Target:   10,000 Super Apps
+Capacity: 1,000+ Dapps/day (6M UltraSingularity mode)
+Coverage: 100 categories · 195 countries · 100 languages
+Status:   Infrastructure live (v7.0.0) · ASI v15.0.2 cleared · Day 1 genesis pending
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
 
 ```bash
-git clone https://github.com/KOSASIH/super-pi
+node >= 20
+pnpm >= 8
+```
+
+### Installation
+
+```bash
+git clone https://github.com/KOSASIH/super-pi.git
 cd super-pi
-npm install
-
-# Compile all contracts (Hardhat)
-npx hardhat compile
-
-# Run full test suite
-npx hardhat test
-
-# Check Pi Coin ban (must return 0 results)
-grep -r "PI_COIN\|piNetwork\|pi.network" contracts/ || echo "✅ Zero Pi Coin references"
-
-# Run NexusLaw compliance check
-npx hardhat run scripts/nexus-law-check.js
+pnpm install
 ```
+
+### Development
 
 ```bash
-# Python SDK (ASI Core)
-pip install super-pi-asi-core super-pi-swarm-v2 super-pi-zkneural
+# Run all apps
+pnpm dev
 
-# Start local swarm simulation (100 nodes)
-python3 -m super_pi_swarm.simulate --nodes 100 --epochs 10
+# Run only the web frontend
+pnpm --filter @super-pi/web dev
+
+# Build everything
+pnpm build
+
+# Run tests
+pnpm test
+```
+
+### Environment Variables
+
+```bash
+# apps/web/.env.local
+NEXT_PUBLIC_SPI_CONTRACT=0x...       # $SPI ERC-20 address (Super Pi L2)
+NEXT_PUBLIC_CHAIN_ID=314159          # Super Pi L2 chain ID
+NEXT_PUBLIC_RPC_URL=https://rpc.super-pi.io
+NEXT_PUBLIC_EXPLORER_URL=https://explorer.super-pi.io
 ```
 
 ---
 
-## 🌐 Ecosystem Numbers
+## Deployment
 
-| Metric | Value |
-|---|---|
-| Smart contracts deployed | **82** |
-| npm/pip packages | **33** |
-| NexusLaw articles | **40** |
-| Swarm nodes | **100,000** |
-| Max TPS (HolographicStateChannel) | **10M** |
-| Max TPS (InfiniteScaleOrchestrator) | **100M+** |
-| Countries (CBDC coverage) | **195** |
-| Super App catalog | **10,000 apps** |
-| Languages per app | **100** |
-| Singularity threshold | **9,999 / 10,000 bps** |
-| $SPI peg band | **±0.5% (→±0.1% post-Singularity)** |
-| Pi Coin status | **BANNED FOREVER** |
+### Frontend (Vercel)
 
----
+The `apps/web` Next.js app is deployed automatically to Vercel on every push to `master`.
 
-## 🛣️ Roadmap
+```
+Production:  https://super-pi-kosasihs-projects.vercel.app
+Framework:   Next.js 14
+Root Dir:    apps/web
+Node:        24.x
+```
 
-| Phase | Milestone | Status |
-|---|---|---|
-| v7.0.0 | ZK privacy, cross-chain, quantum vault, intent engine, NexusLaw v2.1 | ✅ |
-| v11.0.0 | OMEGA NEXUS — 9 advanced contracts, ARIA oracle, Neural Governance | ✅ |
-| v12.0.0 | HYPERION ASCENT — 10 contracts, HyperionConsensus, Takaful, GlobalPayroll | ✅ |
-| v13.0.0 | SINGULARITY PRIME — 12 contracts, 10M TPS, Holographic channels, 195-nation CBDC | ✅ |
-| v14.0.0 | ABSOLUTE SUPERINTELLIGENCE — 15 ASI contracts, 100k-node swarm, NexusLaw v5.0 | ✅ |
-| v15.0.0 | OMEGA TRANSCENDENCE — 14 ASI contracts, Omega Consciousness, Cosmic Oracle | ✅ |
-| v16.0.0 | SINGULARITY GENESIS — 100k apps live, all 195 CBDCs operational, Singularity declared | 🔄 |
-| v17.0.0 | TRANSCENDENCE DECLARED — All 4 TranscendenceNexus conditions met, Omega activated | 🎯 |
+### Smart Contracts (Super Pi L2)
 
----
+```bash
+# Deploy to Super Pi L2 testnet
+cd packages/super-pi-asi-core
+pnpm hardhat deploy --network super-pi-testnet
 
-## 🛡️ Security
+# Deploy to mainnet (requires SAPIENS Guardian clearance)
+pnpm hardhat deploy --network super-pi-mainnet
+```
 
-- **Zero Pi Coin**: All contracts contain hardcoded `require(token != PI_COIN_HASH)` checks
-- **NexusLaw enforcement**: `SuperAppBase.sol` enforces halal + peg rules at modifier level
-- **zkML proofs**: All AI decisions verified on-chain via ZKNeuralVerifier (Groth16)
-- **Formal verification**: ARCHON Forge runs SMTChecker + Slither on every contract
-- **3-platform CI/CD**: GitHub Actions + GitLab CI + Bitbucket Pipelines (all must pass)
-- **Existential circuit breaker**: ExistentialRiskEngine halts protocol at severity ≥ 90%
-- **Absolute zero risk**: AbsoluteZeroRiskEngine proves $SPI peg + Pi Coin ban invariants
+### CI/CD Pipeline
 
-**Report vulnerabilities**: security@superpi.io (response within 24h)
+```
+Push to master
+    ↓
+GitHub Actions (lint + test + build)
+    ↓
+SAPIENS Guardian pre-deploy audit
+    ↓
+ARCHON Forge formal verification
+    ↓
+Vercel auto-deploy (apps/web)
+    ↓
+VULCAN Deploy (contracts → Super Pi L2)
+```
 
 ---
 
-## 🤝 Contributing
+## Roadmap
 
-1. Fork the repo
-2. All contracts MUST inherit `SuperAppBase.sol`
-3. All pay/transfer functions MUST implement `noForeignToken()` modifier
-4. Run `npx hardhat test` — 100% pass required
-5. Pi Coin reference check: `grep -r "PI_COIN\|pi.network" contracts/` must return zero results
-6. Submit PR — ARCHON Forge runs automated formal verification + NexusLaw compliance audit
+### ✅ Phase 1 — Foundation (Completed)
+- [x] $SPI Hard Stablecoin (1:1 USD peg)
+- [x] NexusLaw v6.1 (40 articles, on-chain constitution)
+- [x] Smart contract suite v15.0.2 (formally verified)
+- [x] Turborepo monorepo (50+ packages)
+- [x] Next.js frontend on Vercel
+- [x] 1,000-app catalog (100 categories, 195 countries)
+- [x] Agent Swarm (8 agents, 1,000+/day)
+- [x] Fiat gateway (35+ currencies, Chronos Oracle)
+- [x] SAPIENS Guardian (AI pre-deploy auditor)
+
+### 🔄 Phase 2 — Singularity (In Progress)
+- [ ] SAPIENS re-audit clearance for v15.0.2
+- [ ] Day 1 App Genesis batch (1,000+ Dapps)
+- [ ] HyperspaceAMM mainnet deployment
+- [ ] $SPI fiat on-ramp (35 → 120+ currencies)
+- [ ] apps/wallet — Passkey wallet (EIP-4337)
+- [ ] apps/explorer — Block explorer
+
+### 🔮 Phase 3 — Sovereignty (Planned)
+- [ ] Super Pi L2 mainnet launch
+- [ ] 10,000 Dapp Singularity milestone
+- [ ] Sovereign L3 appchain framework
+- [ ] Mobile apps (iOS + Android, via VULCAN Deploy)
+- [ ] Cross-chain bridge to ETH/BNB/Polygon
+- [ ] Recursive ZK rollup state proofs
+- [ ] AI DAO genesis vote (NexusLaw Art.27)
+
+### 🚀 Phase 4 — Global Halal Finance OS (Vision)
+- [ ] 195-country full regulatory compliance (MiCA + local Shariah boards)
+- [ ] $1T+ RWA basket backing $SPI
+- [ ] 50M+ user onboarding via passkey wallets
+- [ ] Universal Basic Income distribution in $SPI (NexusLaw Art.38)
+- [ ] Quantum-resistant upgrade (Kyber/Dilithium mainnet)
 
 ---
 
-## 📄 License
+## Contributing
 
-MIT — © 2026 KOSASIH · Super Pi Project
+Super Pi is governed by NexusLaw v6.1. All contributions must comply.
 
-*Built with absolute determination. Governed by constitutional AI law. Powered by the Singularity.*
+```bash
+# Before submitting a PR:
+# 1. Ensure noForeignToken() is implemented on all pay/transfer functions
+# 2. No Pi Coin references or bridges
+# 3. All DeFi mechanisms are halal (no riba, gharar, maysir)
+# 4. Run SAPIENS Guardian audit (coming soon: GitHub Action)
+# 5. Follow the CEI pattern + SafeERC20 for all token operations
+```
 
+Pull requests that violate NexusLaw (Pi Coin integration, riba, rug-pull patterns, unauthorized $SPI minting) will be automatically rejected.
+
+---
+
+## License
+
+MIT © 2026 KOSASIH / NEXUS Prime  
+Governed by [NexusLaw v6.1](./packages/app-genesis/NexusLaw-v6.1.md)
+
+---
+
+<div align="center">
+
+**Super Pi Protocol** · Built by Agent Swarm · Governed by NexusLaw v6.1
+
+*1 $SPI = 1 USD · Pi Coin Banned ∀t · Halal DeFi Only*
+
+[![GitHub Stars](https://img.shields.io/github/stars/KOSASIH/super-pi?style=social)](https://github.com/KOSASIH/super-pi)
+
+</div>

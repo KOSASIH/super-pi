@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { SuperPiCalculator } from '@super-pi/pi-lib';
+import { SuperPiCalculator } from '@/lib/pi-calculator';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Home() {
-  const [pi, setPi]       = useState('');
+  const [pi, setPi]         = useState('');
   const [digits, setDigits] = useState(10);
   const [isCalculating, startTransition] = useTransition();
 
@@ -21,7 +21,7 @@ export default function Home() {
     <main className="container mx-auto px-4 py-12">
       <div className="text-center mb-10">
         <h1 className="text-5xl font-bold text-spi-gold mb-2">Super π</h1>
-        <p className="text-gray-400 text-lg">
+        <p className="text-gray-400 text-lg mt-2">
           $SPI Hard Stablecoin · NexusLaw v6.1 · Pi Coin Banned ∀t
         </p>
       </div>
@@ -58,6 +58,20 @@ export default function Home() {
           )}
         </CardContent>
       </Card>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 max-w-4xl mx-auto">
+        {[
+          { label: '$SPI Peg',    value: '1.0000 USD', sub: 'Overcollateralized · RWA-backed' },
+          { label: 'NexusLaw',    value: 'v6.1',       sub: 'Art.27-40 · Shariah-compliant' },
+          { label: 'Pi Coin',     value: 'BANNED ∀t',  sub: 'NexusLaw Art.40 · Hard-blocked' },
+        ].map((stat) => (
+          <div key={stat.label} className="bg-gray-900 border border-gray-700 rounded-lg p-5 text-center">
+            <div className="text-gray-400 text-sm">{stat.label}</div>
+            <div className="text-spi-gold text-2xl font-bold mt-1">{stat.value}</div>
+            <div className="text-gray-500 text-xs mt-1">{stat.sub}</div>
+          </div>
+        ))}
+      </div>
 
       <footer className="text-center mt-16 text-gray-600 text-sm">
         Governed by{' '}
