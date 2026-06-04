@@ -1,6 +1,6 @@
 # Phase 3 RWA Vault Activation Runbook
 **OMEGA DeFi | Super Pi v16.0.0-phase3 | NexusLaw v6.1 Art.40**
-*Generated: 2026-06-04T20:05:00+07:00*
+*Generated: 2026-06-04T20:05:00+07:00 | Patched: 2026-06-04T20:08:00+07:00*
 
 ---
 
@@ -54,7 +54,6 @@ Edit `scripts/phase3/DeployPhase3Vaults.s.sol`:
 ```solidity
 address constant SPI_TOKEN   = <SPI_ERC20_ADDRESS>;
 address constant RWA_FACTORY = <RWA_FACTORY_ADDRESS>;
-// Sukuk only (optional):
 address constant SUPI_TOKEN  = <SUPI_ERC20_ADDRESS>; // or 0 to default to SPI_TOKEN
 ```
 
@@ -68,10 +67,7 @@ forge script scripts/phase3/DeployPhase3Vaults.s.sol:DeployAllPhase3Vaults \
   --broadcast --verify
 ```
 
-For each vault, atomically executes:
-1. `createVault(name, assetClass, targetSize, spiBToken)` → `vaultId`
-2. `certifyHalal(vaultId)` → `halalCertified = true`, `active = true`
-
+For each vault atomically: `createVault(...)` → `certifyHalal(vaultId)`
 Expected events: `VaultCreated` + `HalalCertified` per vault.
 
 ---
@@ -84,26 +80,37 @@ cast call $RWA_FACTORY "vaults(uint256)((uint256,string,uint8,uint256,uint256,ad
 cast call $RWA_FACTORY "vaults(uint256)((uint256,string,uint8,uint256,uint256,address,bool,uint256,uint256,bool))" 3
 ```
 
-Confirm per vault: `halalCertified == true`, `active == true`, `spiBToken != 0xDEAD`, `minCollateral == 11_000`.
+Confirm: `halalCertified == true`, `active == true`, `spiBToken != 0xDEAD`, `minCollateral == 11_000`.
 
 ---
 
-## Step 5 — Cert URIs On-Chain (Phase 3.1)
+## Step 5 — Cert URIs On-Chain (Phase 3.1 — ARCHON Forge)
 
-Cert refs `LM-HALAL-PHASE3-001/002/003` are off-chain (repo SHA 2daec37b).
-Phase 3.1: add `mapping(uint256 => string) public halalCertURI` to factory, set during `certifyHalal`.
+LEX Machina cert spec prepared. Integrate into RWAVaultFactory v1.2:
+- `mapping(uint256 => HalalCert) public halalCertURI`
+- Populate inside `certifyHalal()` atomically
+- 30-day expiry renewal trigger + `onlyRole(SHARIAH_BOARD)` renewal function
+- Full struct spec: `workspace/legal/HALAL_CERT_URI_MAPPING_PHASE3_LM-2026-0604.md` (LEX Machina)
+
+| vaultId | certRef | AAOIFI | Expires | Dual |
+|---|---|---|---|---|
+| 1 | LM-HALAL-PHASE3-001 | No.13 Mudarabah | 1780574400 | false |
+| 2 | LM-HALAL-PHASE3-002 | No.9 Ijarah | 1780574400 | false |
+| 3 | LM-HALAL-PHASE3-003 | No.17+9 Sukuk | 1780574400 | true |
 
 ---
 
 ## Step 6 — Yield Keeper Setup
 
-| Vault | Epoch | Call |
-|---|---|---|
-| SPI-TBILL-V1 | Weekly | `distributeYield(1, amount)` |
-| SPI-REALESTATE-V1 | Monthly | `distributeYield(2, amount)` |
-| SPI-SUKUK-V1 | Quarterly | `distributeYield(3, amount)` |
+> ✅ SAPIENS Guardian RWA-04 (2026-06-04): `distributeYield()` removed in v1.1 (blob 898c2a79).
+> Replaced with `fundYieldReserve()` + `claimYield()`, both with `nonReentrant`. Concern resolved.
+> **Audit target: 898c2a79 (v1.1), not 16d15a890 (v1.0).**
 
-> ⚠ Phase 3.1: add `nonReentrant` to `distributeYield()` before keeper goes live with large yield amounts.
+| Vault | Epoch | Keeper trigger | Fund Reserve | Claim |
+|---|---|---|---|---|
+| SPI-TBILL-V1 | Weekly (7 days) | Price oracle tick | `fundYieldReserve(1, amount)` | `claimYield(1)` |
+| SPI-REALESTATE-V1 | Monthly (30 days) | Settlement date | `fundYieldReserve(2, amount)` | `claimYield(2)` |
+| SPI-SUKUK-V1 | Quarterly (90 days) | Coupon date | `fundYieldReserve(3, amount)` | `claimYield(3)` |
 
 ---
 
