@@ -43,11 +43,11 @@ contract CertifyPhase3Vaults is Script {
 
         vm.startBroadcast();
 
-        // vaultId=1 — SPI-TBILL-V1 | AAOIFI No.13 Mudarabah | dualCert: false
+        // vaultId=1 — SPI-TBILL-V1 | AAOIFI No.13 Mudarabah only | dualCert: false
         IRWAVaultFactory(factory).certifyHalal(
             tbillId,
             "LM-HALAL-PHASE3-001",
-            "AAOIFI No.13 (Mudarabah) + No. 21 (Investment Sukuk)",
+            "AAOIFI No.13",
             "https://surething.io/api/files/1cc3ff84-bdcd-431d-ac18-5dc16ff5a784/download?t=cCqZF0X3K9zRZe5Qq_XywA.1780582513#SPI-TBILL-V1",
             1749038400,
             1780574400,
