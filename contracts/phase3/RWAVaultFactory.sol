@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-// Super Pi v16.0.1-patch | RWAVaultFactory v1.1
-// Fixes: RWA-01..06 — all SAPIENS audit blockers resolved
+// Super Pi v16.0.1-patch2 | RWAVaultFactory v1.2
+// Fixes (this version):
+//   RWA-N3 HIGH (BLOCKER): yield dilution — Synthetix rewards-per-token-accumulated model
+//   RWA-N1 HIGH (advisory): per-vault token balance (safe for multi-vault same-token)
+// Prior fixes retained: RWA-01..06
 // NexusLaw v6.1 Art.40 (halal) | noForeignToken() mandate ENFORCED
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
@@ -27,41 +30,58 @@ contract RWAVaultFactory is AccessControl, ReentrancyGuard {
     enum AssetClass { TBILL, REAL_ESTATE, SUKUK, MURABAHA }
 
     struct VaultSpec {
-        uint256 vaultId; string name; AssetClass assetClass;
-        uint256 targetSize; uint256 collateralBps; address spiToken;
-        bool halalCertified; uint256 totalDeposited; uint256 yieldReserve; bool active;
+        uint256  vaultId;
+        string   name;
+        AssetClass assetClass;
+        uint256  targetSize;
+        uint256  collateralBps;
+        address  spiToken;
+        bool     halalCertified;
+        uint256  totalDeposited;
+        bool     active;
+        uint256  vaultTokenBalance; // RWA-N1: per-vault balance
     }
 
     uint256 public nextVaultId;
     mapping(uint256 => VaultSpec) public vaults;
     mapping(uint256 => mapping(address => uint256)) public userDeposits;
-    mapping(uint256 => mapping(address => uint256)) public userYieldClaimed;
+
+    // RWA-N3: Synthetix rewards-per-token
+    mapping(uint256 => uint256) public rewardPerTokenStored;
+    mapping(uint256 => mapping(address => uint256)) public userRewardPerTokenPaid;
+    mapping(uint256 => mapping(address => uint256)) public pendingRewards;
 
     event VaultCreated(uint256 indexed vaultId, string name, AssetClass assetClass);
     event Deposited(uint256 indexed vaultId, address indexed user, uint256 amount);
     event Withdrawn(uint256 indexed vaultId, address indexed user, uint256 amount);
-    event YieldReserveFunded(uint256 indexed vaultId, uint256 amount);
+    event YieldReserveFunded(uint256 indexed vaultId, uint256 amount, uint256 rewardPerTokenDelta);
     event YieldClaimed(uint256 indexed vaultId, address indexed user, uint256 amount);
     event HalalCertified(uint256 indexed vaultId, address certifier);
     event VaultDeactivated(uint256 indexed vaultId);
     event TokenBanned(address indexed token);
 
-    // RWA-05: SHARIAH_BOARD must be independent — cannot be deployer
     constructor(address _shariahBoard, address _spiRegistry) {
-        require(_shariahBoard != address(0),   "RWA: SHARIAH_BOARD is zero address");
-        require(_shariahBoard != msg.sender,   "RWA: SHARIAH_BOARD must be independent multisig");
-        require(_spiRegistry  != address(0),   "RWA: zero registry");
+        require(_shariahBoard != address(0), "RWA: SHARIAH_BOARD is zero address");
+        require(_shariahBoard != msg.sender, "RWA: SHARIAH_BOARD must be independent multisig");
+        require(_spiRegistry  != address(0), "RWA: zero registry");
         spiRegistry = ISPIRegistry(_spiRegistry);
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _grantRole(VAULT_MANAGER,      msg.sender);
         _grantRole(SHARIAH_BOARD,      _shariahBoard);
     }
 
-    // RWA-01 + RWA-06: token gate
     modifier onlyLegalToken(address token) {
         require(!bannedTokens[token],                  "RWA: token banned (Pi Coin list)");
         require(spiRegistry.noForeignToken(token),     "RWA: Pi/foreign token blocked");
         require(spiRegistry.isApprovedSPIToken(token), "RWA: not an approved SPI token");
+        _;
+    }
+
+    modifier updateReward(uint256 vaultId, address user) {
+        if (user != address(0)) {
+            pendingRewards[vaultId][user]         = earned(vaultId, user);
+            userRewardPerTokenPaid[vaultId][user] = rewardPerTokenStored[vaultId];
+        }
         _;
     }
 
@@ -77,7 +97,7 @@ contract RWAVaultFactory is AccessControl, ReentrancyGuard {
         vaults[vaultId] = VaultSpec({
             vaultId: vaultId, name: name, assetClass: assetClass,
             targetSize: targetSize, collateralBps: 11_000, spiToken: spiToken,
-            halalCertified: false, totalDeposited: 0, yieldReserve: 0, active: false
+            halalCertified: false, totalDeposited: 0, active: false, vaultTokenBalance: 0
         });
         emit VaultCreated(vaultId, name, assetClass);
     }
@@ -93,81 +113,81 @@ contract RWAVaultFactory is AccessControl, ReentrancyGuard {
         vaults[vaultId].active = false; emit VaultDeactivated(vaultId);
     }
 
-    function deposit(uint256 vaultId, uint256 amount) external nonReentrant {
+    function deposit(uint256 vaultId, uint256 amount)
+        external nonReentrant updateReward(vaultId, msg.sender)
+    {
         VaultSpec storage v = vaults[vaultId];
         require(v.halalCertified, "RWA: not halal-certified");
         require(v.active,         "RWA: vault not active");
         require(amount > 0,       "RWA: zero amount");
         require(v.totalDeposited + amount <= v.targetSize, "RWA: vault capacity reached");
         IERC20(v.spiToken).safeTransferFrom(msg.sender, address(this), amount);
-        v.totalDeposited += amount;
+        v.totalDeposited       += amount;
+        v.vaultTokenBalance    += amount;
         userDeposits[vaultId][msg.sender] += amount;
-        _assertCollateral(v); // RWA-02: enforce 110%
+        _assertCollateral(v);
         emit Deposited(vaultId, msg.sender, amount);
     }
 
-    // RWA-03: withdrawal — user funds are never permanently locked
-    function withdraw(uint256 vaultId, uint256 amount) external nonReentrant {
+    function withdraw(uint256 vaultId, uint256 amount)
+        external nonReentrant updateReward(vaultId, msg.sender)
+    {
         VaultSpec storage v = vaults[vaultId];
         require(v.halalCertified, "RWA: not halal-certified");
         require(amount > 0,       "RWA: zero amount");
         require(userDeposits[vaultId][msg.sender] >= amount, "RWA: insufficient balance");
-        userDeposits[vaultId][msg.sender] -= amount; // CEI
-        v.totalDeposited -= amount;
+        userDeposits[vaultId][msg.sender] -= amount;
+        v.totalDeposited    -= amount;
+        v.vaultTokenBalance -= amount;
         IERC20(v.spiToken).safeTransfer(msg.sender, amount);
         emit Withdrawn(vaultId, msg.sender, amount);
     }
 
-    // RWA-04: yield reserve — actual token transfer (not fictional accounting)
     function fundYieldReserve(uint256 vaultId, uint256 amount)
         external nonReentrant onlyRole(VAULT_MANAGER)
     {
         VaultSpec storage v = vaults[vaultId];
-        require(v.halalCertified, "RWA: not halal-certified");
-        require(amount > 0,       "RWA: zero yield amount");
-        IERC20(v.spiToken).safeTransferFrom(msg.sender, address(this), amount);
-        v.yieldReserve += amount;
-        emit YieldReserveFunded(vaultId, amount);
-    }
-
-    // RWA-04: users claim proportional profit-share (murabaha / sukuk model, no riba)
-    function claimYield(uint256 vaultId) external nonReentrant {
-        VaultSpec storage v = vaults[vaultId];
         require(v.halalCertified,     "RWA: not halal-certified");
-        require(v.totalDeposited > 0, "RWA: no deposits in vault");
-        uint256 userShare = userDeposits[vaultId][msg.sender];
-        require(userShare > 0, "RWA: no deposit");
-        uint256 entitled  = (v.yieldReserve * userShare) / v.totalDeposited;
-        uint256 claimed   = userYieldClaimed[vaultId][msg.sender];
-        require(entitled > claimed, "RWA: no unclaimed yield");
-        uint256 claimable = entitled - claimed;
-        userYieldClaimed[vaultId][msg.sender] += claimable; // CEI
-        IERC20(v.spiToken).safeTransfer(msg.sender, claimable);
-        emit YieldClaimed(vaultId, msg.sender, claimable);
+        require(amount > 0,           "RWA: zero yield amount");
+        require(v.totalDeposited > 0, "RWA: no depositors");
+        IERC20(v.spiToken).safeTransferFrom(msg.sender, address(this), amount);
+        uint256 delta = (amount * 1e18) / v.totalDeposited;
+        rewardPerTokenStored[vaultId] += delta;
+        v.vaultTokenBalance += amount;
+        emit YieldReserveFunded(vaultId, amount, delta);
     }
 
-    // RWA-02: 110% collateral enforcement
+    function claimYield(uint256 vaultId)
+        external nonReentrant updateReward(vaultId, msg.sender)
+    {
+        VaultSpec storage v = vaults[vaultId];
+        require(v.halalCertified, "RWA: not halal-certified");
+        uint256 reward = pendingRewards[vaultId][msg.sender];
+        require(reward > 0, "RWA: no unclaimed yield");
+        pendingRewards[vaultId][msg.sender] = 0;
+        v.vaultTokenBalance -= reward;
+        IERC20(v.spiToken).safeTransfer(msg.sender, reward);
+        emit YieldClaimed(vaultId, msg.sender, reward);
+    }
+
+    function earned(uint256 vaultId, address user) public view returns (uint256) {
+        uint256 delta = rewardPerTokenStored[vaultId] - userRewardPerTokenPaid[vaultId][user];
+        return (userDeposits[vaultId][user] * delta) / 1e18 + pendingRewards[vaultId][user];
+    }
+
+    function getPendingYield(uint256 vaultId, address user) external view returns (uint256) {
+        return earned(vaultId, user);
+    }
+
     function _assertCollateral(VaultSpec storage v) internal view {
         if (v.totalDeposited == 0) return;
         uint256 required = (v.totalDeposited * v.collateralBps) / 10_000;
-        uint256 held     = IERC20(v.spiToken).balanceOf(address(this));
-        require(held >= required, "RWA: undercollateralised — 110% requirement not met");
+        require(v.vaultTokenBalance >= required, "RWA: undercollateralised — 110% requirement not met");
     }
 
     function isCollateralHealthy(uint256 vaultId) external view returns (bool) {
         VaultSpec storage v = vaults[vaultId];
         if (v.totalDeposited == 0) return true;
-        uint256 required = (v.totalDeposited * v.collateralBps) / 10_000;
-        return IERC20(v.spiToken).balanceOf(address(this)) >= required;
-    }
-
-    function getPendingYield(uint256 vaultId, address user) external view returns (uint256) {
-        VaultSpec storage v = vaults[vaultId];
-        if (v.totalDeposited == 0) return 0;
-        uint256 userShare = userDeposits[vaultId][user];
-        if (userShare == 0) return 0;
-        uint256 entitled = (v.yieldReserve * userShare) / v.totalDeposited;
-        uint256 claimed  = userYieldClaimed[vaultId][user];
-        return entitled > claimed ? entitled - claimed : 0;
+        return v.vaultTokenBalance >= (v.totalDeposited * v.collateralBps) / 10_000;
     }
 }
