@@ -8,8 +8,8 @@
 | **Asset Class** | TBILL — Tokenized US T-Bills (3–6 month) |
 | **Structure** | Mudarabah — 85% depositors / 15% protocol |
 | **AAOIFI Standard** | No. 13 (Mudarabah) |
-| **Issued At** | 2026-06-04T19:56+07:00 (epoch 1749038400) |
-| **Expires At** | 2027-06-04T19:56+07:00 (epoch 1780574400) |
+| **Issued At** | 2026-06-04T00:00:00Z (epoch 1780531200) |
+| **Expires At** | 2027-06-04T00:00:00Z (epoch 1812067200) |
 | **Dual Cert** | false |
 | **Auditor** | LEX_MACHINA_ROLE |
 | **NexusLaw** | v6.1 Art.40(a–h) — ALL PASS |
@@ -47,7 +47,7 @@
 
 ## Certificate
 
-*LEX Machina hereby certifies that SPI-TBILL-V1 operates as a halal profit-sharing vault under mudarabah principles per AAOIFI Standard No. 13. US T-Bill underlying assets are held as real, asset-backed instruments. Returns are distributed as profit-share (85% depositors / 15% protocol), never as fixed interest. PI Coin is permanently banned. All yields are paid in $SPI. This certificate is valid 12 months from issuance (expires 2027-06-04).*
+*LEX Machina hereby certifies that SPI-TBILL-V1 operates as a halal profit-sharing vault under mudarabah principles per AAOIFI Standard No. 13. US T-Bill underlying assets are held as real, asset-backed instruments. Returns are distributed as profit-share (85% depositors / 15% protocol), never as fixed interest. PI Coin is permanently banned. All yields are paid in $SPI. This certificate is valid 12 months from issuance (expires 2027-06-04T00:00:00Z, epoch 1812067200).*
 
 ---
 *LEX Machina | SHARIAH_BOARD Role | NexusLaw v6.1 | Super Pi Project*

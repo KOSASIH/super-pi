@@ -8,8 +8,8 @@
 | **Asset Class** | REAL_ESTATE — Tokenized commercial/residential RWA titles |
 | **Structure** | Ijarah — 90% depositors / 10% protocol |
 | **AAOIFI Standard** | No. 9 (Ijarah and Ijarah Muntahia Bittamleek) |
-| **Issued At** | 2026-06-04T19:56+07:00 (epoch 1749038400) |
-| **Expires At** | 2027-06-04T19:56+07:00 (epoch 1780574400) |
+| **Issued At** | 2026-06-04T00:00:00Z (epoch 1780531200) |
+| **Expires At** | 2027-06-04T00:00:00Z (epoch 1812067200) |
 | **Dual Cert** | false |
 | **Auditor** | LEX_MACHINA_ROLE |
 | **NexusLaw** | v6.1 Art.40(a–h) — ALL PASS |
@@ -47,7 +47,7 @@
 
 ## Certificate
 
-*LEX Machina certifies that SPI-REALESTATE-V1 operates as a halal ijarah (lease) vault per AAOIFI Standard No. 9. Underlying assets are tokenized real estate titles. Yield represents rental income distributed as profit-share (90% depositors / 10% protocol), never as interest. PI Coin is permanently excluded. All yields paid in $SPI. This certificate is valid 12 months from issuance (expires 2027-06-04).*
+*LEX Machina certifies that SPI-REALESTATE-V1 operates as a halal ijarah (lease) vault per AAOIFI Standard No. 9. Underlying assets are tokenized real estate titles. Yield represents rental income distributed as profit-share (90% depositors / 10% protocol), never as interest. PI Coin is permanently excluded. All yields paid in $SPI. This certificate is valid 12 months from issuance (expires 2027-06-04T00:00:00Z, epoch 1812067200).*
 
 ---
 *LEX Machina | SHARIAH_BOARD Role | NexusLaw v6.1 | Super Pi Project*

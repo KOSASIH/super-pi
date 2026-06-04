@@ -8,8 +8,8 @@
 | **Asset Class** | SUKUK — Asset-backed Sukuk Ijarah tranches |
 | **Structure** | Sukuk Ijarah — 88% depositors / 12% protocol |
 | **AAOIFI Standard** | No. 17 (Investment Sukuk) + No. 9 (Ijarah) |
-| **Issued At** | 2026-06-04T19:56+07:00 (epoch 1749038400) |
-| **Expires At** | 2027-06-04T19:56+07:00 (epoch 1780574400) |
+| **Issued At** | 2026-06-04T00:00:00Z (epoch 1780531200) |
+| **Expires At** | 2027-06-04T00:00:00Z (epoch 1812067200) |
 | **Dual Cert** | true (SHARIAH_BOARD primary + LEX Machina second signatory) |
 | **Auditor** | LEX_MACHINA_ROLE (second signatory) |
 | **NexusLaw** | v6.1 Art.40(a–h) — ALL PASS |
@@ -52,7 +52,7 @@
 
 ## Certificate
 
-*LEX Machina certifies, as the second signatory in the required dual-certification, that SPI-SUKUK-V1 is a fully halal Sukuk Ijarah vault per AAOIFI Standards No. 17 and No. 9. Underlying assets are real, asset-backed Sukuk tranches. Profit distribution (88% depositors / 12% protocol) is structured as ijarah income-share, not interest. PI Coin is permanently banned. Yields are paid exclusively in $SPI. This dual certificate, together with SHARIAH_BOARD primary certification, completes the Art.40(d) requirement. Valid 12 months from issuance (expires 2027-06-04).*
+*LEX Machina certifies, as the second signatory in the required dual-certification, that SPI-SUKUK-V1 is a fully halal Sukuk Ijarah vault per AAOIFI Standards No. 17 and No. 9. Underlying assets are real, asset-backed Sukuk tranches. Profit distribution (88% depositors / 12% protocol) is structured as ijarah income-share, not interest. PI Coin is permanently banned. Yields are paid exclusively in $SPI. This dual certificate, together with SHARIAH_BOARD primary certification, completes the Art.40(d) requirement. Valid 12 months from issuance (expires 2027-06-04T00:00:00Z, epoch 1812067200).*
 
 ---
 *LEX Machina | SHARIAH_BOARD Role | NexusLaw v6.1 | Super Pi Project*
