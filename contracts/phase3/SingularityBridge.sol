@@ -1,8 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-// Purpose: Phase 3 Cross-Chain Bridge — $SPI to EVM/Cosmos/Solana, MEV-0, Pi Coin banned
-// NexusLaw v6.1 | Super Pi v16.0.0-phase3
+// Super Pi v16.0.1-patch | SingularityBridge v1.1
+// Fixes: SB-01 (Pi registry), SB-02 (multi-relayer quorum),
+//        SB-03 (48h role timelock), SB-04 (noForeignToken called)
+// NexusLaw v6.1 | noForeignToken() mandate ENFORCED
 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -10,7 +12,7 @@ import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
-interface ISPIToken {
+interface ISPIRegistry {
     function noForeignToken(address token) external view returns (bool);
 }
 
@@ -18,26 +20,26 @@ contract SingularityBridge is ReentrancyGuard, Pausable, AccessControl {
     using SafeERC20 for IERC20;
     using ECDSA for bytes32;
 
-    bytes32 public constant RELAYER_ROLE   = keccak256("RELAYER_ROLE");
-    bytes32 public constant GUARDIAN_ROLE  = keccak256("GUARDIAN_ROLE");
+    bytes32 public constant RELAYER_ROLE  = keccak256("RELAYER_ROLE");
+    bytes32 public constant GUARDIAN_ROLE = keccak256("GUARDIAN_ROLE");
 
-    address public constant PI_COIN = address(0xDEAD);
-    modifier noPiCoin(address token) {
-        require(token != PI_COIN, "SingularityBridge: PI_COIN banned");
-        _;
-    }
+    // SB-01: guardian-managed Pi Coin ban list (no 0xDEAD placeholder)
+    mapping(address => bool) public bannedTokens;
+    ISPIRegistry public immutable spiRegistry;
+
+    // SB-03: 48h role-grant timelock
+    struct PendingGrant { bytes32 role; address account; uint256 unlocksAt; }
+    mapping(bytes32 => PendingGrant) public pendingGrants;
+    uint256 public constant ROLE_TIMELOCK = 48 hours;
+
+    // SB-02: multi-relayer quorum
+    uint8 public quorumThreshold;
 
     enum DestChain { EVM, COSMOS, SOLANA, SUPERPI_L2 }
 
     struct BridgeOrder {
-        uint256 orderId;
-        address sender;
-        address token;
-        uint256 amount;
-        DestChain dest;
-        bytes32 destAddress;
-        uint64  nonce;
-        bool    settled;
+        uint256 orderId; address sender; address token; uint256 amount;
+        DestChain dest; bytes32 destAddress; uint64 nonce; bool settled;
     }
 
     uint256 public nextOrderId;
@@ -46,65 +48,123 @@ contract SingularityBridge is ReentrancyGuard, Pausable, AccessControl {
     uint256 public bridgeFeesBps = 10;
     address public feeTreasury;
 
-    mapping(address => uint64) public senderNonce;
+    mapping(address => uint64)      public senderNonce;
     mapping(uint256 => BridgeOrder) public orders;
-    mapping(bytes32 => bool) public usedRelayHashes;
-    mapping(address => bool) public approvedTokens;
-    ISPIToken public immutable spiRegistry;
+    mapping(bytes32 => bool)        public usedRelayHashes;
+    mapping(address => bool)        public approvedTokens;
 
     event BridgeOut(uint256 indexed orderId, address indexed sender, address token, uint256 amount, DestChain dest, bytes32 destAddress);
     event BridgeIn(uint256 indexed orderId, address indexed recipient, address token, uint256 amount, bytes32 relayHash);
     event TokenApproved(address indexed token, bool approved);
+    event TokenBanned(address indexed token);
+    event RoleGrantQueued(bytes32 indexed role, address indexed account, uint256 unlocksAt);
+    event RoleGrantExecuted(bytes32 indexed role, address indexed account);
+    event RoleGrantCancelled(bytes32 indexed role, address indexed account);
 
-    constructor(address _spiRegistry, address _feeTreasury) {
-        spiRegistry  = ISPIToken(_spiRegistry);
-        feeTreasury  = _feeTreasury;
+    constructor(address _spiRegistry, address _feeTreasury, uint8 _quorumThreshold) {
+        require(_spiRegistry != address(0), "SB: zero registry");
+        require(_feeTreasury != address(0), "SB: zero treasury");
+        require(_quorumThreshold >= 2,      "SB: quorum must be >= 2");
+        spiRegistry     = ISPIRegistry(_spiRegistry);
+        feeTreasury     = _feeTreasury;
+        quorumThreshold = _quorumThreshold;
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(GUARDIAN_ROLE, msg.sender);
+        _grantRole(GUARDIAN_ROLE,      msg.sender);
+    }
+
+    // SB-01 + SB-04: token gate — checks ban list AND calls noForeignToken()
+    modifier onlyAllowedToken(address token) {
+        require(!bannedTokens[token],              "SB: token banned (Pi Coin list)");
+        require(spiRegistry.noForeignToken(token), "SB: foreign/Pi token blocked by registry");
+        _;
     }
 
     function bridgeOut(address token, uint256 amount, DestChain dest, bytes32 destAddress)
-        external nonReentrant whenNotPaused noPiCoin(token)
+        external nonReentrant whenNotPaused onlyAllowedToken(token)
     {
-        require(approvedTokens[token], "SingularityBridge: token not approved");
-        require(amount >= MIN_BRIDGE_AMOUNT && amount <= MAX_BRIDGE_AMOUNT, "amount out of range");
-        require(destAddress != bytes32(0), "invalid dest address");
-
-        uint64 nonce = ++senderNonce[msg.sender];
-        uint256 fee  = (amount * bridgeFeesBps) / 10_000;
-        uint256 net  = amount - fee;
-
+        require(approvedTokens[token], "SB: token not approved");
+        require(amount >= MIN_BRIDGE_AMOUNT && amount <= MAX_BRIDGE_AMOUNT, "SB: amount out of range");
+        require(destAddress != bytes32(0), "SB: invalid dest address");
+        uint64  nonce = ++senderNonce[msg.sender];
+        uint256 fee   = (amount * bridgeFeesBps) / 10_000;
+        uint256 net   = amount - fee;
         IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
         if (fee > 0) IERC20(token).safeTransfer(feeTreasury, fee);
-
         uint256 orderId = ++nextOrderId;
         orders[orderId] = BridgeOrder(orderId, msg.sender, token, net, dest, destAddress, nonce, false);
         emit BridgeOut(orderId, msg.sender, token, net, dest, destAddress);
     }
 
-    function bridgeIn(uint256 orderId, address recipient, address token, uint256 amount, bytes32 relayHash, bytes calldata relayerSig)
-        external nonReentrant whenNotPaused onlyRole(RELAYER_ROLE) noPiCoin(token)
-    {
-        require(!usedRelayHashes[relayHash], "SingularityBridge: relay already used");
-        bytes32 digest = keccak256(abi.encodePacked(orderId, recipient, token, amount, relayHash)).toEthSignedMessageHash();
-        address signer = digest.recover(relayerSig);
-        require(hasRole(RELAYER_ROLE, signer), "SingularityBridge: invalid relayer sig");
-
+    // SB-02: multi-sig quorum — requires >= quorumThreshold distinct valid relayer sigs
+    function bridgeIn(
+        uint256 orderId, address recipient, address token, uint256 amount,
+        bytes32 relayHash, bytes[] calldata relayerSigs
+    ) external nonReentrant whenNotPaused onlyAllowedToken(token) {
+        require(!usedRelayHashes[relayHash],           "SB: relay hash already used");
+        require(relayerSigs.length >= quorumThreshold, "SB: not enough signatures");
+        bytes32 digest = keccak256(abi.encodePacked(orderId, recipient, token, amount, relayHash))
+            .toEthSignedMessageHash();
+        address[] memory seen = new address[](relayerSigs.length);
+        uint256 validCount;
+        for (uint256 i; i < relayerSigs.length; i++) {
+            address signer = digest.recover(relayerSigs[i]);
+            if (!hasRole(RELAYER_ROLE, signer)) continue;
+            bool dup;
+            for (uint256 j; j < validCount; j++) { if (seen[j] == signer) { dup = true; break; } }
+            if (!dup) seen[validCount++] = signer;
+        }
+        require(validCount >= quorumThreshold, "SB: relayer quorum not reached");
         usedRelayHashes[relayHash] = true;
         IERC20(token).safeTransfer(recipient, amount);
         emit BridgeIn(orderId, recipient, token, amount, relayHash);
     }
 
-    function setTokenApproval(address token, bool approved) external onlyRole(GUARDIAN_ROLE) noPiCoin(token) {
+    // SB-03: timelocked role management
+    function queueRoleGrant(bytes32 role, address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(account != address(0), "SB: zero account");
+        bytes32 grantId = keccak256(abi.encodePacked(role, account));
+        uint256 unlocksAt = block.timestamp + ROLE_TIMELOCK;
+        pendingGrants[grantId] = PendingGrant(role, account, unlocksAt);
+        emit RoleGrantQueued(role, account, unlocksAt);
+    }
+    function executeRoleGrant(bytes32 role, address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        bytes32 grantId = keccak256(abi.encodePacked(role, account));
+        PendingGrant memory pg = pendingGrants[grantId];
+        require(pg.unlocksAt > 0,               "SB: no pending grant");
+        require(block.timestamp >= pg.unlocksAt, "SB: timelock not expired");
+        delete pendingGrants[grantId];
+        _grantRole(role, account);
+        emit RoleGrantExecuted(role, account);
+    }
+    function cancelRoleGrant(bytes32 role, address account) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        bytes32 grantId = keccak256(abi.encodePacked(role, account));
+        require(pendingGrants[grantId].unlocksAt > 0, "SB: no pending grant");
+        delete pendingGrants[grantId];
+        emit RoleGrantCancelled(role, account);
+    }
+    function grantRole(bytes32, address) public pure override {
+        revert("SB: use queueRoleGrant + executeRoleGrant");
+    }
+
+    function banToken(address token) external onlyRole(GUARDIAN_ROLE) {
+        bannedTokens[token] = true; approvedTokens[token] = false;
+        emit TokenBanned(token);
+    }
+    function setTokenApproval(address token, bool approved) external onlyRole(GUARDIAN_ROLE) {
+        require(!bannedTokens[token],              "SB: token banned");
+        require(spiRegistry.noForeignToken(token), "SB: foreign/Pi token");
         approvedTokens[token] = approved;
         emit TokenApproved(token, approved);
     }
-
     function setBridgeFee(uint256 bps) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        require(bps <= 100, "max 1%");
-        bridgeFeesBps = bps;
+        require(bps <= 100, "SB: max fee 1%"); bridgeFeesBps = bps;
     }
-
-    function pause() external onlyRole(GUARDIAN_ROLE) { _pause(); }
+    function setQuorum(uint8 threshold) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(threshold >= 2, "SB: quorum must be >= 2"); quorumThreshold = threshold;
+    }
+    function setFeeTreasury(address treasury) external onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(treasury != address(0), "SB: zero treasury"); feeTreasury = treasury;
+    }
+    function pause()   external onlyRole(GUARDIAN_ROLE) { _pause(); }
     function unpause() external onlyRole(GUARDIAN_ROLE) { _unpause(); }
 }
