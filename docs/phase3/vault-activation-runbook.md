@@ -1,33 +1,41 @@
 # Phase 3 RWA Vault Activation Runbook
 **OMEGA DeFi | Super Pi v16.0.0-phase3 | NexusLaw v6.1 Art.40**
-*Generated: 2026-06-04T20:05:00+07:00 | Last patched: 2026-06-04T20:13:00+07:00*
+*Generated: 2026-06-04T20:05:00+07:00 | Last patched: 2026-06-04T20:15:00+07:00*
 
 ---
 
 ## 🔴 CURRENT STATUS: VAULT FACTORY ON HOLD
 
-**SAPIENS Guardian split verdict @ SHA 898c2a79 (2026-06-04T20:13):**
+**SAPIENS Guardian 3rd audit verdict (2026-06-04T20:15):**
 
-| Component | Status | Action |
+| Component | Status | Notes |
 |---|---|---|
-| SingularityBridge v1.1 | ✅ GREEN — broadcasting | VULCAN underway |
-| RWAVaultFactory v1.1 | 🔴 HOLD | See blockers below |
+| SingularityBridge v1.1 | ✅ GREEN — broadcasting | Unchanged at 898c2a79 |
+| Script A `f3d27448` | ✅ Operationally sound | Scripts/docs only, dual-broadcaster correct |
+| Script B `8b92bc62` | ✅ Operationally sound | Scripts/docs only |
+| RWAVaultFactory v1.1 | 🔴 HOLD | RWA-N3 unresolved + ISPIRegistry not audited |
 
-### Blockers
+---
 
-**RWA-N3 — DEPLOY BLOCKER: `claimYield()` yield accounting dilution**
-Early depositors underflow and are permanently locked out when new deposits arrive after `fundYieldReserve()`. User-funds-at-risk.
-Fix path: Synthetix rewards-per-token model. **ARCHON Forge in progress.**
+## SAPIENS Clearance Requirements (both required in single resubmission)
 
-**HIGH — `_assertCollateral()` cross-vault contamination**
-Per-vault collateral isolation missing. **ARCHON Forge in progress.**
+### (a) RWA-N3 — Deploy Blocker: `claimYield()` yield accounting dilution
 
-LEX Machina certs (LM-HALAL-PHASE3-001/002/003, SHA 2daec37b) are acknowledged and valid. Block is on the factory contract, not the certifications.
+Early depositors permanently locked out when deposits arrive after `fundYieldReserve()`. User-funds-at-risk.
+**Fix:** Synthetix rewards-per-token model in `claimYield()` / `fundYieldReserve()`.
+**Owner:** ARCHON Forge. **Action:** Fix RWAVaultFactory.sol source + resubmit to SAPIENS.
 
-**Next gate sequence:**
-1. ARCHON Forge ships RWA-N3 fix + `_assertCollateral()` isolation fix
-2. SAPIENS 3rd re-audit clears SHA of patched factory
-3. Resume deploy sequence from Step 1 (ISPIRegistry) onward
+### (b) HIGH — `_assertCollateral()` cross-vault contamination
+
+Per-vault collateral isolation missing.
+**Owner:** ARCHON Forge. **Action:** Fix + include in same factory resubmission.
+
+### (c) ISPIRegistry source not submitted
+
+SAPIENS cannot clear a contract not reviewed. No ISPIRegistry source was submitted.
+**Owner:** ARCHON Forge. **Action:** Submit ISPIRegistry.sol to SAPIENS alongside factory resubmission.
+
+> ✅ RWA-05 dual-broadcaster split confirmed operationally correct by SAPIENS. Script A + B need no changes.
 
 ---
 
@@ -37,17 +45,19 @@ LEX Machina certs (LM-HALAL-PHASE3-001/002/003, SHA 2daec37b) are acknowledged a
 |---|---|---|
 | 1 | LEX Machina halal certs (SHA 2daec37b) | ✅ |
 | 2 | Deploy scripts ABI-verified (SHA 0512a8d8) | ✅ |
-| 3 | ARCHON Forge script split: Script A f3d27448 / Script B 8b92bc62 | ✅ |
-| 4 | RWA-04: `distributeYield()` → `fundYieldReserve()` + `claimYield()` resolved | ✅ |
-| 5 | SingularityBridge v1.1 SAPIENS green | ✅ broadcasting |
-| 6 | RWA-N3 `claimYield()` dilution fix | 🔨 ARCHON Forge |
-| 7 | `_assertCollateral()` cross-vault isolation fix | 🔨 ARCHON Forge |
-| 8 | SAPIENS 3rd re-audit of patched factory | ⏳ after #6+#7 |
-| 9 | `SPI_TOKEN` address on Super Pi L2 | ⏳ NEXUS Prime |
-| 10 | `ISPIRegistry` deployed address | ⏳ NEXUS Prime / step 1 |
-| 11 | `RWA_FACTORY` address (post-deploy) | ⏳ step 2 |
-| 12 | VAULT_MANAGER broadcaster wallet | ⏳ confirm |
-| 13 | SHARIAH_BOARD multisig (must differ from VAULT_MANAGER) | ⏳ confirm |
+| 3 | Script A `f3d27448` — SAPIENS cleared | ✅ |
+| 4 | Script B `8b92bc62` — SAPIENS cleared | ✅ |
+| 5 | RWA-04: `distributeYield()` → `fundYieldReserve()` + `claimYield()` resolved | ✅ |
+| 6 | SingularityBridge v1.1 SAPIENS green | ✅ broadcasting |
+| 7 | RWA-N3 `claimYield()` dilution fix in factory source | 🔨 ARCHON Forge |
+| 8 | `_assertCollateral()` cross-vault isolation fix | 🔨 ARCHON Forge |
+| 9 | ISPIRegistry.sol submitted to SAPIENS | 🔨 ARCHON Forge |
+| 10 | SAPIENS 4th re-audit clearance (factory + ISPIRegistry) | ⏳ after #7+#8+#9 |
+| 11 | `SPI_TOKEN` address on Super Pi L2 | ⏳ NEXUS Prime |
+| 12 | `ISPIRegistry` deployed address | ⏳ step 1 post-clearance |
+| 13 | `RWA_FACTORY` address (post-deploy) | ⏳ step 3 post-clearance |
+| 14 | VAULT_MANAGER broadcaster wallet confirmed | ⏳ confirm |
+| 15 | SHARIAH_BOARD multisig (must differ from VAULT_MANAGER) | ⏳ confirm |
 
 ---
 
@@ -59,16 +69,17 @@ LEX Machina certs (LM-HALAL-PHASE3-001/002/003, SHA 2daec37b) are acknowledged a
 | SPI-REALESTATE-V1 | `LM-HALAL-PHASE3-002` | Ijarah 90/10 | ~6.5% pa | No.9 ✅ |
 | SPI-SUKUK-V1 | `LM-HALAL-PHASE3-003` | Sukuk Ijarah 88/12 | ~5.5% pa | No.17 + No.9 dual-cert ✅ |
 
-All Art.40(a–h) checks PASS. PI_COIN banned on all three. Certs valid regardless of factory hold.
+All Art.40(a–h) checks PASS. PI_COIN banned on all three.
+Certs valid and acknowledged — hold is on the factory contract only.
 
 ---
 
 ## Deployment Sequence (7 gates — RWA-05 dual-role enforced)
 
-> ⛔ **GATED: Do not execute until SAPIENS clears patched factory (post RWA-N3 + collateral fix).**
+> ⛔ **GATED: Do not execute until SAPIENS clears patched RWAVaultFactory + ISPIRegistry.**
 > **Two broadcaster wallets required.** Script A and Script B MUST use different wallets — on-chain enforced.
 
-### Step 1 — Deploy ISPIRegistry
+### Step 1 — Deploy ISPIRegistry *(post SAPIENS clearance)*
 
 ```bash
 forge script contracts/phase3/ISPIRegistry.sol \
@@ -91,7 +102,7 @@ forge script contracts/SPI_ERC20.sol \
 # Record: SPI_TOKEN=<addr>
 ```
 
-### Step 3 — Deploy RWAVaultFactory v1.1 (post-patch)
+### Step 3 — Deploy RWAVaultFactory v1.x *(patched, post SAPIENS clearance)*
 
 ```bash
 forge script contracts/phase3/RWAVaultFactory.sol \
@@ -111,7 +122,7 @@ export SUPI_TOKEN=<addr>  # or 0x0
 
 ### Step 5 — Script A: Create Vaults (VAULT_MANAGER broadcaster)
 
-Script: `scripts/phase3/DeployPhase3Vaults_A.s.sol` (f3d27448)
+Script: `scripts/phase3/DeployPhase3Vaults_A.s.sol` (`f3d27448`)
 
 ```bash
 forge script scripts/phase3/DeployPhase3Vaults_A.s.sol:DeployVaultsA \
@@ -124,7 +135,7 @@ Expected events: `VaultCreated(vaultId, name, assetClass)` x3
 
 ### Step 6 — Script B: Certify Halal (SHARIAH_BOARD multisig)
 
-Script: `scripts/phase3/DeployPhase3Vaults_B.s.sol` (8b92bc62)
+Script: `scripts/phase3/DeployPhase3Vaults_B.s.sol` (`8b92bc62`)
 
 ```bash
 export VAULT_ID_1=<from Step 5>
@@ -152,7 +163,7 @@ Confirm: `halalCertified == true`, `active == true`, `spiBToken != 0xDEAD`, `min
 
 ## Phase 3.1 Backlog (ARCHON Forge — post factory deploy)
 
-- `mapping(uint256 => HalalCert) public halalCertURI` → v1.2 (LEX Machina spec: `workspace/legal/HALAL_CERT_URI_MAPPING_PHASE3_LM-2026-0604.md`)
+- `mapping(uint256 => HalalCert) public halalCertURI` → v1.x+1 (LEX Machina spec: `workspace/legal/HALAL_CERT_URI_MAPPING_PHASE3_LM-2026-0604.md`)
 - 30-day cert expiry renewal trigger + `onlyRole(SHARIAH_BOARD)` renewal function
 
 > ✅ RWA-04: `distributeYield()` removed in v1.1 (898c2a79). Replaced by `fundYieldReserve()` + `claimYield()`, both `nonReentrant`. **Not a backlog item.**
@@ -183,7 +194,7 @@ Confirm: `halalCertified == true`, `active == true`, `spiBToken != 0xDEAD`, `min
 |---|---|
 | NEXUS Prime | SPI_TOKEN, ISPIRegistry, RWA_FACTORY addresses, role assignments |
 | VULCAN Deploy | Broadcast execution, gas issues, sequence ordering |
-| ARCHON Forge | RWA-N3 fix, collateral isolation fix, script issues, v1.2 halalCertURI |
+| ARCHON Forge | RWA-N3 fix, collateral isolation, ISPIRegistry source, v1.x halalCertURI |
 | LEX Machina | Cert disputes, Art.40 queries, cert renewal |
 | SAPIENS Guardian | Re-audit clearance, exploit alerts |
 | AESTHETE Nexus | UI unlock, user flow |
