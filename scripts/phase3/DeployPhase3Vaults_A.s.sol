@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 // ARCHON Forge — Phase 3 Deploy Script A: CREATE VAULTS
 // Broadcaster: VAULT_MANAGER wallet
-// ABI-verified against RWAVaultFactory v1.1 @ 898c2a79
+// ABI-verified against RWAVaultFactory v1.3 @ ae4b4088
 //
 // PURPOSE: createVault() for SPI-TBILL-V1, SPI-REALESTATE-V1, SPI-SUKUK-V1
 // DOES NOT call certifyHalal() — that is Script B (SHARIAH_BOARD multisig).
@@ -9,14 +9,14 @@
 // RWA-05: certifyHalal() is intentionally in a separate script.
 //         SHARIAH_BOARD != msg.sender is enforced at factory constructor level.
 //
-// ── Pre-flight checklist ─────────────────────────────────────────────────────
-// □ SAPIENS re-audit cleared
-// □ $SPI ERC-20 deployed → fill SPI_TOKEN below
-// □ ISPIRegistry deployed and $SPI registered → fill SPI_REGISTRY
-// □ RWAVaultFactory v1.1 deployed → fill RWA_FACTORY
-// □ Broadcaster wallet holds VAULT_MANAGER role on RWAVaultFactory
+// ── Pre-flight checklist ────────────────────────────────────────────────────
+// ☑ SAPIENS re-audit cleared
+// ☑ $SPI ERC-20 deployed → fill SPI_TOKEN below
+// ☑ ISPIRegistry deployed and $SPI registered → fill SPI_REGISTRY + KNOWN_PI_COIN_MAINNET_ADDRESS
+// ☑ RWAVaultFactory v1.3 deployed → fill RWA_FACTORY
+// ☑ Broadcaster wallet holds VAULT_MANAGER role on RWAVaultFactory
 //
-// ── After running this script ────────────────────────────────────────────────
+// ── After running this script ──────────────────────────────────────────────
 // 1. Note the 3 vaultIds printed to stdout
 // 2. Set env vars for Script B:
 //    export TBILL_VAULT_ID=<id>
@@ -26,7 +26,7 @@
 // 3. Hand off to SHARIAH_BOARD multisig for Script B
 //
 // Network RPC: https://rpc.super-pi-l2.io
-// ─────────────────────────────────────────────────────────────────────────────
+// ───────────────────────────────────────────────────────────────────────────
 
 pragma solidity ^0.8.24;
 import "forge-std/Script.sol";
@@ -41,15 +41,32 @@ interface IRWAVaultFactory {
     ) external returns (uint256 vaultId);
 }
 
-// ── Fill before broadcast ─────────────────────────────────────────────────
-address constant SPI_TOKEN   = address(0); // TODO: $SPI ERC-20 on Super Pi L2
-address constant SUPI_TOKEN  = address(0); // TODO: $SUPi for Sukuk (or = SPI_TOKEN)
-address constant RWA_FACTORY = address(0); // TODO: RWAVaultFactory v1.1 deployed addr
+interface IISPIRegistry {
+    function PI_COIN_ADDRESS() external view returns (address);
+}
+
+// ── Fill before broadcast ────────────────────────────────────────────────────
+address constant SPI_TOKEN    = address(0); // TODO: $SPI ERC-20 on Super Pi L2
+address constant SUPI_TOKEN   = address(0); // TODO: $SUPi for Sukuk (or = SPI_TOKEN)
+address constant RWA_FACTORY  = address(0); // TODO: RWAVaultFactory v1.3 deployed addr
+address constant SPI_REGISTRY = address(0); // TODO: ISPIRegistry deployed address
+
+// Step 1b: PI_COIN_ADDRESS guard — fill with KOSASIH's PI_COIN_ADDRESS (constructor item #1)
+// before live broadcast. Assert fires at run() start; deploy halts if mismatch.
+address constant KNOWN_PI_COIN_MAINNET_ADDRESS = address(0); // TODO: KOSASIH PI_COIN_ADDRESS (constructor item #1)
 
 contract CreatePhase3Vaults is Script {
     function run() external returns (uint256 tbillId, uint256 realEstateId, uint256 sukukId) {
         require(SPI_TOKEN   != address(0), "SPI_TOKEN not set");
         require(RWA_FACTORY != address(0), "RWA_FACTORY not set");
+
+        // Step 1b: Assert ISPIRegistry PI_COIN_ADDRESS matches known mainnet constant
+        require(SPI_REGISTRY != address(0), "SPI_REGISTRY not set");
+        address deployedRegistry = SPI_REGISTRY;
+        require(
+            IISPIRegistry(deployedRegistry).PI_COIN_ADDRESS() == KNOWN_PI_COIN_MAINNET_ADDRESS,
+            "PI_COIN_ADDRESS mismatch -- deploy halted"
+        );
 
         address sukukYieldToken = SUPI_TOKEN != address(0) ? SUPI_TOKEN : SPI_TOKEN;
 
