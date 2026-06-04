@@ -54,8 +54,8 @@ contract CertifyPhase3Vaults is Script {
             "LM-HALAL-PHASE3-001",
             "AAOIFI No.13",
             "https://surething.io/api/files/1cc3ff84-bdcd-431d-ac18-5dc16ff5a784/download?t=cCqZF0X3K9zRZe5Qq_XywA.1780582513#SPI-TBILL-V1",
-            1749038400,
-            1780574400,
+            1780531200,
+            1812067200,
             false
         );
 
@@ -65,8 +65,8 @@ contract CertifyPhase3Vaults is Script {
             "LM-HALAL-PHASE3-002",
             "AAOIFI No.9",
             "https://surething.io/api/files/1cc3ff84-bdcd-431d-ac18-5dc16ff5a784/download?t=cCqZF0X3K9zRZe5Qq_XywA.1780582513#SPI-REALESTATE-V1",
-            1749038400,
-            1780574400,
+            1780531200,
+            1812067200,
             false
         );
 
@@ -76,19 +76,19 @@ contract CertifyPhase3Vaults is Script {
             "LM-HALAL-PHASE3-003",
             "AAOIFI No.17 + No.9",
             "https://surething.io/api/files/1cc3ff84-bdcd-431d-ac18-5dc16ff5a784/download?t=cCqZF0X3K9zRZe5Qq_XywA.1780582513#SPI-SUKUK-V1",
-            1749038400,
-            1780574400,
+            1780531200,
+            1812067200,
             true
         );
 
         vm.stopBroadcast();
 
         console.log("=== Script B FINAL -- all vaults halal-certified ===");
-        console.log("SPI-TBILL-V1      LM-HALAL-PHASE3-001  AAOIFI No.13         vaultId:", tbillId);
-        console.log("SPI-REALESTATE-V1 LM-HALAL-PHASE3-002  AAOIFI No.9          vaultId:", realEstId);
-        console.log("SPI-SUKUK-V1      LM-HALAL-PHASE3-003  AAOIFI No.17 + No.9  vaultId:", sukukId);
-        console.log("issuedAt: 1749038400 | expiresAt: 1780574400");
-        console.log("Renewal window opens: 2027-05-05");
+        console.log("SPI-TBILL-V1      LM-HALAL-PHASE3-001  AAOIFI No.13          vaultId:", tbillId);
+        console.log("SPI-REALESTATE-V1 LM-HALAL-PHASE3-002  AAOIFI No.9           vaultId:", realEstId);
+        console.log("SPI-SUKUK-V1      LM-HALAL-PHASE3-003  AAOIFI No.17 + No.9   vaultId:", sukukId);
+        console.log("issuedAt: 1780531200 | expiresAt: 1812067200");
+        console.log("Renewal window opens: 2027-06-04");
         console.log("Trigger: call triggerCertRenewal(vaultId) from any address when window opens.");
     }
 }
