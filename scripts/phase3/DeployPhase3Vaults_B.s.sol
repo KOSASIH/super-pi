@@ -1,10 +1,22 @@
 // SPDX-License-Identifier: MIT
-// ARCHON Forge — Phase 3 Deploy Script B v3: CERTIFY HALAL + LEX MACHINA CERT DATA
+// ARCHON Forge -- Phase 3 Deploy Script B FINAL: CERTIFY HALAL + LEX MACHINA CERT DATA
 // Broadcaster: SHARIAH_BOARD independent multisig (NOT the VAULT_MANAGER wallet)
-// Updated for RWAVaultFactory v1.3 — certifyHalal() 7-param signature
+// RWAVaultFactory v1.3 -- certifyHalal() 7-param signature
 //
-// LEX Machina cert doc: https://surething.io/api/files/1cc3ff84-bdcd-431d-ac18-5dc16ff5a784/download?t=cCqZF0X3K9zRZe5Qq_XywA.1780582513
+// LEX Machina cert docs (permanent):
+//   https://raw.githubusercontent.com/KOSASIH/super-pi/6ee81abc17a9a310b28ec53945535c51dc7cfe5e/docs/halal-certs/LM-HALAL-PHASE3-001-SPI-TBILL-V1.md
+//   https://raw.githubusercontent.com/KOSASIH/super-pi/6ee81abc17a9a310b28ec53945535c51dc7cfe5e/docs/halal-certs/LM-HALAL-PHASE3-002-SPI-REALESTATE-V1.md
+//   https://raw.githubusercontent.com/KOSASIH/super-pi/6ee81abc17a9a310b28ec53945535c51dc7cfe5e/docs/halal-certs/LM-HALAL-PHASE3-003-SPI-SUKUK-V1.md
 // Cert doc SHA: c1ca2433 | NexusLaw v6.1 Art.40
+//
+// AAOIFI standard strings (cert-doc canonical full-form per LM-HALAL-PHASE3-001/002/003):
+//   SPI-TBILL-V1:      'AAOIFI No.13 (Mudarabah)'
+//   SPI-REALESTATE-V1: 'AAOIFI No.9 (Ijarah and Ijarah Muntahia Bittamleek)'
+//   SPI-SUKUK-V1:      'AAOIFI No.17 (Investment Sukuk) + No.9 (Ijarah)'
+//
+// Timestamps (LEX Machina corrected -- 1-year offset fix applied per OMEGA-ARCH-001):
+//   issuedAt:  1780531200  (2026-06-04T00:00:00Z)
+//   expiresAt: 1812067200  (2027-06-04T00:00:00Z)
 //
 // Run AFTER Script A. Set env vars:
 //   export TBILL_VAULT_ID=<id>
@@ -43,46 +55,47 @@ contract CertifyPhase3Vaults is Script {
 
         vm.startBroadcast();
 
-        // vaultId=1 — SPI-TBILL-V1 | AAOIFI No.13 Mudarabah only | dualCert: false
+        // vaultId=TBILL_VAULT_ID -- SPI-TBILL-V1 | AAOIFI No.13 (Mudarabah) | dualCert: false
         IRWAVaultFactory(factory).certifyHalal(
             tbillId,
             "LM-HALAL-PHASE3-001",
-            "AAOIFI No.13",
-            "https://surething.io/api/files/1cc3ff84-bdcd-431d-ac18-5dc16ff5a784/download?t=cCqZF0X3K9zRZe5Qq_XywA.1780582513#SPI-TBILL-V1",
-            1749038400,
-            1780574400,
+            "AAOIFI No.13 (Mudarabah)",
+            "https://raw.githubusercontent.com/KOSASIH/super-pi/6ee81abc17a9a310b28ec53945535c51dc7cfe5e/docs/halal-certs/LM-HALAL-PHASE3-001-SPI-TBILL-V1.md",
+            1780531200,
+            1812067200,
             false
         );
 
-        // vaultId=2 — SPI-REALESTATE-V1 | AAOIFI No.9 Ijarah | dualCert: false
+        // vaultId=REALESTATE_VAULT_ID -- SPI-REALESTATE-V1 | AAOIFI No.9 (Ijarah and Ijarah Muntahia Bittamleek) | dualCert: false
         IRWAVaultFactory(factory).certifyHalal(
             realEstId,
             "LM-HALAL-PHASE3-002",
             "AAOIFI No.9 (Ijarah and Ijarah Muntahia Bittamleek)",
-            "https://surething.io/api/files/1cc3ff84-bdcd-431d-ac18-5dc16ff5a784/download?t=cCqZF0X3K9zRZe5Qq_XywA.1780582513#SPI-REALESTATE-V1",
-            1749038400,
-            1780574400,
+            "https://raw.githubusercontent.com/KOSASIH/super-pi/6ee81abc17a9a310b28ec53945535c51dc7cfe5e/docs/halal-certs/LM-HALAL-PHASE3-002-SPI-REALESTATE-V1.md",
+            1780531200,
+            1812067200,
             false
         );
 
-        // vaultId=3 — SPI-SUKUK-V1 | AAOIFI No.17+9 Sukuk Ijarah | dualCert: TRUE
+        // vaultId=SUKUK_VAULT_ID -- SPI-SUKUK-V1 | AAOIFI No.17 (Investment Sukuk) + No.9 (Ijarah) | dualCert: TRUE
         IRWAVaultFactory(factory).certifyHalal(
             sukukId,
             "LM-HALAL-PHASE3-003",
             "AAOIFI No.17 (Investment Sukuk) + No.9 (Ijarah)",
-            "https://surething.io/api/files/1cc3ff84-bdcd-431d-ac18-5dc16ff5a784/download?t=cCqZF0X3K9zRZe5Qq_XywA.1780582513#SPI-SUKUK-V1",
-            1749038400,
-            1780574400,
+            "https://raw.githubusercontent.com/KOSASIH/super-pi/6ee81abc17a9a310b28ec53945535c51dc7cfe5e/docs/halal-certs/LM-HALAL-PHASE3-003-SPI-SUKUK-V1.md",
+            1780531200,
+            1812067200,
             true
         );
 
         vm.stopBroadcast();
 
-        console.log("=== Script B v3 complete — all vaults halal-certified ===");
-        console.log("SPI-TBILL-V1      LM-HALAL-PHASE3-001 vaultId:", tbillId);
-        console.log("SPI-REALESTATE-V1 LM-HALAL-PHASE3-002 vaultId:", realEstId);
-        console.log("SPI-SUKUK-V1      LM-HALAL-PHASE3-003 vaultId:", sukukId);
-        console.log("Expires: 2027-06-04 | Renewal window opens: 2027-05-05");
+        console.log("=== Script B FINAL -- all vaults halal-certified ===");
+        console.log("SPI-TBILL-V1      LM-HALAL-PHASE3-001  AAOIFI No.13 (Mudarabah)                       vaultId:", tbillId);
+        console.log("SPI-REALESTATE-V1 LM-HALAL-PHASE3-002  AAOIFI No.9 (Ijarah and Ijarah Muntahia Bittamleek)  vaultId:", realEstId);
+        console.log("SPI-SUKUK-V1      LM-HALAL-PHASE3-003  AAOIFI No.17 (Investment Sukuk) + No.9 (Ijarah)  vaultId:", sukukId);
+        console.log("issuedAt: 1780531200 (2026-06-04T00:00:00Z) | expiresAt: 1812067200 (2027-06-04T00:00:00Z)");
+        console.log("Renewal window opens: 2027-05-05");
         console.log("Trigger: call triggerCertRenewal(vaultId) from any address when window opens.");
     }
 }
