@@ -1,0 +1,10 @@
+{
+  "Duplex": "https://achingbrain.github.io/it-stream-types/interfaces/Duplex.html",
+  ".:Duplex": "https://achingbrain.github.io/it-stream-types/interfaces/Duplex.html",
+  "Sink": "https://achingbrain.github.io/it-stream-types/interfaces/Sink.html",
+  ".:Sink": "https://achingbrain.github.io/it-stream-types/interfaces/Sink.html",
+  "Transform": "https://achingbrain.github.io/it-stream-types/interfaces/Transform.html",
+  ".:Transform": "https://achingbrain.github.io/it-stream-types/interfaces/Transform.html",
+  "Source": "https://achingbrain.github.io/it-stream-types/types/Source.html",
+  ".:Source": "https://achingbrain.github.io/it-stream-types/types/Source.html"
+}

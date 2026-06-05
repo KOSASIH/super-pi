@@ -1,0 +1,309 @@
+{
+  "name": "multiformats",
+  "version": "13.4.2",
+  "description": "Interface for multihash, multicodec, multibase and CID",
+  "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
+  "license": "Apache-2.0 OR MIT",
+  "homepage": "https://github.com/multiformats/js-multiformats#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/multiformats/js-multiformats.git"
+  },
+  "bugs": {
+    "url": "https://github.com/multiformats/js-multiformats/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "keywords": [
+    "ipfs",
+    "ipld",
+    "multiformats"
+  ],
+  "type": "module",
+  "types": "./dist/src/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "*",
+        "dist/*",
+        "dist/src/*",
+        "dist/src/*/index"
+      ],
+      "src/*": [
+        "*",
+        "dist/*",
+        "dist/src/*",
+        "dist/src/*/index"
+      ]
+    }
+  },
+  "files": [
+    "src",
+    "dist",
+    "!dist/test",
+    "!**/*.tsbuildinfo"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    },
+    "./bases/base10": {
+      "types": "./dist/src/bases/base10.d.ts",
+      "import": "./dist/src/bases/base10.js"
+    },
+    "./bases/base16": {
+      "types": "./dist/src/bases/base16.d.ts",
+      "import": "./dist/src/bases/base16.js"
+    },
+    "./bases/base2": {
+      "types": "./dist/src/bases/base2.d.ts",
+      "import": "./dist/src/bases/base2.js"
+    },
+    "./bases/base256emoji": {
+      "types": "./dist/src/bases/base256emoji.d.ts",
+      "import": "./dist/src/bases/base256emoji.js"
+    },
+    "./bases/base32": {
+      "types": "./dist/src/bases/base32.d.ts",
+      "import": "./dist/src/bases/base32.js"
+    },
+    "./bases/base36": {
+      "types": "./dist/src/bases/base36.d.ts",
+      "import": "./dist/src/bases/base36.js"
+    },
+    "./bases/base58": {
+      "types": "./dist/src/bases/base58.d.ts",
+      "import": "./dist/src/bases/base58.js"
+    },
+    "./bases/base64": {
+      "types": "./dist/src/bases/base64.d.ts",
+      "import": "./dist/src/bases/base64.js"
+    },
+    "./bases/base8": {
+      "types": "./dist/src/bases/base8.d.ts",
+      "import": "./dist/src/bases/base8.js"
+    },
+    "./bases/identity": {
+      "types": "./dist/src/bases/identity.d.ts",
+      "import": "./dist/src/bases/identity.js"
+    },
+    "./bases/interface": {
+      "types": "./dist/src/bases/interface.d.ts",
+      "import": "./dist/src/bases/interface.js"
+    },
+    "./basics": {
+      "types": "./dist/src/basics.d.ts",
+      "import": "./dist/src/basics.js"
+    },
+    "./block": {
+      "types": "./dist/src/block.d.ts",
+      "import": "./dist/src/block.js"
+    },
+    "./block/interface": {
+      "types": "./dist/src/block/interface.d.ts",
+      "import": "./dist/src/block/interface.js"
+    },
+    "./bytes": {
+      "types": "./dist/src/bytes.d.ts",
+      "import": "./dist/src/bytes.js"
+    },
+    "./cid": {
+      "types": "./dist/src/cid.d.ts",
+      "import": "./dist/src/cid.js"
+    },
+    "./codecs/interface": {
+      "types": "./dist/src/codecs/interface.d.ts",
+      "import": "./dist/src/codecs/interface.js"
+    },
+    "./codecs/json": {
+      "types": "./dist/src/codecs/json.d.ts",
+      "import": "./dist/src/codecs/json.js"
+    },
+    "./codecs/raw": {
+      "types": "./dist/src/codecs/raw.d.ts",
+      "import": "./dist/src/codecs/raw.js"
+    },
+    "./hashes/digest": {
+      "types": "./dist/src/hashes/digest.d.ts",
+      "import": "./dist/src/hashes/digest.js"
+    },
+    "./hashes/hasher": {
+      "types": "./dist/src/hashes/hasher.d.ts",
+      "import": "./dist/src/hashes/hasher.js"
+    },
+    "./hashes/identity": {
+      "types": "./dist/src/hashes/identity.d.ts",
+      "import": "./dist/src/hashes/identity.js"
+    },
+    "./hashes/interface": {
+      "types": "./dist/src/hashes/interface.d.ts",
+      "import": "./dist/src/hashes/interface.js"
+    },
+    "./hashes/sha1": {
+      "types": "./dist/types/src/hashes/sha1.d.ts",
+      "browser": "./dist/src/hashes/sha1-browser.js",
+      "import": "./dist/src/hashes/sha1.js"
+    },
+    "./hashes/sha2": {
+      "types": "./dist/src/hashes/sha2.d.ts",
+      "browser": "./dist/src/hashes/sha2-browser.js",
+      "import": "./dist/src/hashes/sha2.js"
+    },
+    "./interface": {
+      "types": "./dist/src/interface.d.ts",
+      "import": "./dist/src/interface.js"
+    },
+    "./link": {
+      "types": "./dist/src/link.d.ts",
+      "import": "./dist/src/link.js"
+    },
+    "./link/interface": {
+      "types": "./dist/src/link/interface.d.ts",
+      "import": "./dist/src/link/interface.js"
+    },
+    "./traversal": {
+      "types": "./dist/src/traversal.d.ts",
+      "import": "./dist/src/traversal.js"
+    }
+  },
+  "eslintConfig": {
+    "extends": "ipfs",
+    "parserOptions": {
+      "project": true,
+      "sourceType": "module"
+    }
+  },
+  "release": {
+    "branches": [
+      "master"
+    ],
+    "plugins": [
+      [
+        "@semantic-release/commit-analyzer",
+        {
+          "preset": "conventionalcommits",
+          "releaseRules": [
+            {
+              "breaking": true,
+              "release": "major"
+            },
+            {
+              "revert": true,
+              "release": "patch"
+            },
+            {
+              "type": "feat",
+              "release": "minor"
+            },
+            {
+              "type": "fix",
+              "release": "patch"
+            },
+            {
+              "type": "docs",
+              "release": "patch"
+            },
+            {
+              "type": "test",
+              "release": "patch"
+            },
+            {
+              "type": "deps",
+              "release": "patch"
+            },
+            {
+              "scope": "no-release",
+              "release": false
+            }
+          ]
+        }
+      ],
+      [
+        "@semantic-release/release-notes-generator",
+        {
+          "preset": "conventionalcommits",
+          "presetConfig": {
+            "types": [
+              {
+                "type": "feat",
+                "section": "Features"
+              },
+              {
+                "type": "fix",
+                "section": "Bug Fixes"
+              },
+              {
+                "type": "chore",
+                "section": "Trivial Changes"
+              },
+              {
+                "type": "docs",
+                "section": "Documentation"
+              },
+              {
+                "type": "deps",
+                "section": "Dependencies"
+              },
+              {
+                "type": "test",
+                "section": "Tests"
+              }
+            ]
+          }
+        }
+      ],
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      [
+        "@semantic-release/git",
+        {
+          "assets": [
+            "CHANGELOG.md",
+            "package.json"
+          ]
+        }
+      ]
+    ]
+  },
+  "scripts": {
+    "clean": "aegir clean",
+    "lint": "aegir lint",
+    "build": "aegir build",
+    "release": "aegir release",
+    "docs": "aegir docs",
+    "test": "npm run lint && npm run test:node && npm run test:chrome",
+    "test:node": "aegir test -t node --cov",
+    "test:chrome": "aegir test -t browser --cov",
+    "test:chrome-webworker": "aegir test -t webworker",
+    "test:firefox": "aegir test -t browser -- --browser firefox",
+    "test:firefox-webworker": "aegir test -t webworker -- --browser firefox",
+    "test:electron-main": "aegir test -t electron-main"
+  },
+  "devDependencies": {
+    "@stablelib/sha256": "^2.0.0",
+    "@stablelib/sha512": "^2.0.0",
+    "@types/node": "^25.0.0",
+    "aegir": "^47.0.7",
+    "buffer": "^6.0.3",
+    "cids": "^1.1.9",
+    "crypto-hash": "^4.0.0"
+  },
+  "aegir": {
+    "test": {
+      "target": [
+        "node",
+        "browser"
+      ]
+    }
+  },
+  "browser": {
+    "./hashes/sha1": "./dist/src/hashes/sha1-browser.js",
+    "./dist/src/hashes/sha1.js": "./dist/src/hashes/sha1-browser.js",
+    "./hashes/sha2": "./dist/src/hashes/sha2-browser.js",
+    "./dist/src/hashes/sha2.js": "./dist/src/hashes/sha2-browser.js"
+  }
+}

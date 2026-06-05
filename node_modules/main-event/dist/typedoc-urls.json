@@ -1,0 +1,13 @@
+{
+  "TypedEventEmitter": "https://achingbrain.github.io/main-event/classes/TypedEventEmitter.html",
+  ".:TypedEventEmitter": "https://achingbrain.github.io/main-event/classes/TypedEventEmitter.html",
+  "EventCallback": "https://achingbrain.github.io/main-event/interfaces/EventCallback.html",
+  ".:EventCallback": "https://achingbrain.github.io/main-event/interfaces/EventCallback.html",
+  "EventObject": "https://achingbrain.github.io/main-event/interfaces/EventObject.html",
+  ".:EventObject": "https://achingbrain.github.io/main-event/interfaces/EventObject.html",
+  "TypedEventTarget": "https://achingbrain.github.io/main-event/interfaces/TypedEventTarget.html",
+  ".:TypedEventTarget": "https://achingbrain.github.io/main-event/interfaces/TypedEventTarget.html",
+  "EventHandler": "https://achingbrain.github.io/main-event/types/EventHandler.html",
+  ".:EventHandler": "https://achingbrain.github.io/main-event/types/EventHandler.html",
+  "setMaxListeners": "https://achingbrain.github.io/main-event/variables/setMaxListeners.html"
+}

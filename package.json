@@ -1,15 +1,33 @@
 {
-  "name": "super-pi-monorepo",
+  "name": "super-pi",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
+    "test": "turbo run test",
     "lint": "turbo run lint",
-    "type-check": "turbo run type-check"
+    "type-check": "turbo run type-check",
+    "verify": "npm run lint && npm run type-check && npm run test",
+    "docs": "bash scripts/generate-docs.sh",
+    "release": "python3 scripts/release.py",
+    "clean": "turbo run clean",
+    "health-check": "python3 scripts/health-check.py",
+    "security-scan": "python3 scripts/security-scan.py",
+    "contract-registry": "python3 scripts/contract-registry.py",
+    "deploy-testnet": "bash scripts/deploy.sh testnet",
+    "deploy-staging": "bash scripts/deploy.sh staging",
+    "deploy-production": "bash scripts/deploy.sh production"
   },
   "devDependencies": {
-    "turbo": "^1.10.0",
-    "typescript": "^5.3.0"
+    "turbo": "latest",
+    "typescript": "latest",
+    "prettier": "latest"
   },
-  "packageManager": "pnpm@8.15.0"
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "contracts/*",
+    "services/*"
+  ]
 }

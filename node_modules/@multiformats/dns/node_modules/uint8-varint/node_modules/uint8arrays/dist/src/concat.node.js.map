@@ -1,0 +1,1 @@
+{"version":3,"file":"concat.node.js","sourceRoot":"","sources":["../../src/concat.node.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,aAAa,CAAA;AACpC,OAAO,EAAE,YAAY,EAAE,MAAM,qBAAqB,CAAA;AAElD;;GAEG;AACH,MAAM,UAAU,MAAM,CAAE,MAAoB,EAAE,MAAe;IAC3D,OAAO,YAAY,CAAC,MAAM,CAAC,MAAM,CAAC,MAAM,EAAE,MAAM,CAAC,CAAC,CAAA;AACpD,CAAC"}

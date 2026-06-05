@@ -1,0 +1,56 @@
+{
+  "name": "protons-runtime",
+  "version": "5.6.0",
+  "description": "Shared code to make your bundle smaller when running protons in your app",
+  "license": "Apache-2.0 OR MIT",
+  "homepage": "https://github.com/ipfs/protons/tree/master/packages/protons-runtime#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ipfs/protons.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ipfs/protons/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "type": "module",
+  "types": "./dist/src/index.d.ts",
+  "files": [
+    "protons.proto",
+    "src",
+    "dist",
+    "!dist/test",
+    "!**/*.tsbuildinfo"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    }
+  },
+  "eslintConfig": {
+    "extends": "ipfs",
+    "parserOptions": {
+      "project": true,
+      "sourceType": "module"
+    }
+  },
+  "scripts": {
+    "clean": "aegir clean",
+    "lint": "aegir lint",
+    "dep-check": "aegir dep-check",
+    "doc-check": "aegir doc-check",
+    "build": "aegir build",
+    "release": "aegir release"
+  },
+  "dependencies": {
+    "uint8-varint": "^2.0.2",
+    "uint8arraylist": "^2.4.3",
+    "uint8arrays": "^5.0.1"
+  },
+  "devDependencies": {
+    "aegir": "^47.0.5"
+  }
+}

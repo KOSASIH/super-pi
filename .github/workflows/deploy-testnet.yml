@@ -1,0 +1,8 @@
+name: Deploy Testnet
+on:
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Testnet deployment ready."

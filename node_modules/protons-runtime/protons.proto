@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+import "google/protobuf/descriptor.proto";
+
+package protons;
+
+message ProtonsOptions {
+  // limit the number of repeated fields or map entries that will be decoded
+  optional int32 limit = 1;
+}
+
+// custom options available for use by protons
+extend google.protobuf.FieldOptions {
+  optional ProtonsOptions options = 1186;
+}

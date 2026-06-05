@@ -1,0 +1,1290 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getDefaultAddresses = exports.isWebAuthnAccount = exports.EIP712_SAFE_OPERATION_TYPE_V07 = exports.EIP712_SAFE_OPERATION_TYPE_V06 = void 0;
+exports.getPaymasterAndData = getPaymasterAndData;
+exports.toSafeSmartAccount = toSafeSmartAccount;
+const ox_1 = require("ox");
+const viem_1 = require("viem");
+const account_abstraction_1 = require("viem/account-abstraction");
+const actions_1 = require("viem/actions");
+const utils_1 = require("viem/utils");
+const getAccountNonce_js_1 = require("../../actions/public/getAccountNonce.js");
+const decode7579Calls_js_1 = require("../../utils/decode7579Calls.js");
+const encode7579Calls_js_1 = require("../../utils/encode7579Calls.js");
+const isSmartAccountDeployed_js_1 = require("../../utils/isSmartAccountDeployed.js");
+const toOwner_js_1 = require("../../utils/toOwner.js");
+const signUserOperation_js_1 = require("./signUserOperation.js");
+const multiSendAbi = [
+    {
+        inputs: [
+            {
+                internalType: "bytes",
+                name: "transactions",
+                type: "bytes"
+            }
+        ],
+        name: "multiSend",
+        outputs: [],
+        stateMutability: "payable",
+        type: "function"
+    }
+];
+const initSafe7579Abi = [
+    {
+        type: "function",
+        name: "initSafe7579",
+        inputs: [
+            {
+                name: "safe7579",
+                type: "address",
+                internalType: "address"
+            },
+            {
+                name: "executors",
+                type: "tuple[]",
+                internalType: "struct ModuleInit[]",
+                components: [
+                    {
+                        name: "module",
+                        type: "address",
+                        internalType: "address"
+                    },
+                    {
+                        name: "initData",
+                        type: "bytes",
+                        internalType: "bytes"
+                    }
+                ]
+            },
+            {
+                name: "fallbacks",
+                type: "tuple[]",
+                internalType: "struct ModuleInit[]",
+                components: [
+                    {
+                        name: "module",
+                        type: "address",
+                        internalType: "address"
+                    },
+                    {
+                        name: "initData",
+                        type: "bytes",
+                        internalType: "bytes"
+                    }
+                ]
+            },
+            {
+                name: "hooks",
+                type: "tuple[]",
+                internalType: "struct ModuleInit[]",
+                components: [
+                    {
+                        name: "module",
+                        type: "address",
+                        internalType: "address"
+                    },
+                    {
+                        name: "initData",
+                        type: "bytes",
+                        internalType: "bytes"
+                    }
+                ]
+            },
+            {
+                name: "attesters",
+                type: "address[]",
+                internalType: "address[]"
+            },
+            {
+                name: "threshold",
+                type: "uint8",
+                internalType: "uint8"
+            }
+        ],
+        outputs: [],
+        stateMutability: "nonpayable"
+    }
+];
+const preValidationSetupAbi = [
+    {
+        type: "function",
+        name: "preValidationSetup",
+        inputs: [
+            {
+                name: "initHash",
+                type: "bytes32",
+                internalType: "bytes32"
+            },
+            {
+                name: "to",
+                type: "address",
+                internalType: "address"
+            },
+            {
+                name: "preInit",
+                type: "bytes",
+                internalType: "bytes"
+            }
+        ],
+        outputs: [],
+        stateMutability: "nonpayable"
+    }
+];
+const enableModulesAbi = [
+    {
+        inputs: [
+            {
+                internalType: "address[]",
+                name: "modules",
+                type: "address[]"
+            }
+        ],
+        name: "enableModules",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function"
+    }
+];
+const safeWebAuthnSharedSignerAbi = [
+    {
+        inputs: [
+            {
+                components: [
+                    {
+                        internalType: "uint256",
+                        name: "x",
+                        type: "uint256"
+                    },
+                    {
+                        internalType: "uint256",
+                        name: "y",
+                        type: "uint256"
+                    },
+                    {
+                        internalType: "P256.Verifiers",
+                        name: "verifiers",
+                        type: "uint176"
+                    }
+                ],
+                internalType: "struct SafeWebAuthnSharedSigner.Signer",
+                name: "signer",
+                type: "tuple"
+            }
+        ],
+        name: "configure",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function"
+    }
+];
+const setupAbi = [
+    {
+        inputs: [
+            {
+                internalType: "address[]",
+                name: "_owners",
+                type: "address[]"
+            },
+            {
+                internalType: "uint256",
+                name: "_threshold",
+                type: "uint256"
+            },
+            {
+                internalType: "address",
+                name: "to",
+                type: "address"
+            },
+            {
+                internalType: "bytes",
+                name: "data",
+                type: "bytes"
+            },
+            {
+                internalType: "address",
+                name: "fallbackHandler",
+                type: "address"
+            },
+            {
+                internalType: "address",
+                name: "paymentToken",
+                type: "address"
+            },
+            {
+                internalType: "uint256",
+                name: "payment",
+                type: "uint256"
+            },
+            {
+                internalType: "address payable",
+                name: "paymentReceiver",
+                type: "address"
+            }
+        ],
+        name: "setup",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function"
+    }
+];
+const createProxyWithNonceAbi = [
+    {
+        inputs: [
+            {
+                internalType: "address",
+                name: "_singleton",
+                type: "address"
+            },
+            {
+                internalType: "bytes",
+                name: "initializer",
+                type: "bytes"
+            },
+            {
+                internalType: "uint256",
+                name: "saltNonce",
+                type: "uint256"
+            }
+        ],
+        name: "createProxyWithNonce",
+        outputs: [
+            {
+                internalType: "contract SafeProxy",
+                name: "proxy",
+                type: "address"
+            }
+        ],
+        stateMutability: "nonpayable",
+        type: "function"
+    }
+];
+const setupSafeAbi = [
+    {
+        type: "function",
+        name: "setupSafe",
+        inputs: [
+            {
+                name: "initData",
+                type: "tuple",
+                internalType: "struct Safe7579Launchpad.InitData",
+                components: [
+                    {
+                        name: "singleton",
+                        type: "address",
+                        internalType: "address"
+                    },
+                    {
+                        name: "owners",
+                        type: "address[]",
+                        internalType: "address[]"
+                    },
+                    {
+                        name: "threshold",
+                        type: "uint256",
+                        internalType: "uint256"
+                    },
+                    {
+                        name: "setupTo",
+                        type: "address",
+                        internalType: "address"
+                    },
+                    {
+                        name: "setupData",
+                        type: "bytes",
+                        internalType: "bytes"
+                    },
+                    {
+                        name: "safe7579",
+                        type: "address",
+                        internalType: "contract ISafe7579"
+                    },
+                    {
+                        name: "validators",
+                        type: "tuple[]",
+                        internalType: "struct ModuleInit[]",
+                        components: [
+                            {
+                                name: "module",
+                                type: "address",
+                                internalType: "address"
+                            },
+                            {
+                                name: "initData",
+                                type: "bytes",
+                                internalType: "bytes"
+                            }
+                        ]
+                    },
+                    {
+                        name: "callData",
+                        type: "bytes",
+                        internalType: "bytes"
+                    }
+                ]
+            }
+        ],
+        outputs: [],
+        stateMutability: "nonpayable"
+    }
+];
+const executeUserOpWithErrorStringAbi = [
+    {
+        inputs: [
+            {
+                internalType: "address",
+                name: "to",
+                type: "address"
+            },
+            {
+                internalType: "uint256",
+                name: "value",
+                type: "uint256"
+            },
+            {
+                internalType: "bytes",
+                name: "data",
+                type: "bytes"
+            },
+            {
+                internalType: "uint8",
+                name: "operation",
+                type: "uint8"
+            }
+        ],
+        name: "executeUserOpWithErrorString",
+        outputs: [],
+        stateMutability: "nonpayable",
+        type: "function"
+    }
+];
+exports.EIP712_SAFE_OPERATION_TYPE_V06 = {
+    SafeOp: [
+        { type: "address", name: "safe" },
+        { type: "uint256", name: "nonce" },
+        { type: "bytes", name: "initCode" },
+        { type: "bytes", name: "callData" },
+        { type: "uint256", name: "callGasLimit" },
+        { type: "uint256", name: "verificationGasLimit" },
+        { type: "uint256", name: "preVerificationGas" },
+        { type: "uint256", name: "maxFeePerGas" },
+        { type: "uint256", name: "maxPriorityFeePerGas" },
+        { type: "bytes", name: "paymasterAndData" },
+        { type: "uint48", name: "validAfter" },
+        { type: "uint48", name: "validUntil" },
+        { type: "address", name: "entryPoint" }
+    ]
+};
+exports.EIP712_SAFE_OPERATION_TYPE_V07 = {
+    SafeOp: [
+        { type: "address", name: "safe" },
+        { type: "uint256", name: "nonce" },
+        { type: "bytes", name: "initCode" },
+        { type: "bytes", name: "callData" },
+        { type: "uint128", name: "verificationGasLimit" },
+        { type: "uint128", name: "callGasLimit" },
+        { type: "uint256", name: "preVerificationGas" },
+        { type: "uint128", name: "maxPriorityFeePerGas" },
+        { type: "uint128", name: "maxFeePerGas" },
+        { type: "bytes", name: "paymasterAndData" },
+        { type: "uint48", name: "validAfter" },
+        { type: "uint48", name: "validUntil" },
+        { type: "address", name: "entryPoint" }
+    ]
+};
+const SAFE_VERSION_TO_ADDRESSES_MAP = {
+    "1.4.1": {
+        "0.6": {
+            SAFE_MODULE_SETUP_ADDRESS: "0x8EcD4ec46D4D2a6B64fE960B3D64e8B94B2234eb",
+            SAFE_4337_MODULE_ADDRESS: "0xa581c4A4DB7175302464fF3C06380BC3270b4037",
+            SAFE_PROXY_FACTORY_ADDRESS: "0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67",
+            SAFE_SINGLETON_ADDRESS: "0x41675C099F32341bf84BFc5382aF534df5C7461a",
+            MULTI_SEND_ADDRESS: "0x38869bf66a61cF6bDB996A6aE40D5853Fd43B526",
+            MULTI_SEND_CALL_ONLY_ADDRESS: "0x9641d764fc13c8B624c04430C7356C1C7C8102e2"
+        },
+        "0.7": {
+            SAFE_MODULE_SETUP_ADDRESS: "0x2dd68b007B46fBe91B9A7c3EDa5A7a1063cB5b47",
+            SAFE_4337_MODULE_ADDRESS: "0x75cf11467937ce3F2f357CE24ffc3DBF8fD5c226",
+            SAFE_PROXY_FACTORY_ADDRESS: "0x4e1DCf7AD4e460CfD30791CCC4F9c8a4f820ec67",
+            SAFE_SINGLETON_ADDRESS: "0x41675C099F32341bf84BFc5382aF534df5C7461a",
+            MULTI_SEND_ADDRESS: "0x38869bf66a61cF6bDB996A6aE40D5853Fd43B526",
+            MULTI_SEND_CALL_ONLY_ADDRESS: "0x9641d764fc13c8B624c04430C7356C1C7C8102e2",
+            WEB_AUTHN_SHARED_SIGNER_ADDRESS: "0x94a4F6affBd8975951142c3999aEAB7ecee555c2",
+            SAFE_P256_VERIFIER_ADDRESS: "0xA86e0054C51E4894D88762a017ECc5E5235f5DBA"
+        }
+    },
+    "1.5.0": {
+        "0.7": {
+            SAFE_MODULE_SETUP_ADDRESS: "0x2dd68b007B46fBe91B9A7c3EDa5A7a1063cB5b47",
+            SAFE_4337_MODULE_ADDRESS: "0x75cf11467937ce3F2f357CE24ffc3DBF8fD5c226",
+            SAFE_PROXY_FACTORY_ADDRESS: "0x14F2982D601c9458F93bd70B218933A6f8165e7b",
+            SAFE_SINGLETON_ADDRESS: "0xFf51A5898e281Db6DfC7855790607438dF2ca44b",
+            MULTI_SEND_ADDRESS: "0x218543288004CD07832472D464648173c77D7eB7",
+            MULTI_SEND_CALL_ONLY_ADDRESS: "0xA83c336B20401Af773B6219BA5027174338D1836",
+            WEB_AUTHN_SHARED_SIGNER_ADDRESS: "0x94a4F6affBd8975951142c3999aEAB7ecee555c2",
+            SAFE_P256_VERIFIER_ADDRESS: "0xA86e0054C51E4894D88762a017ECc5E5235f5DBA"
+        }
+    }
+};
+const adjustVInSignature = (signingMethod, signature) => {
+    const ETHEREUM_V_VALUES = [0, 1, 27, 28];
+    const MIN_VALID_V_VALUE_FOR_SAFE_ECDSA = 27;
+    let signatureV = Number.parseInt(signature.slice(-2), 16);
+    if (!ETHEREUM_V_VALUES.includes(signatureV)) {
+        throw new Error("Invalid signature");
+    }
+    if (signingMethod === "eth_sign") {
+        if (signatureV < MIN_VALID_V_VALUE_FOR_SAFE_ECDSA) {
+            signatureV += MIN_VALID_V_VALUE_FOR_SAFE_ECDSA;
+        }
+        signatureV += 4;
+    }
+    if (signingMethod === "eth_signTypedData") {
+        if (signatureV < MIN_VALID_V_VALUE_FOR_SAFE_ECDSA) {
+            signatureV += MIN_VALID_V_VALUE_FOR_SAFE_ECDSA;
+        }
+    }
+    return (signature.slice(0, -2) + signatureV.toString(16));
+};
+const generateSafeMessageMessage = (message) => {
+    const signableMessage = message;
+    if (typeof signableMessage === "string" || signableMessage.raw) {
+        return (0, viem_1.hashMessage)(signableMessage);
+    }
+    return (0, viem_1.hashTypedData)(message);
+};
+const encodeInternalTransaction = (tx) => {
+    const encoded = (0, viem_1.encodePacked)(["uint8", "address", "uint256", "uint256", "bytes"], [
+        tx.operation,
+        tx.to,
+        tx.value,
+        BigInt(tx.data.slice(2).length / 2),
+        tx.data
+    ]);
+    return encoded.slice(2);
+};
+const encodeMultiSend = (txs) => {
+    const data = `0x${txs
+        .map((tx) => encodeInternalTransaction(tx))
+        .join("")}`;
+    return (0, viem_1.encodeFunctionData)({
+        abi: multiSendAbi,
+        functionName: "multiSend",
+        args: [data]
+    });
+};
+const get7579LaunchPadInitData = ({ safe4337ModuleAddress, safeSingletonAddress, erc7579LaunchpadAddress, safeWebAuthnSharedSignerAddress, owners, validators, executors, fallbacks, hooks, attesters, threshold, attestersThreshold }) => {
+    const ownerAddresses = owners.map((owner) => {
+        if ("type" in owner && owner.type === "webAuthn") {
+            if (!safeWebAuthnSharedSignerAddress) {
+                throw new Error("safeWebAuthnSharedSignerAddress not defined");
+            }
+            return safeWebAuthnSharedSignerAddress;
+        }
+        if ("address" in owner && owner.address) {
+            return owner.address;
+        }
+        throw new Error("Incorrect owner found");
+    });
+    const initData = {
+        singleton: safeSingletonAddress,
+        owners: ownerAddresses,
+        threshold: threshold,
+        setupTo: erc7579LaunchpadAddress,
+        setupData: (0, viem_1.encodeFunctionData)({
+            abi: initSafe7579Abi,
+            functionName: "initSafe7579",
+            args: [
+                safe4337ModuleAddress,
+                executors.map((executor) => ({
+                    module: executor.address,
+                    initData: executor.context
+                })),
+                fallbacks.map((fallback) => ({
+                    module: fallback.address,
+                    initData: fallback.context
+                })),
+                hooks.map((hook) => ({
+                    module: hook.address,
+                    initData: hook.context
+                })),
+                attesters.sort((left, right) => left.toLowerCase().localeCompare(right.toLowerCase())),
+                attestersThreshold
+            ]
+        }),
+        safe7579: safe4337ModuleAddress,
+        validators: validators
+    };
+    return initData;
+};
+const isWebAuthnAccount = (owner) => {
+    return "type" in owner && owner.type === "webAuthn";
+};
+exports.isWebAuthnAccount = isWebAuthnAccount;
+const getInitializerCode = async ({ owners, threshold, safeModuleSetupAddress, safe4337ModuleAddress, safeWebAuthnSharedSignerAddress, safeP256VerifierAddress, multiSendAddress, safeSingletonAddress, erc7579LaunchpadAddress, setupTransactions = [], safeModules = [], validators = [], executors = [], fallbacks = [], hooks = [], attesters = [], attestersThreshold = 0, paymentToken = viem_1.zeroAddress, payment = BigInt(0), paymentReceiver = viem_1.zeroAddress }) => {
+    if (erc7579LaunchpadAddress) {
+        const initData = get7579LaunchPadInitData({
+            safe4337ModuleAddress,
+            safeSingletonAddress,
+            safeWebAuthnSharedSignerAddress,
+            erc7579LaunchpadAddress,
+            owners,
+            validators,
+            executors,
+            fallbacks,
+            threshold,
+            hooks,
+            attesters,
+            attestersThreshold
+        });
+        const initHash = (0, viem_1.keccak256)((0, viem_1.encodeAbiParameters)([
+            {
+                internalType: "address",
+                name: "singleton",
+                type: "address"
+            },
+            {
+                internalType: "address[]",
+                name: "owners",
+                type: "address[]"
+            },
+            {
+                internalType: "uint256",
+                name: "threshold",
+                type: "uint256"
+            },
+            {
+                internalType: "address",
+                name: "setupTo",
+                type: "address"
+            },
+            {
+                internalType: "bytes",
+                name: "setupData",
+                type: "bytes"
+            },
+            {
+                internalType: "contract ISafe7579",
+                name: "safe7579",
+                type: "address"
+            },
+            {
+                internalType: "struct ModuleInit[]",
+                name: "validators",
+                type: "tuple[]",
+                components: [
+                    {
+                        internalType: "address",
+                        name: "module",
+                        type: "address"
+                    },
+                    {
+                        internalType: "bytes",
+                        name: "initData",
+                        type: "bytes"
+                    }
+                ]
+            }
+        ], [
+            initData.singleton,
+            initData.owners,
+            initData.threshold,
+            initData.setupTo,
+            initData.setupData,
+            initData.safe7579,
+            initData.validators.map((validator) => ({
+                module: validator.address,
+                initData: validator.context
+            }))
+        ]));
+        return (0, viem_1.encodeFunctionData)({
+            abi: preValidationSetupAbi,
+            functionName: "preValidationSetup",
+            args: [initHash, viem_1.zeroAddress, "0x"]
+        });
+    }
+    const webAuthnOwner = owners.reduce((acc, owner) => {
+        if ((0, exports.isWebAuthnAccount)(owner)) {
+            return owner;
+        }
+        return acc;
+    }, undefined);
+    const ownerAddresses = owners.map((owner) => {
+        if ((0, exports.isWebAuthnAccount)(owner)) {
+            if (!safeWebAuthnSharedSignerAddress) {
+                throw new Error("safeWebAuthnSharedSignerAddress not defined");
+            }
+            return safeWebAuthnSharedSignerAddress;
+        }
+        if ("address" in owner && owner.address) {
+            return owner.address;
+        }
+        throw new Error("Incorrect owner found");
+    });
+    const multiCalls = [
+        {
+            to: safeModuleSetupAddress,
+            data: (0, viem_1.encodeFunctionData)({
+                abi: enableModulesAbi,
+                functionName: "enableModules",
+                args: [[safe4337ModuleAddress, ...safeModules]]
+            }),
+            value: BigInt(0),
+            operation: 1
+        }
+    ];
+    if (webAuthnOwner &&
+        safeWebAuthnSharedSignerAddress &&
+        safeP256VerifierAddress) {
+        const parsedPublicKey = ox_1.PublicKey.fromHex(webAuthnOwner.publicKey);
+        multiCalls.push({
+            to: safeWebAuthnSharedSignerAddress,
+            data: (0, viem_1.encodeFunctionData)({
+                abi: safeWebAuthnSharedSignerAbi,
+                functionName: "configure",
+                args: [
+                    {
+                        x: parsedPublicKey.x,
+                        y: parsedPublicKey.y,
+                        verifiers: BigInt(safeP256VerifierAddress)
+                    }
+                ]
+            }),
+            value: BigInt(0),
+            operation: 1
+        });
+    }
+    for (const tx of setupTransactions) {
+        multiCalls.push({
+            ...tx,
+            operation: 0
+        });
+    }
+    const multiSendCallData = encodeMultiSend(multiCalls);
+    return (0, viem_1.encodeFunctionData)({
+        abi: setupAbi,
+        functionName: "setup",
+        args: [
+            ownerAddresses,
+            threshold,
+            multiSendAddress,
+            multiSendCallData,
+            safe4337ModuleAddress,
+            paymentToken,
+            payment,
+            paymentReceiver
+        ]
+    });
+};
+function getPaymasterAndData(unpackedUserOperation) {
+    return unpackedUserOperation.paymaster
+        ? (0, viem_1.concat)([
+            unpackedUserOperation.paymaster,
+            (0, viem_1.pad)((0, viem_1.toHex)(unpackedUserOperation.paymasterVerificationGasLimit ||
+                BigInt(0)), {
+                size: 16
+            }),
+            (0, viem_1.pad)((0, viem_1.toHex)(unpackedUserOperation.paymasterPostOpGasLimit || BigInt(0)), {
+                size: 16
+            }),
+            unpackedUserOperation.paymasterData || "0x"
+        ])
+        : "0x";
+}
+const getAccountInitCode = async ({ owners, threshold, safeModuleSetupAddress, safe4337ModuleAddress, safeSingletonAddress, erc7579LaunchpadAddress, safeWebAuthnSharedSignerAddress, safeP256VerifierAddress, multiSendAddress, paymentToken, payment, paymentReceiver, saltNonce = BigInt(0), setupTransactions = [], safeModules = [], validators = [], executors = [], fallbacks = [], hooks = [], attesters = [], attestersThreshold = 0 }) => {
+    const initializer = await getInitializerCode({
+        owners,
+        threshold,
+        safeModuleSetupAddress,
+        safeWebAuthnSharedSignerAddress,
+        safeP256VerifierAddress,
+        safe4337ModuleAddress,
+        multiSendAddress,
+        setupTransactions,
+        safeSingletonAddress,
+        safeModules,
+        erc7579LaunchpadAddress,
+        validators,
+        executors,
+        fallbacks,
+        hooks,
+        attesters,
+        attestersThreshold,
+        paymentToken,
+        payment,
+        paymentReceiver
+    });
+    const initCodeCallData = (0, viem_1.encodeFunctionData)({
+        abi: createProxyWithNonceAbi,
+        functionName: "createProxyWithNonce",
+        args: [
+            erc7579LaunchpadAddress ?? safeSingletonAddress,
+            initializer,
+            saltNonce
+        ]
+    });
+    return initCodeCallData;
+};
+const getDefaultAddresses = (safeVersion, entryPointVersion, { addModuleLibAddress: _addModuleLibAddress, safeModuleSetupAddress: _safeModuleSetupAddress, safe4337ModuleAddress: _safe4337ModuleAddress, safeProxyFactoryAddress: _safeProxyFactoryAddress, safeSingletonAddress: _safeSingletonAddress, multiSendAddress: _multiSendAddress, multiSendCallOnlyAddress: _multiSendCallOnlyAddress, safeWebAuthnSharedSignerAddress: _safeWebAuthnSharedSignerAddress, safeP256VerifierAddress: _safeP256VerifierAddress }) => {
+    const versionAddresses = SAFE_VERSION_TO_ADDRESSES_MAP[safeVersion][entryPointVersion];
+    if (!versionAddresses) {
+        throw new Error(`Safe version ${safeVersion} does not support EntryPoint version ${entryPointVersion}`);
+    }
+    const safeModuleSetupAddress = _safeModuleSetupAddress ??
+        _addModuleLibAddress ??
+        versionAddresses.SAFE_MODULE_SETUP_ADDRESS;
+    const safe4337ModuleAddress = _safe4337ModuleAddress ?? versionAddresses.SAFE_4337_MODULE_ADDRESS;
+    const safeProxyFactoryAddress = _safeProxyFactoryAddress ?? versionAddresses.SAFE_PROXY_FACTORY_ADDRESS;
+    const safeSingletonAddress = _safeSingletonAddress ?? versionAddresses.SAFE_SINGLETON_ADDRESS;
+    const multiSendAddress = _multiSendAddress ?? versionAddresses.MULTI_SEND_ADDRESS;
+    const multiSendCallOnlyAddress = _multiSendCallOnlyAddress ??
+        versionAddresses.MULTI_SEND_CALL_ONLY_ADDRESS;
+    const safeWebAuthnSharedSignerAddress = _safeWebAuthnSharedSignerAddress ??
+        versionAddresses.WEB_AUTHN_SHARED_SIGNER_ADDRESS;
+    const safeP256VerifierAddress = _safeP256VerifierAddress ?? versionAddresses.SAFE_P256_VERIFIER_ADDRESS;
+    return {
+        safeModuleSetupAddress,
+        safe4337ModuleAddress,
+        safeProxyFactoryAddress,
+        safeSingletonAddress,
+        multiSendAddress,
+        multiSendCallOnlyAddress,
+        safeWebAuthnSharedSignerAddress,
+        safeP256VerifierAddress
+    };
+};
+exports.getDefaultAddresses = getDefaultAddresses;
+function isErc7579Args(args) {
+    return args.erc7579LaunchpadAddress !== undefined;
+}
+const proxyCreationCodeAbi = [
+    {
+        inputs: [],
+        name: "proxyCreationCode",
+        outputs: [
+            {
+                internalType: "bytes",
+                name: "",
+                type: "bytes"
+            }
+        ],
+        stateMutability: "pure",
+        type: "function"
+    }
+];
+const getAccountAddress = async ({ client, owners, threshold, safeModuleSetupAddress, safe4337ModuleAddress, safeProxyFactoryAddress, safeSingletonAddress, multiSendAddress, safeWebAuthnSharedSignerAddress, safeP256VerifierAddress, erc7579LaunchpadAddress, paymentToken, payment, paymentReceiver, setupTransactions = [], safeModules = [], saltNonce = BigInt(0), validators = [], executors = [], fallbacks = [], hooks = [], attesters = [], attestersThreshold = 0 }) => {
+    const proxyCreationCode = await (0, actions_1.readContract)(client, {
+        abi: proxyCreationCodeAbi,
+        address: safeProxyFactoryAddress,
+        functionName: "proxyCreationCode"
+    });
+    const initializer = await getInitializerCode({
+        owners,
+        threshold,
+        safeModuleSetupAddress,
+        safe4337ModuleAddress,
+        safeWebAuthnSharedSignerAddress,
+        safeP256VerifierAddress,
+        multiSendAddress,
+        setupTransactions,
+        safeSingletonAddress,
+        safeModules,
+        erc7579LaunchpadAddress,
+        validators,
+        executors,
+        fallbacks,
+        hooks,
+        attesters,
+        attestersThreshold,
+        paymentToken,
+        payment,
+        paymentReceiver
+    });
+    const deploymentCode = (0, viem_1.encodePacked)(["bytes", "uint256"], [
+        proxyCreationCode,
+        (0, viem_1.hexToBigInt)(erc7579LaunchpadAddress ?? safeSingletonAddress)
+    ]);
+    const salt = (0, viem_1.keccak256)((0, viem_1.encodePacked)(["bytes32", "uint256"], [(0, viem_1.keccak256)((0, viem_1.encodePacked)(["bytes"], [initializer])), saltNonce]));
+    return (0, viem_1.getContractAddress)({
+        from: safeProxyFactoryAddress,
+        salt,
+        bytecode: deploymentCode,
+        opcode: "CREATE2"
+    });
+};
+async function toSafeSmartAccount(parameters) {
+    const { client, owners: _owners, address, threshold = BigInt(_owners.length), version, safe4337ModuleAddress: _safe4337ModuleAddress, safeProxyFactoryAddress: _safeProxyFactoryAddress, safeSingletonAddress: _safeSingletonAddress, erc7579LaunchpadAddress, saltNonce = BigInt(0), validUntil = 0, validAfter = 0, nonceKey, paymentToken, payment, paymentReceiver, onchainIdentifier } = parameters;
+    const owners = await Promise.all(_owners.map(async (owner) => {
+        if ("account" in owner) {
+            return owner.account;
+        }
+        if ("request" in owner) {
+            return (0, toOwner_js_1.toOwner)({
+                owner: owner
+            });
+        }
+        return owner;
+    }));
+    const localOwners = await Promise.all(_owners
+        .filter((owner) => {
+        if ("type" in owner && owner.type === "local") {
+            return true;
+        }
+        if ("request" in owner) {
+            return true;
+        }
+        if ("account" in owner) {
+            return true;
+        }
+        if ((0, exports.isWebAuthnAccount)(owner)) {
+            return true;
+        }
+        return false;
+    })
+        .map((owner) => {
+        if ((0, exports.isWebAuthnAccount)(owner)) {
+            return owner;
+        }
+        return (0, toOwner_js_1.toOwner)({
+            owner: owner
+        });
+    }));
+    const entryPoint = {
+        address: parameters.entryPoint?.address ?? account_abstraction_1.entryPoint07Address,
+        abi: (parameters.entryPoint?.version ?? "0.7") === "0.6"
+            ? account_abstraction_1.entryPoint06Abi
+            : account_abstraction_1.entryPoint07Abi,
+        version: parameters.entryPoint?.version ?? "0.7"
+    };
+    let _safeModuleSetupAddress = undefined;
+    let _multiSendAddress = undefined;
+    let _multiSendCallOnlyAddress = undefined;
+    let safeModules = undefined;
+    let setupTransactions = [];
+    let validators = [];
+    let executors = [];
+    let fallbacks = [];
+    let hooks = [];
+    let attesters = [];
+    let attestersThreshold = 0;
+    if (!isErc7579Args(parameters)) {
+        _safeModuleSetupAddress = parameters.safeModuleSetupAddress;
+        _multiSendAddress = parameters.multiSendAddress;
+        _multiSendCallOnlyAddress = parameters.multiSendCallOnlyAddress;
+        safeModules = parameters.safeModules;
+        setupTransactions = parameters.setupTransactions ?? [];
+    }
+    if (isErc7579Args(parameters)) {
+        validators = parameters.validators ?? [];
+        executors = parameters.executors ?? [];
+        fallbacks = parameters.fallbacks ?? [];
+        hooks = parameters.hooks ?? [];
+        attesters = parameters.attesters ?? [];
+        attestersThreshold = parameters.attestersThreshold ?? 0;
+    }
+    const { safeModuleSetupAddress, safe4337ModuleAddress, safeProxyFactoryAddress, safeSingletonAddress, multiSendAddress, multiSendCallOnlyAddress, safeWebAuthnSharedSignerAddress, safeP256VerifierAddress } = (0, exports.getDefaultAddresses)(version, entryPoint.version, {
+        safeModuleSetupAddress: _safeModuleSetupAddress,
+        safe4337ModuleAddress: _safe4337ModuleAddress,
+        safeProxyFactoryAddress: _safeProxyFactoryAddress,
+        safeSingletonAddress: _safeSingletonAddress,
+        multiSendAddress: _multiSendAddress,
+        multiSendCallOnlyAddress: _multiSendCallOnlyAddress,
+        safeWebAuthnSharedSignerAddress: parameters.safeWebAuthnSharedSignerAddress,
+        safeP256VerifierAddress: parameters.safeP256VerifierAddress
+    });
+    let accountAddress = address;
+    let chainId;
+    const getMemoizedChainId = async () => {
+        if (chainId)
+            return chainId;
+        chainId = client.chain
+            ? client.chain.id
+            : await (0, utils_1.getAction)(client, actions_1.getChainId, "getChainId")({});
+        return chainId;
+    };
+    const getFactoryArgs = async () => {
+        return {
+            factory: safeProxyFactoryAddress,
+            factoryData: await getAccountInitCode({
+                owners,
+                threshold,
+                safeModuleSetupAddress,
+                safe4337ModuleAddress,
+                safeSingletonAddress,
+                safeWebAuthnSharedSignerAddress,
+                safeP256VerifierAddress,
+                multiSendAddress,
+                erc7579LaunchpadAddress,
+                saltNonce,
+                setupTransactions,
+                safeModules,
+                validators,
+                executors,
+                fallbacks,
+                hooks,
+                attesters,
+                attestersThreshold,
+                paymentToken,
+                payment,
+                paymentReceiver
+            })
+        };
+    };
+    return (0, account_abstraction_1.toSmartAccount)({
+        client,
+        entryPoint,
+        getFactoryArgs,
+        async getAddress() {
+            if (accountAddress)
+                return accountAddress;
+            accountAddress = await getAccountAddress({
+                client,
+                owners,
+                threshold,
+                safeModuleSetupAddress,
+                safe4337ModuleAddress,
+                safeProxyFactoryAddress,
+                safeSingletonAddress,
+                safeWebAuthnSharedSignerAddress,
+                safeP256VerifierAddress,
+                multiSendAddress,
+                erc7579LaunchpadAddress,
+                saltNonce,
+                setupTransactions,
+                safeModules,
+                validators,
+                executors,
+                fallbacks,
+                hooks,
+                attesters,
+                attestersThreshold,
+                paymentToken,
+                payment,
+                paymentReceiver
+            });
+            return accountAddress;
+        },
+        async encodeCalls(calls) {
+            const hasMultipleCalls = calls.length > 1;
+            if (erc7579LaunchpadAddress) {
+                const safeDeployed = await (0, isSmartAccountDeployed_js_1.isSmartAccountDeployed)(client, await this.getAddress());
+                if (!safeDeployed) {
+                    const initData = get7579LaunchPadInitData({
+                        safe4337ModuleAddress,
+                        safeSingletonAddress,
+                        erc7579LaunchpadAddress,
+                        safeWebAuthnSharedSignerAddress,
+                        owners,
+                        threshold,
+                        validators,
+                        executors,
+                        fallbacks,
+                        hooks,
+                        attesters,
+                        attestersThreshold
+                    });
+                    return (0, viem_1.encodeFunctionData)({
+                        abi: setupSafeAbi,
+                        functionName: "setupSafe",
+                        args: [
+                            {
+                                ...initData,
+                                validators: initData.validators.map((validator) => ({
+                                    module: validator.address,
+                                    initData: validator.context
+                                })),
+                                callData: (0, encode7579Calls_js_1.encode7579Calls)({
+                                    mode: {
+                                        type: hasMultipleCalls
+                                            ? "batchcall"
+                                            : "call",
+                                        revertOnError: false,
+                                        selector: "0x",
+                                        context: "0x"
+                                    },
+                                    callData: calls
+                                })
+                            }
+                        ]
+                    });
+                }
+                return (0, encode7579Calls_js_1.encode7579Calls)({
+                    mode: {
+                        type: hasMultipleCalls ? "batchcall" : "call",
+                        revertOnError: false,
+                        selector: "0x",
+                        context: "0x"
+                    },
+                    callData: calls
+                });
+            }
+            let to;
+            let value;
+            let data;
+            let operationType = 0;
+            if (hasMultipleCalls) {
+                to = multiSendCallOnlyAddress;
+                value = BigInt(0);
+                data = encodeMultiSend(calls.map((tx) => ({
+                    to: tx.to,
+                    value: tx.value ?? 0n,
+                    data: tx.data ?? "0x",
+                    operation: 0
+                })));
+                operationType = 1;
+            }
+            else {
+                const call = calls.length === 0 ? undefined : calls[0];
+                if (!call) {
+                    throw new Error("No calls to encode");
+                }
+                to = call.to;
+                data = call.data ?? "0x";
+                value = call.value ?? 0n;
+            }
+            const calldata = (0, viem_1.encodeFunctionData)({
+                abi: executeUserOpWithErrorStringAbi,
+                functionName: "executeUserOpWithErrorString",
+                args: [to, value, data, operationType]
+            });
+            if (onchainIdentifier) {
+                return (0, viem_1.concat)([calldata, onchainIdentifier]);
+            }
+            return calldata;
+        },
+        async decodeCalls(callData) {
+            try {
+                const decoded = (0, viem_1.decodeFunctionData)({
+                    abi: setupSafeAbi,
+                    data: callData
+                });
+                return (0, decode7579Calls_js_1.decode7579Calls)(decoded.args[0].callData).callData;
+            }
+            catch (_) { }
+            try {
+                return (0, decode7579Calls_js_1.decode7579Calls)(callData).callData;
+            }
+            catch (_) { }
+            const decoded = (0, viem_1.decodeFunctionData)({
+                abi: executeUserOpWithErrorStringAbi,
+                data: callData
+            });
+            const to = decoded.args[0];
+            const value = decoded.args[1];
+            const data = decoded.args[2];
+            if (to === multiSendCallOnlyAddress) {
+                const decodedMultiSend = (0, viem_1.decodeFunctionData)({
+                    abi: multiSendAbi,
+                    data: data
+                });
+                const dataToDecode = decodedMultiSend.args[0];
+                const transactions = [];
+                let position = 0;
+                const dataLength = (0, viem_1.size)(dataToDecode);
+                while (position < dataLength) {
+                    position += 1;
+                    const to = (0, viem_1.getAddress)((0, viem_1.slice)(dataToDecode, position, position + 20));
+                    position += 20;
+                    const value = BigInt((0, viem_1.slice)(dataToDecode, position, position + 32));
+                    position += 32;
+                    const dataLength = Number(BigInt((0, viem_1.slice)(dataToDecode, position, position + 32)) *
+                        BigInt(2));
+                    position += 32;
+                    const data = (0, viem_1.slice)(dataToDecode, position, position + dataLength);
+                    position += dataLength;
+                    transactions.push({ to, value, data });
+                }
+                return transactions;
+            }
+            return [{ to, value, data }];
+        },
+        async getNonce(args) {
+            return (0, getAccountNonce_js_1.getAccountNonce)(client, {
+                address: await this.getAddress(),
+                entryPointAddress: entryPoint.address,
+                key: nonceKey ?? args?.key
+            });
+        },
+        async getStubSignature() {
+            const signatures = owners.map((owner) => {
+                let signer = safeWebAuthnSharedSignerAddress;
+                let dynamic = true;
+                let data = "0xfffffffffffffffffffffffffffffff0000000000000000000000000000000007aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa1c";
+                if (!(0, exports.isWebAuthnAccount)(owner)) {
+                    signer = owner.address;
+                    dynamic = false;
+                }
+                else {
+                    data = (0, viem_1.encodeAbiParameters)([
+                        { name: "authenticatorData", type: "bytes" },
+                        { name: "clientDataJSON", type: "string" },
+                        { name: "signature", type: "uint256[2]" }
+                    ], [
+                        "0x49960de5880e8c687434170f6476605b8fe4aeb9a28632c7995cf3ba831d97631d00000000",
+                        '"origin":"http://somelargdomainheresothatwehaveenoughbytes.com","crossOrigin":false',
+                        [
+                            44941127272049826721201904734628716258498742255959991581049806490182030242267n,
+                            9910254599581058084911561569808925251374718953855182016200087235935345969636n
+                        ]
+                    ]);
+                }
+                if (!signer) {
+                    throw new Error("No signer found");
+                }
+                return {
+                    signer,
+                    data,
+                    dynamic
+                };
+            });
+            return (0, viem_1.encodePacked)(["uint48", "uint48", "bytes"], [0, 0, (0, signUserOperation_js_1.concatSignatures)(signatures)]);
+        },
+        async sign({ hash }) {
+            return this.signMessage({ message: hash });
+        },
+        async signMessage({ message }) {
+            if (localOwners.length < Number(threshold)) {
+                throw new Error("Owners length mismatch, currently not supported");
+            }
+            if (erc7579LaunchpadAddress && version === "1.5.0") {
+                throw new Error("Safe 7579 & version 1.5.0 are not compatible");
+            }
+            const messageHash = (0, viem_1.hashTypedData)({
+                domain: {
+                    chainId: await getMemoizedChainId(),
+                    verifyingContract: await this.getAddress()
+                },
+                types: {
+                    SafeMessage: [{ name: "message", type: "bytes" }]
+                },
+                primaryType: "SafeMessage",
+                message: {
+                    message: generateSafeMessageMessage(message)
+                }
+            });
+            const signatures = await Promise.all(localOwners.map(async (localOwner) => {
+                let signer = safeWebAuthnSharedSignerAddress;
+                let data;
+                let dynamic = true;
+                if (!(0, exports.isWebAuthnAccount)(localOwner)) {
+                    signer = localOwner.address;
+                    data = adjustVInSignature("eth_sign", await localOwner.signMessage({
+                        message: {
+                            raw: (0, viem_1.toBytes)(messageHash)
+                        }
+                    }));
+                    dynamic = false;
+                }
+                else {
+                    data = await (0, signUserOperation_js_1.getWebAuthnSignature)({
+                        owner: localOwner,
+                        hash: messageHash
+                    });
+                }
+                if (!signer) {
+                    throw new Error("no signer found");
+                }
+                return {
+                    signer,
+                    dynamic,
+                    data
+                };
+            }));
+            const signatureBytes = (0, signUserOperation_js_1.concatSignatures)(signatures);
+            return erc7579LaunchpadAddress
+                ? (0, viem_1.concat)([viem_1.zeroAddress, signatureBytes])
+                : signatureBytes;
+        },
+        async signTypedData(typedData) {
+            if (localOwners.length < Number(threshold)) {
+                throw new Error("Owners length mismatch, currently not supported");
+            }
+            if (erc7579LaunchpadAddress && version === "1.5.0") {
+                throw new Error("Safe 7579 & version 1.5.0 are not compatible");
+            }
+            const signatures = await Promise.all(localOwners.map(async (localOwner) => {
+                let signer = safeWebAuthnSharedSignerAddress;
+                let data;
+                let dynamic = true;
+                if (!(0, exports.isWebAuthnAccount)(localOwner)) {
+                    signer = localOwner.address;
+                    data = adjustVInSignature("eth_signTypedData", await localOwner.signTypedData({
+                        domain: {
+                            chainId: await getMemoizedChainId(),
+                            verifyingContract: await this.getAddress()
+                        },
+                        types: {
+                            SafeMessage: [
+                                { name: "message", type: "bytes" }
+                            ]
+                        },
+                        primaryType: "SafeMessage",
+                        message: {
+                            message: generateSafeMessageMessage(typedData)
+                        }
+                    }));
+                    dynamic = false;
+                }
+                else {
+                    const messageHash = (0, viem_1.hashTypedData)({
+                        domain: {
+                            chainId: await getMemoizedChainId(),
+                            verifyingContract: await this.getAddress()
+                        },
+                        types: {
+                            SafeMessage: [
+                                { name: "message", type: "bytes" }
+                            ]
+                        },
+                        primaryType: "SafeMessage",
+                        message: {
+                            message: generateSafeMessageMessage(typedData)
+                        }
+                    });
+                    data = await (0, signUserOperation_js_1.getWebAuthnSignature)({
+                        owner: localOwner,
+                        hash: messageHash
+                    });
+                }
+                if (!signer) {
+                    throw new Error("no signer found");
+                }
+                return {
+                    signer,
+                    dynamic,
+                    data
+                };
+            }));
+            const signatureBytes = (0, signUserOperation_js_1.concatSignatures)(signatures);
+            return erc7579LaunchpadAddress
+                ? (0, viem_1.concat)([viem_1.zeroAddress, signatureBytes])
+                : signatureBytes;
+        },
+        async signUserOperation(parameters) {
+            const { chainId = await getMemoizedChainId(), ...userOperation } = parameters;
+            if (localOwners.length < Number(threshold)) {
+                throw new Error("Owners length mismatch use SafeSmartAccount.signUserOperation from `permissionless/accounts/safe`");
+            }
+            let signatures = undefined;
+            for (const owner of localOwners) {
+                signatures = await (0, signUserOperation_js_1.signUserOperation)({
+                    ...userOperation,
+                    version,
+                    entryPoint,
+                    owners: localOwners,
+                    account: owner,
+                    chainId,
+                    signatures,
+                    validAfter,
+                    validUntil,
+                    safe4337ModuleAddress,
+                    safeWebAuthnSharedSignerAddress
+                });
+            }
+            if (!signatures) {
+                throw new Error("No signatures found");
+            }
+            return signatures;
+        }
+    });
+}
+//# sourceMappingURL=toSafeSmartAccount.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../../src/hmac/index.ts"],"names":[],"mappings":"AAAA;;;;;;;;;;;;;;;GAeG;AAKH,MAAM,WAAW,IAAI;IACnB,MAAM,CAAC,IAAI,EAAE,UAAU,GAAG,OAAO,CAAC,UAAU,CAAC,CAAA;IAC7C,MAAM,EAAE,MAAM,CAAA;CACf;AAED,wBAAsB,MAAM,CAAE,IAAI,EAAE,MAAM,GAAG,QAAQ,GAAG,QAAQ,EAAE,MAAM,EAAE,UAAU,GAAG,OAAO,CAAC,IAAI,CAAC,CAWnG"}

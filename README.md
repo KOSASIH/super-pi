@@ -1,3 +1,7 @@
+ master
+# SUPER-PI Enterprise Infrastructure
+Modular, enterprise-grade digital infrastructure platform designed for long-term maintainability, governance, and ecosystem integration.
+
 <div align="center">
 
 <img src="https://img.shields.io/badge/Super%20Pi%20Protocol-v15.0.2-gold?style=for-the-badge&logo=ethereum&logoColor=black" alt="Version" />
@@ -485,3 +489,4 @@ Governed by [NexusLaw v6.1](./packages/app-genesis/NexusLaw-v6.1.md)
 [![GitHub Stars](https://img.shields.io/github/stars/KOSASIH/super-pi?style=social)](https://github.com/KOSASIH/super-pi)
 
 </div>
+ master

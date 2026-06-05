@@ -12,6 +12,6 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "ethers": "^6.0.0"
+    "ethers": "^5.8.0"
   }
 }

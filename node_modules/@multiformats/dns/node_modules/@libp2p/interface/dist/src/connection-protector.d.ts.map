@@ -1,0 +1,1 @@
+{"version":3,"file":"connection-protector.d.ts","sourceRoot":"","sources":["../../src/connection-protector.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,YAAY,EAAE,aAAa,EAAE,MAAM,YAAY,CAAA;AAE7D,MAAM,WAAW,mBAAmB;IAClC;;;OAGG;IACH,OAAO,CAAE,UAAU,EAAE,aAAa,EAAE,OAAO,CAAC,EAAE,YAAY,GAAG,OAAO,CAAC,aAAa,CAAC,CAAA;CACpF"}

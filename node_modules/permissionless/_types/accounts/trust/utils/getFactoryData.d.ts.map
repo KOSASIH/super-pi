@@ -1,0 +1,1 @@
+{"version":3,"file":"getFactoryData.d.ts","sourceRoot":"","sources":["../../../../accounts/trust/utils/getFactoryData.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,OAAO,EAAE,MAAM,MAAM,CAAA;AAGnC;;GAEG;AACH,eAAO,MAAM,cAAc,GAAU,qDAIlC;IACC,KAAK,EAAE,KAAK,MAAM,EAAE,CAAA;IACpB,KAAK,EAAE,MAAM,CAAA;IACb,iCAAiC,EAAE,OAAO,CAAA;CAC7C,2BAoCA,CAAA"}
