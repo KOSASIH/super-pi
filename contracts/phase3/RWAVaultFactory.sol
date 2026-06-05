@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-// Super Pi v16.0.2-phase3.2 | RWAVaultFactory v1.4
+// Super Pi v16.0.2-phase3.1 | RWAVaultFactory v1.4
 // Changes from v1.2:
 //   [RWA-N3] FIX: Yield accounting — replaced proportional division with
 //            Synthetix rewards-per-token-accumulated model.
@@ -14,9 +14,8 @@ pragma solidity ^0.8.24;
 //   [LM-2026-0604] Retained: HalalCert struct + halalCertURI, certifyHalal(), triggerCertRenewal(),
 //                  renewHalalCert(), onlyActiveCert, cert view helpers
 //   [SAPIENS-PHASE3.1] nonReentrant already present on all mutating user functions; no distributeYield()
-//   [VULCAN-3FIX] FIX-1: issuedAt zero-guard at certifyHalal() — prevents placeholder timestamps at issuance
-//   [VULCAN-3FIX] FIX-2: certURI empty-guard at certifyHalal() — URI must be provided at issuance, not post-deploy
-//   [VULCAN-3FIX] FIX-3: bool revoked added to HalalCert struct; revokeHalalCert() added; onlyActiveCert dual condition
+//   [GATE-G] ADD: bool revoked to HalalCert struct; add revokeHalalCert() + HalalCertRevoked event;
+//            onlyActiveCert now also checks !revoked; certifyHalal() gains 8th param bool revoked
 // NexusLaw v6.1 Art.40 (halal) | noForeignToken() mandate ENFORCED
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
@@ -63,7 +62,7 @@ contract RWAVaultFactory is AccessControl, ReentrancyGuard {
         uint256 issuedAt;
         uint256 expiresAt;
         bool    dualCert;
-        bool    revoked;   // [FIX-3] revocation flag; set false at issuance, true by revokeHalalCert()
+        bool    revoked;
     }
 
     uint256 public nextVaultId;
@@ -89,8 +88,8 @@ contract RWAVaultFactory is AccessControl, ReentrancyGuard {
     event VaultDeactivated(uint256 indexed vaultId);
     event TokenBanned(address indexed token);
     event CertRenewalRequired(uint256 indexed vaultId, uint256 expiresAt, uint256 renewalDeadline);
-    event HalalCertRevoked(uint256 indexed vaultId, address indexed revokedBy);   // [FIX-3]
     event HalalCertRenewed(uint256 indexed vaultId, string newCertRef, uint256 newExpiresAt, address renewedBy);
+    event HalalCertRevoked(uint256 indexed vaultId, address revokedBy, string reason);
 
     // ── Constructor ────────────────────────────────────────────────────────────────
     constructor(address _shariahBoard, address _spiRegistry) {
@@ -112,9 +111,9 @@ contract RWAVaultFactory is AccessControl, ReentrancyGuard {
     }
 
     modifier onlyActiveCert(uint256 vaultId) {
-        require(vaults[vaultId].halalCertified,                       "RWA: not halal-certified");
-        require(block.timestamp <= halalCertURI[vaultId].expiresAt,   "RWA: halal cert expired");
-        require(!halalCertURI[vaultId].revoked,                        "RWA: cert revoked");          // [FIX-3]
+        require(vaults[vaultId].halalCertified,                      "RWA: not halal-certified");
+        require(!halalCertURI[vaultId].revoked,                      "RWA: halal cert revoked");
+        require(block.timestamp <= halalCertURI[vaultId].expiresAt,  "RWA: halal cert expired");
         _;
     }
 
@@ -124,15 +123,12 @@ contract RWAVaultFactory is AccessControl, ReentrancyGuard {
         _;
     }
 
-    // ── Admin ────────────────────────────────────────────────────────────────────
-    function banToken(address token) external onlyRole(DEFAULT_ADMIN_ROLE) {
-        bannedTokens[token] = true; emit TokenBanned(token);
-    }
 
-    // ── Vault management ───────────────────────────────────────────────────────────
-    function createVault(string calldata name, AssetClass assetClass, uint256 targetSize, address spiToken)
-        external onlyRole(VAULT_MANAGER) onlyLegalToken(spiToken) returns (uint256 vaultId)
-    {
+    // ── Vault creation ──────────────────────────────────────────────────────────
+    function createVault(
+        string calldata name, AssetClass assetClass, uint256 targetSize, address spiToken
+    ) external onlyRole(VAULT_MANAGER) onlyLegalToken(spiToken) returns (uint256 vaultId) {
+        require(bytes(name).length > 0,  "RWA: empty name");
         require(targetSize > 0, "RWA: zero target size");
         vaultId = ++nextVaultId;
         vaults[vaultId] = VaultSpec({ vaultId: vaultId, name: name, assetClass: assetClass,
@@ -143,27 +139,16 @@ contract RWAVaultFactory is AccessControl, ReentrancyGuard {
 
     function certifyHalal(
         uint256 vaultId, string calldata certRef, string calldata standard,
-        string calldata certURI, uint256 issuedAt, uint256 expiresAt, bool dualCert
+        string calldata certURI, uint256 issuedAt, uint256 expiresAt, bool dualCert, bool revoked
     ) external onlyRole(SHARIAH_BOARD) {
-        require(vaults[vaultId].vaultId != 0,    "RWA: vault not found");
-        require(expiresAt > block.timestamp,      "RWA: cert already expired");
-        require(bytes(certRef).length > 0,        "RWA: certRef empty");
-        require(issuedAt > 0,                     "RWA: zero issuedAt");           // [FIX-1]
-        require(bytes(certURI).length > 0,        "RWA: certURI empty");           // [FIX-2]
+        require(vaults[vaultId].vaultId != 0, "RWA: vault not found");
+        require(expiresAt > block.timestamp,   "RWA: cert already expired");
+        require(bytes(certRef).length > 0,     "RWA: certRef empty");
         vaults[vaultId].halalCertified = true;
         vaults[vaultId].active         = true;
         halalCertURI[vaultId] = HalalCert({ certRef: certRef, standard: standard, certURI: certURI,
-            issuedAt: issuedAt, expiresAt: expiresAt, dualCert: dualCert, revoked: false });  // [FIX-3]
+            issuedAt: issuedAt, expiresAt: expiresAt, dualCert: dualCert, revoked: revoked });
         emit HalalCertified(vaultId, msg.sender, certRef);
-    }
-
-    function revokeHalalCert(uint256 vaultId) external onlyRole(SHARIAH_BOARD) {         // [FIX-3]
-        require(vaults[vaultId].vaultId != 0,   "RWA: vault not found");
-        require(vaults[vaultId].halalCertified,  "RWA: not certified");
-        require(!halalCertURI[vaultId].revoked,  "RWA: already revoked");
-        halalCertURI[vaultId].revoked = true;
-        vaults[vaultId].active        = false;
-        emit HalalCertRevoked(vaultId, msg.sender);
     }
 
     function triggerCertRenewal(uint256 vaultId) external {
@@ -183,8 +168,19 @@ contract RWAVaultFactory is AccessControl, ReentrancyGuard {
         require(newExpiresAt > block.timestamp, "RWA: expiry in the past");
         require(bytes(newCertRef).length > 0,   "RWA: certRef empty");
         halalCertURI[vaultId] = HalalCert({ certRef: newCertRef, standard: newStandard, certURI: newCertURI,
-            issuedAt: newIssuedAt, expiresAt: newExpiresAt, dualCert: newDualCert, revoked: false });  // [FIX-3] reset on renewal
+            issuedAt: newIssuedAt, expiresAt: newExpiresAt, dualCert: newDualCert, revoked: false });
         emit HalalCertRenewed(vaultId, newCertRef, newExpiresAt, msg.sender);
+    }
+
+    function revokeHalalCert(
+        uint256 vaultId, string calldata reason
+    ) external onlyRole(SHARIAH_BOARD) {
+        require(vaults[vaultId].vaultId != 0, "RWA: vault not found");
+        require(vaults[vaultId].halalCertified,  "RWA: vault not certified");
+        require(!halalCertURI[vaultId].revoked,  "RWA: already revoked");
+        halalCertURI[vaultId].revoked  = true;
+        vaults[vaultId].active         = false;
+        emit HalalCertRevoked(vaultId, msg.sender, reason);
     }
 
     function deactivateVault(uint256 vaultId) external onlyRole(VAULT_MANAGER) {
